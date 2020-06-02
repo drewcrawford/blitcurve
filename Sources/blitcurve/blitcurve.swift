@@ -1,3 +1,2 @@
-struct blitcurve {
-    var text = "Hello, World!"
-}
+
+@_exported import blitcurve_c
