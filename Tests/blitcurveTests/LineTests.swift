@@ -24,9 +24,18 @@ final class LineTests: XCTestCase {
         let l2 = Line(point:SIMD2<Float>(0,0), angle: .pi / 4, distance: 12)
         XCTAssert(l2.yIntercept ~= 0)
     }
+    
+    func testLength() {
+        let l2 = Line(a: .zero, b: SIMD2<Float>(3,3))
+        XCTAssert(l2.distance ~= 4.24264)
+        
+        let l0 = Line(a: .zero, b:.zero)
+        XCTAssert(l0.distance == 0)
+    }
 
     static var allTests = [
         ("testLine", testLine),
         ("testSlope", testSlope),
+        ("testLength",testLength),
     ]
 }

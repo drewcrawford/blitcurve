@@ -43,5 +43,12 @@ inline bc_float_t BCLineYIntercept(BCLine l) {
     return l.a.y - BCLineSlope(l) * l.a.x;
 }
 
+///Distance of the line
+__attribute__((const))
+__attribute__((swift_name("getter:Line.distance(self:)")))
+inline bc_float_t BCLineDistance(BCLine l) {
+    return simd_fast_length(l.a - l.b);
+}
+
 
 #endif /* Line_h */
