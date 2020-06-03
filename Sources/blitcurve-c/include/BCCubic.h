@@ -6,6 +6,7 @@
 #import "BCTypes.h"
 #import "BCLine.h"
 #include <stdbool.h>
+#include <simd/simd.h>
 ///BCCubic is a cubic bezier curve defined on 4 points.
 ///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
 __attribute__((swift_name("Cubic")))
@@ -40,6 +41,14 @@ inline BCLine BCCubicFinalTangent(BCCubic c) {
     l.a = c.d;
     l.b = c.b;
     return l;
+}
+
+///Evaluate the cubic for the given bezier parameter
+///- returns: A point on the cubic at the bezier equation for t
+__attribute__((const))
+__attribute__((swift_name("Cubic.evaluate(self:t:)")))
+inline bc_float2_t evaluate(BCCubic c,bc_float_t t) {
+    return c.a * powf(1-t,3) + c.c * 3 * powf(1-t, 2) * t + c.d * 3 * (1 - t) * powf(t, 2) + c.b * powf(t, 3);
 }
 
 /*

@@ -5,3 +5,4 @@
 
 extern inline BCLine BCCubicFinalTangent(BCCubic c);
 extern inline BCLine BCCubicInitialTangent(BCCubic c);
+extern inline bc_float2_t evaluate(BCCubic c,bc_float_t t);

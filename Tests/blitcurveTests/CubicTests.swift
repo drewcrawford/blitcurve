@@ -12,7 +12,19 @@ final class CubicTests: XCTestCase {
         let _ = c.finalTangent
     }
     
+    func testEvaluate() {
+        let curve = Cubic(a: SIMD2<Float>(x: 120, y: 60), b: SIMD2<Float>(x: 220, y: 40), c: SIMD2<Float>(x: 35, y: 200), d: SIMD2<Float>(x: 220, y: 260))
+        let shouldBeA = curve.evaluate(t: 0)
+        XCTAssertEqual(shouldBeA.x, curve.a.x)
+        XCTAssertEqual(shouldBeA.y, curve.a.y)
+        
+        let shouldBeB = curve.evaluate(t: 1)
+        XCTAssertEqual(shouldBeB.x, curve.b.x)
+        XCTAssertEqual(shouldBeB.y, curve.b.y)
+    }
+    
     static var allTests = [
         ("testTangents", testTangents),
+        ("testEvaluate", testEvaluate),
     ]
 }
