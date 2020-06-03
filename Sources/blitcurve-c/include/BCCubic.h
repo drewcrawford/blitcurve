@@ -155,6 +155,16 @@ inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_t initi
     return c;
 }
 
+///Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
+///- warning: UB if the cubics are not normalized
+__attribute__((swift_name("Cubic.init(connecting:to:)")))
+BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
+    BCLine connecting;
+    connecting.a = a.b;
+    connecting.b = b.a;
+    return BCCubicMakeConnectingTangents(connecting, BCCubicFinalTangent(a), BCCubicInitialTangent(b) + M_PI_2);
+}
+
 /*
 
 __attribute__((swift_name("Cubic.init(connecting:to:)")))
@@ -165,9 +175,6 @@ bc_float_t BCCubicLength(BCCubic a);
 
 __attribute__((swift_name("Cubic.hasIntersection(self:with:)")))
 bool BCCubicHasIntersection(BCCubic a, BCCubic b);
-
-__attribute__((swift_name("getter:Cubic.finalTangent(self:)")))
-BCLine LCCubicFinalTangent(BCCubic a);
  */
 
 #endif
