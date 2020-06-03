@@ -52,6 +52,30 @@ inline bc_float2_t evaluate(BCCubic c,bc_float_t t) {
     return c.a * powf(1-t,3) + c.c * 3 * powf(1-t, 2) * t + c.d * 3 * (1 - t) * powf(t, 2) + c.b * powf(t, 3);
 }
 
+__attribute__((const))
+__attribute__((swift_name("getter:Cubic.asLine(self:)")))
+inline BCLine BCCubicAsLine(BCCubic c) {
+    BCLine l;
+    l.a = c.a;
+    l.b = c.b;
+    return l;
+}
+
+///For various reaons, a cubic that has its extremity points close to its control points are problematic.
+///For example, the initial/final tangents of such a cubic are undefined.
+///This function will normalize the cubic by adjusting its control points if the cubic is badly-behaved.
+__attribute__((swift_name("Cubic.normalize(self:)")))
+inline void BCCubicNormalize(BCCubic *c) {
+    if (BCIsNearlyEqual2(c->a,c->c)) {
+        BCLine asLine = BCCubicAsLine(*c);
+        c->c = BCLineEvaluate(asLine,0.001);
+    }
+    if (BCIsNearlyEqual2(c->d,c->b)) {
+        BCLine asLine = BCCubicAsLine(*c);
+        c->d = BCLineEvaluate(asLine,0.999);
+    }
+}
+
 /*
 
 __attribute__((swift_name("Cubic.init(connecting:to:)")))

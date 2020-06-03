@@ -23,8 +23,16 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(shouldBeB.y, curve.b.y)
     }
     
+    func testNormalize() {
+        var curve = Cubic(a: .zero, b: SIMD2<Float>(x: 100, y: 100), c: .zero, d: SIMD2<Float>(x: 100, y: 100))
+        curve.normalize()
+        XCTAssert(curve.a != curve.c)
+        XCTAssert(curve.b != curve.d)
+    }
+    
     static var allTests = [
         ("testTangents", testTangents),
         ("testEvaluate", testEvaluate),
+        ("testNormalize", testEvaluate),
     ]
 }
