@@ -3,7 +3,7 @@
 
 #ifndef Types_h
 #define Types_h
-#import <SIMD/SIMD.h>
+#import <simd/simd.h>
 __attribute__((swift_name("BCFloat")))
 typedef float bc_float_t;
 __attribute__((swift_name("BCFloat2")))

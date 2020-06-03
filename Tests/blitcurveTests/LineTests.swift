@@ -32,10 +32,16 @@ final class LineTests: XCTestCase {
         let l0 = Line(a: .zero, b:.zero)
         XCTAssert(l0.distance == 0)
     }
+    
+    func testTangent() {
+        let l2 = Line(a: .zero, b: SIMD2<Float>(3,3))
+        XCTAssert(l2.tangent ~= .pi / 4)
+    }
 
     static var allTests = [
         ("testLine", testLine),
         ("testSlope", testSlope),
         ("testLength",testLength),
+        ("testTangent",testTangent),
     ]
 }

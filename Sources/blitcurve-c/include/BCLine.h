@@ -50,5 +50,14 @@ inline bc_float_t BCLineDistance(BCLine l) {
     return simd_fast_length(l.a - l.b);
 }
 
+///Tangent along the line.
+///- warning: In the case the line has 0 length, this is UB
+__attribute__((const))
+__attribute__((swift_name("getter:Line.tangent(self:)")))
+inline bc_float_t BCLineTangent(BCLine l) {
+    ASSERT_UB(BCLineDistance(l) > 0);
+    return atan2f(l.b.y - l.a.y, l.b.x - l.a.x);
+}
+
 
 #endif /* Line_h */
