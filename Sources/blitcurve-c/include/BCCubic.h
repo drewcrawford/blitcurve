@@ -5,15 +5,19 @@
 #define Cubic_h
 
 #include <stdbool.h>
+///BCCubic is a cubic bezier curve defined on 4 points.
+///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
 __attribute__((swift_name("Cubic")))
 typedef struct {
+    ///start of curve
     bc_float2_t a;
+    ///end of curve
     bc_float2_t b;
+    ///control point 1
     bc_float2_t c;
+    ///control point 2
     bc_float2_t d;
 } BCCubic;
-
-//https://github.com/twostraws/swift-1/blob/master/docs/CToSwiftNameTranslation.md
 
 __attribute__((swift_name("Cubic.init(connecting:to:)")))
 BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b);
