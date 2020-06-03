@@ -1,3 +1,5 @@
+// linetests.swift: Line tests
+// ©2020 DrewCrawfordApps LLC
 import XCTest
 @testable import blitcurve
 
@@ -14,10 +16,13 @@ final class LineTests: XCTestCase {
     }
     
     func testSlope() {
-        let l = Line(point:SIMD2<Float>(0,0), angle: .pi / 2, distance: 12)
-        XCTAssert(l.slope > 1000 || l.slope.isNaN);
         let l2 = Line(point:SIMD2<Float>(0,0), angle: .pi / 4, distance: 12)
         XCTAssert(l2.slope ~= 1)
+    }
+    
+    func testYIntercept() {
+        let l2 = Line(point:SIMD2<Float>(0,0), angle: .pi / 4, distance: 12)
+        XCTAssert(l2.yIntercept ~= 0)
     }
 
     static var allTests = [

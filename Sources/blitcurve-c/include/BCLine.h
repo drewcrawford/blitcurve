@@ -5,7 +5,9 @@
 #define Line_h
 #import <simd/simd.h>
 #import "BCTypes.h"
+#import "BCMacros.h"
 #import <math.h>
+#import <assert.h>
 ///BCLine is a linesegment defined on 2 points
 ///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
 __attribute__((swift_name("Line")))
@@ -25,11 +27,20 @@ inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float dist
 }
 
 ///Gets the slope of the line.
-///- note: Vertical lines may be a large value or NaN
+///- note: Vertical lines are undefined
 __attribute__((const))
 __attribute__((swift_name("getter:Line.slope(self:)")))
 inline bc_float_t BCLineSlope(BCLine l) {
+    ASSERT_UB(fabsf(l.a.x - l.b.x) > 0);
     return (l.a.y - l.b.y) / (l.a.x - l.b.x);
+}
+
+///Y-intercept of the line
+///- note: Vertical lines are undefined
+__attribute__((const))
+__attribute__((swift_name("getter:Line.yIntercept(self:)")))
+inline bc_float_t BCLineYIntercept(BCLine l) {
+    return l.a.y - BCLineSlope(l) * l.a.x;
 }
 
 

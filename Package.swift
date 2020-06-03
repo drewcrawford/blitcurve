@@ -20,10 +20,14 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "blitcurve",
-            dependencies: ["blitcurve-c"]),
+            dependencies: ["blitcurve-c"],
+        cSettings:[.define("CHECK_UB", to: nil, .when(platforms: nil, configuration: .debug))]
+),
         .target(
             name: "blitcurve-c",
-            dependencies: []),
+            dependencies: [],
+            cSettings:[.define("CHECK_UB", to: nil, .when(platforms: nil, configuration: .debug))]
+        ),
         .testTarget(
             name: "blitcurveTests",
             dependencies: ["blitcurve"]),

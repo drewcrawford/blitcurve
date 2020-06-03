@@ -1,9 +1,10 @@
 // BCCubic.h: Cubic type
 // ©2020 DrewCrawfordApps LLC
-#include "BCTypes.h"
+
 #ifndef Cubic_h
 #define Cubic_h
-
+#import "BCTypes.h"
+#import "BCLine.h"
 #include <stdbool.h>
 ///BCCubic is a cubic bezier curve defined on 4 points.
 ///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
@@ -19,6 +20,30 @@ typedef struct {
     bc_float2_t d;
 } BCCubic;
 
+///Returns the line from a to c.
+///- warning: In the case that a ~= c, it may be difficult to use this sensibly
+__attribute__((const))
+__attribute__((swift_name("getter:Cubic.initialTangent(self:)")))
+inline BCLine BCCubicInitialTangent(BCCubic c) {
+    BCLine l;
+    l.a = c.a;
+    l.b = c.c;
+    return l;
+}
+
+///Returns the line from d to b.
+///- warning: In the case that d ~= b, it may be difficult to use this sensibly
+__attribute__((const))
+__attribute__((swift_name("getter:Cubic.finalTangent(self:)")))
+inline BCLine BCCubicFinalTangent(BCCubic c) {
+    BCLine l;
+    l.a = c.d;
+    l.b = c.b;
+    return l;
+}
+
+/*
+
 __attribute__((swift_name("Cubic.init(connecting:to:)")))
 BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b);
 
@@ -33,6 +58,7 @@ bool BCCubicHasIntersection(BCCubic a, BCCubic b);
 
 __attribute__((swift_name("getter:Cubic.finalTangent(self:)")))
 BCLine LCCubicFinalTangent(BCCubic a);
+ */
 
 #endif
 

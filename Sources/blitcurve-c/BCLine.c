@@ -4,3 +4,4 @@
 
 extern inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float distance);
 extern inline bc_float_t BCLineSlope(BCLine l);
+extern inline bc_float_t BCLineYIntercept(BCLine l);
