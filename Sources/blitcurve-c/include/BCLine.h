@@ -21,8 +21,9 @@ __attribute__((swift_name("Line.init(point:angle:distance:)")))
 inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float distance) {
     BCLine l;
     l.a = a;
-    l.b.x = distance * cosf(angle) + a.x;
-    l.b.y = distance * sinf(angle) + a.y;
+    l.b = simd_make_float2(cosf(angle), sinf(angle));
+    l.b *= distance;
+    l.b += a;
     return l;
 }
 
@@ -31,8 +32,9 @@ inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float dist
 __attribute__((const))
 __attribute__((swift_name("getter:Line.slope(self:)")))
 inline bc_float_t BCLineSlope(BCLine l) {
-    ASSERT_UB(fabsf(l.a.x - l.b.x) > 0);
-    return (l.a.y - l.b.y) / (l.a.x - l.b.x);
+    bc_float2_t diff = l.a - l.b;
+    ASSERT_UB(fabsf(diff.x) > 0);
+    return diff.y / diff.x;
 }
 
 ///Y-intercept of the line
@@ -50,10 +52,13 @@ inline bc_float_t BCLineDistance(BCLine l) {
     return simd_fast_length(l.a - l.b);
 }
 
-__swift_unavailable("Not available")
-inline bc_float_t _BCLineTangentUnchecked(BCLine l) {
-    return atan2f(l.b.y - l.a.y, l.b.x - l.a.x);
+///Reverse start and end point
+__attribute__((const))
+__attribute__((swift_name("getter:Line.reversed(self:)")))
+inline bc_float_t BCLineReversed(BCLine l) {
+    return simd_fast_length(l.a - l.b);
 }
+
 
 ///Tangent along the line.
 ///- warning: In the case the line has 0 length, this is UB
@@ -61,7 +66,8 @@ __attribute__((const))
 __attribute__((swift_name("getter:Line.tangent(self:)")))
 inline bc_float_t BCLineTangent(BCLine l) {
     ASSERT_UB(BCLineDistance(l) > 0);
-    return _BCLineTangentUnchecked(l);
+        bc_float2_t diff = l.b - l.a;
+    return atan2f(diff.y, diff.x);
 }
 
 
@@ -70,12 +76,8 @@ inline bc_float_t BCLineTangent(BCLine l) {
 //__attribute__((const))
 __attribute__((swift_name("Line.evaluate(self:t:)")))
 inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
-    //this is OK because atanf does return a non-nan value for 0 length
-    //and we multiply it by 0
-    bc_float_t tangent = _BCLineTangentUnchecked(l);
-    bc_float2_t term_1 = simd_make_float2(cosf(tangent),sinf(tangent));
-    bc_float2_t term_2 = term_1 * t * BCLineDistance(l);
-    return l.a.x + term_2;
+    ASSERT_UB(t >= 0.0 && t <= 1.0);
+    return simd_mix(l.a,l.b,simd_make_float2(t,t));
 }
 
 

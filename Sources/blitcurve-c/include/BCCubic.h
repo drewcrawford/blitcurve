@@ -6,6 +6,7 @@
 #import "BCTypes.h"
 #import "BCLine.h"
 #import "BCMath.h"
+#import "BCLine2.h"
 #include <stdbool.h>
 #include <simd/simd.h>
 ///BCCubic is a cubic bezier curve defined on 4 points.
@@ -25,8 +26,8 @@ typedef struct {
 ///Returns the line from a to c.
 ///- warning: In the case that a ~= c, it may be difficult to use this sensibly
 __attribute__((const))
-__attribute__((swift_name("getter:Cubic.initialTangent(self:)")))
-inline BCLine BCCubicInitialTangent(BCCubic c) {
+__attribute__((swift_name("getter:Cubic.initialTangentLine(self:)")))
+inline BCLine BCCubicInitialTangentLine(BCCubic c) {
     BCLine l;
     l.a = c.a;
     l.b = c.c;
@@ -36,12 +37,28 @@ inline BCLine BCCubicInitialTangent(BCCubic c) {
 ///Returns the line from d to b.
 ///- warning: In the case that d ~= b, it may be difficult to use this sensibly
 __attribute__((const))
-__attribute__((swift_name("getter:Cubic.finalTangent(self:)")))
-inline BCLine BCCubicFinalTangent(BCCubic c) {
+__attribute__((swift_name("getter:Cubic.finalTangentLine(self:)")))
+inline BCLine BCCubicFinalTangentLine(BCCubic c) {
     BCLine l;
     l.a = c.d;
     l.b = c.b;
     return l;
+}
+
+///Returns the angle of the intitalTangent.
+///- warning: For non-normalized cubic, this may be UB
+__attribute__((const))
+__attribute__((swift_name("getter:Cubic.initialTangent(self:)")))
+inline bc_float_t BCCubicInitialTangent(BCCubic c) {
+    return BCLineTangent(BCCubicInitialTangentLine(c));
+}
+
+///Returns the angle of the finalTangent.
+///- warning: For non-normalized cubic, this may be UB
+__attribute__((const))
+__attribute__((swift_name("getter:Cubic.finalTangent(self:)")))
+inline bc_float_t BCCubicFinalTangent(BCCubic c) {
+    return BCLineTangent(BCCubicFinalTangentLine(c));
 }
 
 ///Evaluate the cubic for the given bezier parameter
@@ -76,13 +93,72 @@ inline void BCCubicNormalize(BCCubic *c) {
     }
 }
 
+///Create a cubic that connects a line with initial and final tangents
+///- warning: This may be UB ifconnecting line is 0-length
+__attribute__((swift_name("Cubic.init(connecting:initialTangent:finalTangent:)")))
+inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_t initialTangent, bc_float_t finalTangent) {
+    BCCubic c;
+    c.a = connecting.a;
+    c.b = connecting.b;
+    
+    /*
+                
+    pick c/d such that it's collinear to the tangent
+    keep in mind the following 5 cases
+      ▲               ▲
+       ╲               ╲
+       ft    .          ft   .
+         ╲  ( )          ╲  ( )
+          ╲  '            ╲  '
+          ▲               ▲
+          │               │
+        line             line
+          │               │
+          │   .       .   │
+          ▲  ( )     ( )  ▲
+         ╱    '       '    ╲
+       it               it  ╲
+       ╱                     ╲
+      ╱                       ╲
+                               ╲
+                                                    
+                                              ▲
+      .     ▲               ▲                 │
+     ( )   ╱               ╱                  │
+      '   ╱         . ft  ╱                 ft│
+     ft  ╱         ( )   ╱                    │
+        ╱           '   ╱                     │
+        ▲               ▲                     ▲.
+        │               │                     ( )
+        │              line                  l.'e
+      line              │                    ( )
+        │   .       .   │                     '
+        ▲  ( )     ( )  ▲                     ▲
+       ╱    '       '    ╲                    │
+      ╱               it  ╲                 it│
+     it                    ╲                  │
+    ╱                       ╲                 │
+                             ╲                │
+    
+    The core idea here is we try to figure out the IT/FT are to the right or left of the line
+    and place the control point on the opposite side.
+     Note that to get ft like it is in this diagram, we need to reverse the arg
+     
+        */
+    bc_float_t lineTangent = BCLineTangent(connecting);
+    //find the difference between angles in (i,f) format
+    //we subtract by M_PI here to reverse the finalTangent we were given
+    bc_float2_t diff = simd_make_float2(initialTangent, finalTangent - M_PI);
+    BCLine2 i_f = BCLine2MakeWithPointAndAngle(simd_make_float4(connecting.a,connecting.b),diff,simd_make_float2(1,1));
+    c.c = i_f.b.xy;
+    c.d = i_f.b.zw;
+    return c;
+}
+
 /*
 
 __attribute__((swift_name("Cubic.init(connecting:to:)")))
 BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b);
-
-__attribute__((swift_name("Cubic.init(connecting:initialTangent:finalTangent:)")))
-BCCubic BCCubicMakeConnectingTangents(BCCubic connecting, BCCubic initialTangent, BCCubic finalTangent);
 
 __attribute__((swift_name("getter:Cubic.length(self:)")))
 bc_float_t BCCubicLength(BCCubic a);

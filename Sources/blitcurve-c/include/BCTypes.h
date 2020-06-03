@@ -8,4 +8,7 @@ __attribute__((swift_name("BCFloat")))
 typedef float bc_float_t;
 __attribute__((swift_name("BCFloat2")))
 typedef simd_float2 bc_float2_t;
+
+__attribute__((swift_name("BCFloat4")))
+typedef simd_float4 bc_float4_t;
 #endif
