@@ -50,13 +50,32 @@ inline bc_float_t BCLineDistance(BCLine l) {
     return simd_fast_length(l.a - l.b);
 }
 
+__swift_unavailable("Not available")
+inline bc_float_t _BCLineTangentUnchecked(BCLine l) {
+    return atan2f(l.b.y - l.a.y, l.b.x - l.a.x);
+}
+
 ///Tangent along the line.
 ///- warning: In the case the line has 0 length, this is UB
 __attribute__((const))
 __attribute__((swift_name("getter:Line.tangent(self:)")))
 inline bc_float_t BCLineTangent(BCLine l) {
     ASSERT_UB(BCLineDistance(l) > 0);
-    return atan2f(l.b.y - l.a.y, l.b.x - l.a.x);
+    return _BCLineTangentUnchecked(l);
+}
+
+
+///'Evaluates' the line with the 'bezier parameter' [0..1]'
+///This returns a for 0, b for 1, and otherwise a linear interpolation along the line
+//__attribute__((const))
+__attribute__((swift_name("Line.evaluate(self:t:)")))
+inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
+    //this is OK because atanf does return a non-nan value for 0 length
+    //and we multiply it by 0
+    bc_float_t tangent = _BCLineTangentUnchecked(l);
+    bc_float2_t term_1 = simd_make_float2(cosf(tangent),sinf(tangent));
+    bc_float2_t term_2 = term_1 * t * BCLineDistance(l);
+    return l.a.x + term_2;
 }
 
 

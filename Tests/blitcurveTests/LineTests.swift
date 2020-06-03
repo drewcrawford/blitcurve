@@ -37,11 +37,25 @@ final class LineTests: XCTestCase {
         let l2 = Line(a: .zero, b: SIMD2<Float>(3,3))
         XCTAssert(l2.tangent ~= .pi / 4)
     }
+    
+    func testEvaluate() {
+        let l = Line(a: .zero, b: SIMD2<Float>(100,100))
+        XCTAssertEqual(l.evaluate(t: 0),  l.a)
+        XCTAssertEqual(l.evaluate(t: 1),  l.b)
+        XCTAssertEqual(l.evaluate(t: 0.5),  SIMD2<Float>(50,50))
+        
+        //try a line with 0-length
+        let l0 = Line(a: .zero, b:.zero)
+        XCTAssertEqual(l0.evaluate(t: 0), .zero)
+        XCTAssertEqual(l0.evaluate(t: 1), .zero)
+        XCTAssertEqual(l0.evaluate(t: 0.5), .zero)
+    }
 
     static var allTests = [
         ("testLine", testLine),
         ("testSlope", testSlope),
         ("testLength",testLength),
         ("testTangent",testTangent),
+        ("testEvaluate",testEvaluate)
     ]
 }

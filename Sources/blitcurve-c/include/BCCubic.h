@@ -5,6 +5,7 @@
 #define Cubic_h
 #import "BCTypes.h"
 #import "BCLine.h"
+#import "BCMath.h"
 #include <stdbool.h>
 #include <simd/simd.h>
 ///BCCubic is a cubic bezier curve defined on 4 points.

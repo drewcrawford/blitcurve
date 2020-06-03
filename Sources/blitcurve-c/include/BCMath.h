@@ -8,9 +8,13 @@
 
 __attribute__((const))
 __attribute__((swift_name("IsNearlyEqual(a:b:)")))
-bool BCIsNearlyEqual(bc_float_t a, bc_float_t b);
+static inline bool BCIsNearlyEqual(bc_float_t a, bc_float_t b) {
+    return (fabs(a - b) < 0.001);
+}
 
 __attribute__((const))
 __attribute__((swift_name("IsNearlyEqual(a:b:)")))
-bool BCIsNearlyEqual2(bc_float2_t a, bc_float2_t b);
+inline bool BCIsNearlyEqual2(bc_float2_t a, bc_float2_t b) {
+    return BCIsNearlyEqual(a.x, b.x) && BCIsNearlyEqual(a.y, b.y);
+}
 #endif
