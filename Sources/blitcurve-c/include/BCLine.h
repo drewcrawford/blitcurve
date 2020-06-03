@@ -47,8 +47,8 @@ inline bc_float_t BCLineYIntercept(BCLine l) {
 
 ///Distance of the line
 __attribute__((const))
-__attribute__((swift_name("getter:Line.distance(self:)")))
-inline bc_float_t BCLineDistance(BCLine l) {
+__attribute__((swift_name("getter:Line.length(self:)")))
+inline bc_float_t BCLineLength(BCLine l) {
     return simd_fast_length(l.a - l.b);
 }
 
@@ -65,7 +65,7 @@ inline bc_float_t BCLineReversed(BCLine l) {
 __attribute__((const))
 __attribute__((swift_name("getter:Line.tangent(self:)")))
 inline bc_float_t BCLineTangent(BCLine l) {
-    ASSERT_UB(BCLineDistance(l) > 0);
+    ASSERT_UB(BCLineLength(l) > 0);
         bc_float2_t diff = l.b - l.a;
     return atan2f(diff.y, diff.x);
 }

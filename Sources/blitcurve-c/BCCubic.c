@@ -11,3 +11,4 @@ extern inline void BCCubicNormalize(BCCubic *c);
 extern inline bc_float_t BCCubicInitialTangent(BCCubic c);
 extern inline bc_float_t BCCubicFinalTangent(BCCubic c);
 extern inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_t initialTangent, bc_float_t finalTangent);
+extern inline bc_float_t BCCubicLength(BCCubic c);

@@ -27,10 +27,10 @@ final class LineTests: XCTestCase {
     
     func testLength() {
         let l2 = Line(a: .zero, b: SIMD2<Float>(3,3))
-        XCTAssert(l2.distance ~= 4.24264)
+        XCTAssert(l2.length ~= 4.24264)
         
         let l0 = Line(a: .zero, b:.zero)
-        XCTAssert(l0.distance == 0)
+        XCTAssert(l0.length == 0)
     }
     
     func testTangent() {

@@ -42,8 +42,9 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(cube.finalTangent, finalTangent, accuracy: 0.1)
     }
     
-    func testConnectingCubics() {
-        let railLine = Line(a: SIMD2<Float>(x: 510.37002139454205, y: 343.83395079162915), b: SIMD2<Float>(x: 1712.387147298103, y: 298.4828489580134))
+    func testLength() {
+        let curve = Cubic(a: SIMD2<Float>(x: 120, y: 60), b: SIMD2<Float>(x: 220, y: 40), c: SIMD2<Float>(x: 35, y: 200), d: SIMD2<Float>(x: 220, y: 260))
+        XCTAssertEqual(curve.length, 272.87, accuracy: 20)
         
     }
     
@@ -51,5 +52,6 @@ final class CubicTests: XCTestCase {
         ("testTangents", testTangents),
         ("testEvaluate", testEvaluate),
         ("testNormalize", testEvaluate),
+        ("testLength",testLength),
     ]
 }

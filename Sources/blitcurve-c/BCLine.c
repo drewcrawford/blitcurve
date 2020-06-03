@@ -8,3 +8,4 @@ extern inline bc_float_t BCLineYIntercept(BCLine l);
 extern inline bc_float_t BCLineDistance(BCLine l);
 extern inline bc_float_t BCLineTangent(BCLine l);
 extern inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t);
+extern inline bc_float_t BCLineLength(BCLine l);
