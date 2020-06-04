@@ -60,7 +60,7 @@ bc_float_t BCCubicLength(BCCubic c) {
     simd_float4x2 mtxF = simd_sub(mtxD, mtxE);
     
     //to complete v2, we need to get v21 + v22
-    simd_float2 v2 = mtxF.columns[2] + mtxF.columns[3];
+    simd_float2 v2_needsabs_unmultiplied = mtxF.columns[2] + mtxF.columns[3];
     
     /*at this point, we need to calculate our absolute values
     across v0,v1,v2,v3,v4 x 2 dimensions (10 in total)
@@ -73,15 +73,18 @@ bc_float_t BCCubicLength(BCCubic c) {
      while v1,v3 will be complete after abs.
     */
     simd_float4 a_v0_v4 = simd_make_float4(mtxF.columns[0],mtxF.columns[1]);
-    simd_float4 a_v2_v1 = simd_make_float4(v2,mtxC.columns[0]);
+    simd_float4 a_v2_v1 = simd_make_float4(v2_needsabs_unmultiplied,mtxC.columns[0]);
     simd_float2 a_v3 = mtxC.columns[1];
     
     //note: simd_float8/16 is not available in Metal
     //need a 4-wide abs solution for that case, we're just assembling and taking the abs of these 10 values
     simd_float8 a8_v0_v4_v2_v1 = simd_make_float8(a_v0_v4,a_v2_v1);
-    simd_float8 a8_v3 = simd_make_float8_undef(a_v3);
-    simd_float16 a16_v0_v4_v2_v1_v3 = simd_make_float16(a8_v0_v4_v2_v1,a8_v3);
-    simd_float16 takenAbs_v0_v4_v2_v1_v3 = simd_abs(a16_v0_v4_v2_v1_v3);
+    
+    simd_float8 takenAbs_v0_v4_v2_v1 = simd_abs(a8_v0_v4_v2_v1);
+    //get v1,v3 out
+    //these terms are fully baked
+    simd_float2 v1 = takenAbs_v0_v4_v2_v1.hi.hi;
+    simd_float2 v3 = simd_abs(a_v3);
     
     /*Now wthe additional multiplication
      
@@ -97,29 +100,19 @@ bc_float_t BCCubicLength(BCCubic c) {
                                                       
      
      */
-    simd_float8 low8 = takenAbs_v0_v4_v2_v1_v3.lo;
-    simd_float4 v0_4_coef = simd_make_float4(0.15,0.15,0.15,0.15);
+    simd_float4 v0_v4_for_mul = takenAbs_v0_v4_v2_v1.lo;
+    simd_float4 v0_v4_coef = simd_make_float4(0.15,0.15,0.15,0.15);
+    
+    simd_float4 v0_v4_multiplied = v0_v4_for_mul * v0_v4_coef;
+    
     //we are only multiplying by 6 terms so we don't care about the last 2
-    simd_float4 v2_dc_coef = simd_make_float4_undef(simd_make_float2(0.26666666666666666,0.26666666666666666));
-    
-    simd_float8 final_coef = simd_make_float8(v0_4_coef, v2_dc_coef);
-    simd_float8 v0_v4_v2_dc = low8 * final_coef;
-    
-    //get v1 and v3
-    simd_float2 v1 = takenAbs_v0_v4_v2_v1_v3.lo.hi.hi;
-    simd_float2 v3 = takenAbs_v0_v4_v2_v1_v3.hi.xy;
+    simd_float2 v2_dc_coef = simd_make_float2(0.26666666666666666,0.26666666666666666);
+    simd_float2 v2_unmultiplied = takenAbs_v0_v4_v2_v1.hi.lo;
+    simd_float2 v2 = v2_unmultiplied * v2_dc_coef;
     
     /*To do our final reduction, we need to add v0,v1,v2,v3,v4 (5 terms) in 2 sets (seprately for x,y)
      
-     we could implement this like
-     
-     simd8 x = v0,v1,v2,v3,v4,0,0,0
-     simd8 y = v0,v1,v2,v3,v4,0,0,0
-     
-     reduce(x)
-     reduce(y)
-     
-     which has 3 wasted additions.  Or we could implement
+     implement
      
      simd4 x_0 = v0,v1,v2,v3
      simd4 y_0 = v0,v1,v2,v3
@@ -132,21 +125,23 @@ bc_float_t BCCubicLength(BCCubic c) {
      
      */
     
-    //split x and y
-    simd_float4 x_v0_v4_v2_v1 = v0_v4_v2_dc.even;
-    simd_float4 y_v0_v4_v2_v1 = v0_v4_v2_dc.odd;
+    //get xy splits for v0,v4
+    simd_float2 x_v0_v4 = v0_v4_multiplied.even;
+    simd_float2 y_v0_v4 = v0_v4_multiplied.odd;
     
-    //put v1 into 1
-    x_v0_v4_v2_v1.w = v1.x;
-    y_v0_v4_v2_v1.w = v1.y;
+    //get xy splits for v1,v3
+    simd_float2 x_v1_v3 = simd_make_float2(v1.x, v3.x);
+    simd_float2 y_v1_v3 = simd_make_float2(v1.y,v3.y);
     
-    simd_float4 x_v3_0 = simd_make_float4(v3.x,0,0,0);
-    simd_float4 y_v3_0 = simd_make_float4(v3.y,0,0,0);
-    simd_float8 vx = simd_make_float8(x_v0_v4_v2_v1, x_v3_0);
-    simd_float8 vy = simd_make_float8(y_v0_v4_v2_v1, y_v3_0);
+    //xy splits for v2 are trivial
     
-    bc_float_t reduceX = simd_reduce_add(vx);
-    bc_float_t reduceY = simd_reduce_add(vy);
-    bc_float2_t reduce2D = simd_make_float2(reduceX,reduceY);
-    return sqrtf(reduceX * reduceX + reduceY * reduceY);
+    //reduce above terms
+    bc_float_t reduced_x_v0_v1_v3_v4 = simd_reduce_add(simd_make_float4(x_v0_v4, x_v1_v3));
+    bc_float_t reduced_x = reduced_x_v0_v1_v3_v4 + v2.x;
+    bc_float_t reduced_y_v0_v1_v3_v4 = simd_reduce_add(simd_make_float4(y_v0_v4, y_v1_v3));
+    bc_float_t reduced_y = reduced_y_v0_v1_v3_v4 + v2.y;
+    
+    
+    bc_float2_t reduce2D = simd_make_float2(reduced_x,reduced_y);
+    return simd_length(reduce2D);
 }
