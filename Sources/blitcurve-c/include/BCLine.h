@@ -18,7 +18,7 @@ typedef struct {
 
 __attribute__((const))
 __attribute__((swift_name("Line.init(point:angle:distance:)")))
-inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float distance) {
+static inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float distance) {
     BCLine l;
     l.a = a;
     l.b = simd_make_float2(cosf(angle), sinf(angle));
@@ -31,7 +31,7 @@ inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float dist
 ///- note: Vertical lines are undefined
 __attribute__((const))
 __attribute__((swift_name("getter:Line.slope(self:)")))
-inline bc_float_t BCLineSlope(BCLine l) {
+static inline bc_float_t BCLineSlope(BCLine l) {
     bc_float2_t diff = l.a - l.b;
     ASSERT_UB(fabsf(diff.x) > 0);
     return diff.y / diff.x;
@@ -41,21 +41,21 @@ inline bc_float_t BCLineSlope(BCLine l) {
 ///- note: Vertical lines are undefined
 __attribute__((const))
 __attribute__((swift_name("getter:Line.yIntercept(self:)")))
-inline bc_float_t BCLineYIntercept(BCLine l) {
+static inline bc_float_t BCLineYIntercept(BCLine l) {
     return l.a.y - BCLineSlope(l) * l.a.x;
 }
 
 ///Distance of the line
 __attribute__((const))
 __attribute__((swift_name("getter:Line.length(self:)")))
-inline bc_float_t BCLineLength(BCLine l) {
+static inline bc_float_t BCLineLength(BCLine l) {
     return simd_fast_length(l.a - l.b);
 }
 
 ///Reverse start and end point
 __attribute__((const))
 __attribute__((swift_name("getter:Line.reversed(self:)")))
-inline bc_float_t BCLineReversed(BCLine l) {
+static inline bc_float_t BCLineReversed(BCLine l) {
     return simd_fast_length(l.a - l.b);
 }
 
@@ -64,7 +64,7 @@ inline bc_float_t BCLineReversed(BCLine l) {
 ///- warning: In the case the line has 0 length, this is UB
 __attribute__((const))
 __attribute__((swift_name("getter:Line.tangent(self:)")))
-inline bc_float_t BCLineTangent(BCLine l) {
+static inline bc_float_t BCLineTangent(BCLine l) {
     ASSERT_UB(BCLineLength(l) > 0);
         bc_float2_t diff = l.b - l.a;
     return atan2f(diff.y, diff.x);
@@ -75,7 +75,7 @@ inline bc_float_t BCLineTangent(BCLine l) {
 ///This returns a for 0, b for 1, and otherwise a linear interpolation along the line
 //__attribute__((const))
 __attribute__((swift_name("Line.evaluate(self:t:)")))
-inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
+static inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
     ASSERT_UB(t >= 0.0 && t <= 1.0);
     return simd_mix(l.a,l.b,simd_make_float2(t,t));
 }

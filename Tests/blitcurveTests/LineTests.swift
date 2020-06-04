@@ -1,7 +1,7 @@
 // linetests.swift: Line tests
 // ©2020 DrewCrawfordApps LLC
 import XCTest
-@testable import blitcurve
+ import blitcurve
 
 final class LineTests: XCTestCase {
     func testLine() {

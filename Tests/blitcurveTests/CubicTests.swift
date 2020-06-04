@@ -2,7 +2,10 @@
 // ©2020 DrewCrawfordApps LLC
 
 import XCTest
-@testable import blitcurve
+import simd
+import blitcurve
+import blitcurve_c
+
 
 final class CubicTests: XCTestCase {
     func testTangents() {
@@ -47,6 +50,33 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(curve.length, 272.87, accuracy: 20)
         
     }
+    #if DEBUG
+    #else
+    //only do this test in release mode
+    //this test is slow
+    func testLengthPerformance() {
+        //generate 100 curves
+        var curves: [Cubic] = []
+        for _ in 0..<100 {
+            let a = SIMD2<Float>(x: Float.random(in: 0..<100), y: Float.random(in: 0..<100))
+            let b = SIMD2<Float>(x: Float.random(in: 0..<100), y: Float.random(in: 0..<100))
+            let c = SIMD2<Float>(x: Float.random(in: 0..<100), y: Float.random(in: 0..<100))
+            let d = SIMD2<Float>(x: Float.random(in: 0..<100), y: Float.random(in: 0..<100))
+            let cubic = Cubic(a: a, b: b, c: c, d: d)
+            curves.append(cubic)
+        }
+        self.measure {
+
+            var r: Float = 0
+            for _ in 0..<100000 {
+                for c in curves {
+                    r += c.length
+                }
+            }
+            print("a",r)
+        }
+    }
+    #endif
     
     static var allTests = [
         ("testTangents", testTangents),
