@@ -50,4 +50,12 @@ __attribute__((const))
 __attribute__((swift_name("AlignedBox.isCornerWithinDistance(self:to:distance:)")))
 bool BCAlignedBoxesCornerWithinDistance(BCAlignedBox a, BCAlignedBox b,bc_float_t distance);
 
+///Gets the center of the box
+__attribute__((const))
+__attribute__((swift_name("getter:AlignedBox.center(self:)")))
+static inline bc_float2_t BCAlignedBoxCenterPoint(BCAlignedBox a) {
+    simd_float2 sum = a.max - a.min;
+    return sum / 2 + a.min;
+}
+
 #endif

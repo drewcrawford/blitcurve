@@ -18,4 +18,15 @@ class AlignedBoxTests: XCTestCase {
         XCTAssert(!a.isCornerWithinDistance(to: b, distance: 0.5))
         XCTAssert(a.isCornerWithinDistance(to: b, distance: sqrt(2)+0.01))
     }
+    
+    func testCenterPoint() {
+        let a = AlignedBox(min: .one, max: SIMD2<Float>(2,2))
+        XCTAssert(a.center == SIMD2<Float>(1.5,1.5))
+    }
+    
+    static var allTests = [
+        ("testApartCorners", testApartCorners),
+        ("testFarCorners", testFarCorners),
+        ("testCenterPoint", testCenterPoint),
+    ]
 }
