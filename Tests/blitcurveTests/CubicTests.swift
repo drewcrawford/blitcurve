@@ -99,7 +99,7 @@ final class CubicTests: XCTestCase {
         
         #if DEBUG
         #else
-        tests.append("testLengthPerformance",testLengthPerformance)
+        tests.append(("testLengthPerformance",testLengthPerformance))
 
         #endif
         return tests

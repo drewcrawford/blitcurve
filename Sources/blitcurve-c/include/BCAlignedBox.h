@@ -43,4 +43,11 @@ static inline BCAlignedBox BCAlignedBoxCreateFromCubic(BCCubic c, BCStrategy str
     }
 }
 
+
+///Determines whether any point in a is within a given distance of any point in b.
+///- note: Does not test the center point
+__attribute__((const))
+__attribute__((swift_name("AlignedBox.isCornerWithinDistance(self:to:distance:)")))
+bool BCAlignedBoxesCornerWithinDistance(BCAlignedBox a, BCAlignedBox b,bc_float_t distance);
+
 #endif
