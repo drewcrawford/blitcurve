@@ -50,6 +50,14 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(curve.length, 272.87, accuracy: 20)
         
     }
+    
+    func testAlignedBox() {
+        let curve = Cubic(a: SIMD2<Float>(x: 120, y: 60), b: SIMD2<Float>(x: 220, y: 40), c: SIMD2<Float>(x: 35, y: 200), d: SIMD2<Float>(x: 220, y: 260))
+        let box = AlignedBox(cubic: curve, strategy: .fastest)
+        XCTAssertEqual(box.min, SIMD2<Float>(35,40))
+        XCTAssertEqual(box.max, SIMD2<Float>(220,260))
+
+    }
     #if DEBUG
     #else
     //only do this test in release mode
@@ -78,10 +86,22 @@ final class CubicTests: XCTestCase {
     }
     #endif
     
-    static var allTests = [
+    static var allTests: [(String,(CubicTests) -> () -> ())] = {
+        
+        var tests = [
         ("testTangents", testTangents),
         ("testEvaluate", testEvaluate),
         ("testNormalize", testEvaluate),
         ("testLength",testLength),
-    ]
+
+        ]
+        
+        
+        #if DEBUG
+        #else
+        tests.append("testLengthPerformance",testLengthPerformance)
+
+        #endif
+        return tests
+    }()
 }
