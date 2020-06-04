@@ -24,7 +24,7 @@ typedef struct {
 } BCCubic;
 
 ///Returns the line from a to c.
-///- warning: In the case that a ~= c, it may be difficult to use this sensibly
+///- warning: In the case that a =~= c, it may be difficult to use this sensibly
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.initialTangentLine(self:)")))
 static inline BCLine BCCubicInitialTangentLine(BCCubic c) {
@@ -35,7 +35,7 @@ static inline BCLine BCCubicInitialTangentLine(BCCubic c) {
 }
 
 ///Returns the line from d to b.
-///- warning: In the case that d ~= b, it may be difficult to use this sensibly
+///- warning: In the case that d=~= b, it may be difficult to use this sensibly
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.finalTangentLine(self:)")))
 static inline BCLine BCCubicFinalTangentLine(BCCubic c) {
