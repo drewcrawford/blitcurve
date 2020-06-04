@@ -55,8 +55,11 @@ static inline bc_float_t BCLineLength(BCLine l) {
 ///Reverse start and end point
 __attribute__((const))
 __attribute__((swift_name("getter:Line.reversed(self:)")))
-static inline bc_float_t BCLineReversed(BCLine l) {
-    return simd_fast_length(l.a - l.b);
+static inline BCLine BCLineReversed(BCLine l) {
+    BCLine r;
+    r.a = l.b;
+    r.b = l.a;
+    return r;
 }
 
 
