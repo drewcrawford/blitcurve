@@ -4,7 +4,12 @@
 #ifndef Line2_h
 #define Line2_h
 #import "BCTypes.h"
+
+#ifndef __METAL_VERSION__
 #import <simd/simd.h>
+#endif
+
+#import "BCMetalC.h"
 ///BCLine is logically 2 BCLine.  In certain cases we can perform operations faster via vectorization.
 ///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
 __attribute__((swift_name("Line2")))

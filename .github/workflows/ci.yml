@@ -27,3 +27,7 @@ jobs:
       run: |
        sudo xcode-select -s /Applications/Xcode_11.5.app
        swift test
+
+       # try metal
+       cd MetalImportTests
+       xcodebuild | xcpretty && exit ${PIPESTATUS[0]}

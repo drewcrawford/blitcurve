@@ -6,8 +6,12 @@
 #import <simd/simd.h>
 #import "BCTypes.h"
 #import "BCMacros.h"
+#import "BCMetalC.h"
+
+#ifndef __METAL_VERSION__
 #import <math.h>
 #import <assert.h>
+#endif
 ///BCLine is a linesegment defined on 2 points
 ///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
 __attribute__((swift_name("Line")))
@@ -21,7 +25,7 @@ __attribute__((swift_name("Line.init(point:angle:distance:)")))
 static inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float distance) {
     BCLine l;
     l.a = a;
-    l.b = simd_make_float2(cosf(angle), sinf(angle));
+    l.b = simd_make_float2(cos(angle), sin(angle));
     l.b *= distance;
     l.b += a;
     return l;
@@ -70,7 +74,7 @@ __attribute__((swift_name("getter:Line.tangent(self:)")))
 static inline bc_float_t BCLineTangent(BCLine l) {
     ASSERT_UB(BCLineLength(l) > 0);
         bc_float2_t diff = l.b - l.a;
-    return atan2f(diff.y, diff.x);
+    return atan2(diff.y, diff.x);
 }
 
 

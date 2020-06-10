@@ -3,11 +3,17 @@
 
 #ifndef Cubic_h
 #define Cubic_h
+#import "BCMetalC.h"
+
 #import "BCTypes.h"
 #import "BCLine.h"
 #import "BCMath.h"
 #import "BCLine2.h"
+
+#ifndef __METAL_VERSION__
 #include <stdbool.h>
+#endif
+
 #include <simd/simd.h>
 ///BCCubic is a cubic bezier curve defined on 4 points.
 ///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
@@ -66,7 +72,7 @@ static inline bc_float_t BCCubicFinalTangent(BCCubic c) {
 __attribute__((const))
 __attribute__((swift_name("Cubic.evaluate(self:t:)")))
 static inline bc_float2_t evaluate(BCCubic c,bc_float_t t) {
-    return c.a * powf(1-t,3) + c.c * 3 * powf(1-t, 2) * t + c.d * 3 * (1 - t) * powf(t, 2) + c.b * powf(t, 3);
+    return c.a * pow(1-t,3) + c.c * 3 * pow(1-t, 2) * t + c.d * 3 * (1 - t) * pow(t, 2) + c.b * pow(t, 3);
 }
 
 __attribute__((const))
@@ -82,7 +88,7 @@ static inline BCLine BCCubicAsLine(BCCubic c) {
 ///For example, the initial/final tangents of such a cubic are undefined.
 ///This function will normalize the cubic by adjusting its control points if the cubic is badly-behaved.
 __attribute__((swift_name("Cubic.normalize(self:)")))
-static inline void BCCubicNormalize(BCCubic *c) {
+static inline void BCCubicNormalize(BCCubic __BC_DEVICE *c) {
     if (BCIsNearlyEqual2(c->a,c->c)) {
         BCLine asLine = BCCubicAsLine(*c);
         c->c = BCLineEvaluate(asLine,0.001);

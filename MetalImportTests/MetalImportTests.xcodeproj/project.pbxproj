@@ -1,0 +1,155 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3A68179324904FE100A906A8 /* MetalImportTests.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A68179224904FE100A906A8 /* MetalImportTests.metal */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3A68179224904FE100A906A8 /* MetalImportTests.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MetalImportTests.metal; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		3A68178A24904FE100A906A8 = {
+			isa = PBXGroup;
+			children = (
+				3A68179124904FE100A906A8 /* MetalImportTests */,
+			);
+			sourceTree = "<group>";
+		};
+		3A68179124904FE100A906A8 /* MetalImportTests */ = {
+			isa = PBXGroup;
+			children = (
+				3A68179224904FE100A906A8 /* MetalImportTests.metal */,
+			);
+			path = MetalImportTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3A68179024904FE100A906A8 /* MetalImportTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A68179624904FE100A906A8 /* Build configuration list for PBXNativeTarget "MetalImportTests" */;
+			buildPhases = (
+				3A68178F24904FE100A906A8 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MetalImportTests;
+			productName = MetalImportTests;
+			productType = "com.apple.product-type.metal-library";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3A68178B24904FE100A906A8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = "DrewCrawfordApps LLC";
+				TargetAttributes = {
+					3A68179024904FE100A906A8 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+				};
+			};
+			buildConfigurationList = 3A68178E24904FE100A906A8 /* Build configuration list for PBXProject "MetalImportTests" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3A68178A24904FE100A906A8;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3A68179024904FE100A906A8 /* MetalImportTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3A68178F24904FE100A906A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A68179324904FE100A906A8 /* MetalImportTests.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3A68179424904FE100A906A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		3A68179524904FE100A906A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		3A68179724904FE100A906A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3A68179824904FE100A906A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A68178E24904FE100A906A8 /* Build configuration list for PBXProject "MetalImportTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A68179424904FE100A906A8 /* Debug */,
+				3A68179524904FE100A906A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A68179624904FE100A906A8 /* Build configuration list for PBXNativeTarget "MetalImportTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A68179724904FE100A906A8 /* Debug */,
+				3A68179824904FE100A906A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3A68178B24904FE100A906A8 /* Project object */;
+}

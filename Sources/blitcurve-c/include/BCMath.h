@@ -3,7 +3,11 @@
 
 #ifndef Math_h
 #define Math_h
+#import "BCMetalC.h"
+#ifndef __METAL_VERSION__
 #import <stdbool.h>
+#endif
+
 #import "BCTypes.h"
 
 __attribute__((const))
