@@ -152,7 +152,6 @@ static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_
      Note that to get ft like it is in this diagram, we need to reverse the arg
      
         */
-    bc_float_t lineTangent = BCLineTangent(connecting);
     //find the difference between angles in (i,f) format
     //we subtract by M_PI here to reverse the finalTangent we were given
     bc_float2_t diff = simd_make_float2(initialTangent, finalTangent - M_PI);
