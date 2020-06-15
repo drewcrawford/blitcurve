@@ -5,6 +5,7 @@
 //#define BCMetalC_h
 //
 #ifdef __METAL_VERSION__
+#include <metal_stdlib>
 //__attribute__((__overloadable__))
 static inline simd::float2 simd_make_float2(float a, float b) {
     return simd::float2(a,b);

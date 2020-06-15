@@ -3,7 +3,10 @@
 
 #ifndef Types_h
 #define Types_h
+
+#ifndef __METAL_VERSION__
 #import <simd/simd.h>
+#endif
 __attribute__((swift_name("BCFloat")))
 typedef float bc_float_t;
 

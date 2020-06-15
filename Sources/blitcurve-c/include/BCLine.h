@@ -3,7 +3,6 @@
 
 #ifndef Line_h
 #define Line_h
-#import <simd/simd.h>
 #import "BCTypes.h"
 #import "BCMacros.h"
 #import "BCMetalC.h"
@@ -11,6 +10,7 @@
 #ifndef __METAL_VERSION__
 #import <math.h>
 #import <assert.h>
+#import <simd/simd.h>
 #endif
 ///BCLine is a linesegment defined on 2 points
 ///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.

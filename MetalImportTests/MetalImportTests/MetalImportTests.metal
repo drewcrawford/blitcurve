@@ -6,11 +6,7 @@
 //  Copyright © 2020 DrewCrawfordApps LLC. All rights reserved.
 //
 
-#include <metal_stdlib>
-extern "C" {
-    #import "../../Sources/blitcurve-c/include/BCCubic.h"
-
-}
-using namespace metal;
+//#include <metal_stdlib>
+#import "../../Sources/blitcurve-c/include/BCCubic.h"
 
 
