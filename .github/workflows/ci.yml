@@ -29,5 +29,5 @@ jobs:
        swift test
 
        # try metal
-       cd metal_lib
+       cd MetalTest
        xcodebuild | xcpretty && exit ${PIPESTATUS[0]}

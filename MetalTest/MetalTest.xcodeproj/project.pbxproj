@@ -1,0 +1,183 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3A013EAA249ED4C200DAAEC8 /* MetalTest.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */; };
+		3A013EB2249ED4E800DAAEC8 /* blitcurve.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EB1249ED4E800DAAEC8 /* blitcurve.metal */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MetalTest.metal; sourceTree = "<group>"; };
+		3A013EB1249ED4E800DAAEC8 /* blitcurve.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = blitcurve.metal; path = ../blitcurve.metal; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		3A013EA1249ED4C200DAAEC8 = {
+			isa = PBXGroup;
+			children = (
+				3A013EB1249ED4E800DAAEC8 /* blitcurve.metal */,
+				3A013EA8249ED4C200DAAEC8 /* MetalTest */,
+			);
+			sourceTree = "<group>";
+		};
+		3A013EA8249ED4C200DAAEC8 /* MetalTest */ = {
+			isa = PBXGroup;
+			children = (
+				3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */,
+			);
+			path = MetalTest;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3A013EA7249ED4C200DAAEC8 /* MetalTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A013EAD249ED4C200DAAEC8 /* Build configuration list for PBXNativeTarget "MetalTest" */;
+			buildPhases = (
+				3A013EB0249ED4CD00DAAEC8 /* ShellScript */,
+				3A013EA6249ED4C200DAAEC8 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MetalTest;
+			productName = MetalTest;
+			productType = "com.apple.product-type.metal-library";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3A013EA2249ED4C200DAAEC8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = "DrewCrawfordApps LLC";
+				TargetAttributes = {
+					3A013EA7249ED4C200DAAEC8 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+				};
+			};
+			buildConfigurationList = 3A013EA5249ED4C200DAAEC8 /* Build configuration list for PBXProject "MetalTest" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3A013EA1249ED4C200DAAEC8;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3A013EA7249ED4C200DAAEC8 /* MetalTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3A013EB0249ED4CD00DAAEC8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${SRCROOT}/../blitcurve.metal",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n../makemetal.swift\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3A013EA6249ED4C200DAAEC8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A013EB2249ED4E800DAAEC8 /* blitcurve.metal in Sources */,
+				3A013EAA249ED4C200DAAEC8 /* MetalTest.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3A013EAB249ED4C200DAAEC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				MTL_HEADER_SEARCH_PATHS = "../Sources/blitcurve-c/include";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		3A013EAC249ED4C200DAAEC8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				MTL_HEADER_SEARCH_PATHS = "../Sources/blitcurve-c/include";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		3A013EAE249ED4C200DAAEC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3A013EAF249ED4C200DAAEC8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A013EA5249ED4C200DAAEC8 /* Build configuration list for PBXProject "MetalTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A013EAB249ED4C200DAAEC8 /* Debug */,
+				3A013EAC249ED4C200DAAEC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A013EAD249ED4C200DAAEC8 /* Build configuration list for PBXNativeTarget "MetalTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A013EAE249ED4C200DAAEC8 /* Debug */,
+				3A013EAF249ED4C200DAAEC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3A013EA2249ED4C200DAAEC8 /* Project object */;
+}
