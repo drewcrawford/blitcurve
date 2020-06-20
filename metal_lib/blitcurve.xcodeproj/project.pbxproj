@@ -1,0 +1,214 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3A013E4F249EA68F00DAAEC8 /* BCLine.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013E4A249EA68F00DAAEC8 /* BCLine.metal */; };
+		3A013E50249EA68F00DAAEC8 /* BCLine2.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013E4B249EA68F00DAAEC8 /* BCLine2.metal */; };
+		3A013E51249EA68F00DAAEC8 /* BCMath.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013E4C249EA68F00DAAEC8 /* BCMath.metal */; };
+		3A013E52249EA68F00DAAEC8 /* BCAlignedBox.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013E4D249EA68F00DAAEC8 /* BCAlignedBox.metal */; };
+		3A013E53249EA68F00DAAEC8 /* BCCubic.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013E4E249EA68F00DAAEC8 /* BCCubic.metal */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3A013E4A249EA68F00DAAEC8 /* BCLine.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = BCLine.metal; sourceTree = "<group>"; };
+		3A013E4B249EA68F00DAAEC8 /* BCLine2.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = BCLine2.metal; sourceTree = "<group>"; };
+		3A013E4C249EA68F00DAAEC8 /* BCMath.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = BCMath.metal; sourceTree = "<group>"; };
+		3A013E4D249EA68F00DAAEC8 /* BCAlignedBox.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = BCAlignedBox.metal; sourceTree = "<group>"; };
+		3A013E4E249EA68F00DAAEC8 /* BCCubic.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = BCCubic.metal; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		3A013E3A249EA54900DAAEC8 = {
+			isa = PBXGroup;
+			children = (
+				3A013E41249EA54900DAAEC8 /* blitcurve */,
+				3A013E59249EAD5100DAAEC8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3A013E41249EA54900DAAEC8 /* blitcurve */ = {
+			isa = PBXGroup;
+			children = (
+				3A013E4D249EA68F00DAAEC8 /* BCAlignedBox.metal */,
+				3A013E4E249EA68F00DAAEC8 /* BCCubic.metal */,
+				3A013E4A249EA68F00DAAEC8 /* BCLine.metal */,
+				3A013E4B249EA68F00DAAEC8 /* BCLine2.metal */,
+				3A013E4C249EA68F00DAAEC8 /* BCMath.metal */,
+			);
+			path = blitcurve;
+			sourceTree = "<group>";
+		};
+		3A013E59249EAD5100DAAEC8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3A013E40249EA54900DAAEC8 /* blitcurve */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A013E46249EA54900DAAEC8 /* Build configuration list for PBXNativeTarget "blitcurve" */;
+			buildPhases = (
+				3A013E49249EA56000DAAEC8 /* ShellScript */,
+				3A013E3F249EA54900DAAEC8 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = blitcurve;
+			productName = blitcurve;
+			productType = "com.apple.product-type.metal-library";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3A013E3B249EA54900DAAEC8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1150;
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = "DrewCrawfordApps LLC";
+				TargetAttributes = {
+					3A013E40249EA54900DAAEC8 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+				};
+			};
+			buildConfigurationList = 3A013E3E249EA54900DAAEC8 /* Build configuration list for PBXProject "blitcurve" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3A013E3A249EA54900DAAEC8;
+			productRefGroup = 3A013E59249EAD5100DAAEC8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3A013E40249EA54900DAAEC8 /* blitcurve */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3A013E49249EA56000DAAEC8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../Sources/blitcurve-c/BCAlignedBox.c",
+				"$(SRCROOT)/../Sources/blitcurve-c/BCCubic.c",
+				"$(SRCROOT)/../Sources/blitcurve-c/BCMath.c",
+				"$(SRCROOT)/../Sources/blitcurve-c/BCLine.c",
+				"$(SRCROOT)/../Sources/blitcurve-c/BCLine2.c",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${SRCROOT}/blitcurve/BCAlignedBox.metal",
+				"${SRCROOT}/blitcurve/BCCubic.metal",
+				"${SRCROOT}/blitcurve/BCMath.metal",
+				"${SRCROOT}/blitcurve/BCLine.metal",
+				"${SRCROOT}/blitcurve/BCLine2.metal",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\nset -e\n: $((i=0))\nwhile [ $i -lt \"$SCRIPT_INPUT_FILE_COUNT\" ]\ndo\n    eval fileOut=\"\\$SCRIPT_OUTPUT_FILE_${i}\"\n    eval fileIn=\"\\$SCRIPT_INPUT_FILE_${i}\"\n    cp -p \"${fileIn}\" \"${fileOut}\"\n    : $((i=i+1))\ndone\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3A013E3F249EA54900DAAEC8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A013E4F249EA68F00DAAEC8 /* BCLine.metal in Sources */,
+				3A013E52249EA68F00DAAEC8 /* BCAlignedBox.metal in Sources */,
+				3A013E51249EA68F00DAAEC8 /* BCMath.metal in Sources */,
+				3A013E53249EA68F00DAAEC8 /* BCCubic.metal in Sources */,
+				3A013E50249EA68F00DAAEC8 /* BCLine2.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3A013E44249EA54900DAAEC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				MTL_HEADER_SEARCH_PATHS = "${SRCROOT}/../Sources/blitcurve-c/include";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		3A013E45249EA54900DAAEC8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				MTL_HEADER_SEARCH_PATHS = "${SRCROOT}/../Sources/blitcurve-c/include";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		3A013E47249EA54900DAAEC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3A013E48249EA54900DAAEC8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A013E3E249EA54900DAAEC8 /* Build configuration list for PBXProject "blitcurve" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A013E44249EA54900DAAEC8 /* Debug */,
+				3A013E45249EA54900DAAEC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A013E46249EA54900DAAEC8 /* Build configuration list for PBXNativeTarget "blitcurve" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A013E47249EA54900DAAEC8 /* Debug */,
+				3A013E48249EA54900DAAEC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3A013E3B249EA54900DAAEC8 /* Project object */;
+}

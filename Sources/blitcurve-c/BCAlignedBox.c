@@ -21,14 +21,14 @@ bool BCAlignedBoxesCornerWithinDistance(BCAlignedBox a, BCAlignedBox b,bc_float_
                                                        
                                               
      */
-    simd_float4x4 mtxA = simd_matrix(simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
+    simd_float4x4 mtxA = bc_make_4x4(simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
                                   simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
                                   simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
                                   simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y)
                                   
                                   );
     
-    simd_float4x4 mtxB = simd_matrix(simd_make_float4(b.min.x,b.min.y,b.min.x,b.min.y),
+    simd_float4x4 mtxB = bc_make_4x4(simd_make_float4(b.min.x,b.min.y,b.min.x,b.min.y),
                                      simd_make_float4(b.max.x,b.min.y,b.max.x,b.min.y),
                                      simd_make_float4(b.min.x,b.max.y,b.min.x,b.max.y),
                                      simd_make_float4(b.max.x,b.max.y,b.max.x,b.max.y)
@@ -79,7 +79,7 @@ bool BCAlignedBoxesCornerWithinDistance(BCAlignedBox a, BCAlignedBox b,bc_float_
                                                        
      
      */
-    simd_float4x4 mtxD = simd_matrix(simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
+    simd_float4x4 mtxD = bc_make_4x4(simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
                                    simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
                                    simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
                                    simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y));

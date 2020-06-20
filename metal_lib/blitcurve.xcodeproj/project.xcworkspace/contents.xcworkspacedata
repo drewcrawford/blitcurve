@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:MetalImportTests.xcodeproj">
+      location = "self:blitcurve.xcodeproj">
    </FileRef>
 </Workspace>

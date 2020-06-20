@@ -3,3 +3,4 @@
 /Packages
 /*.xcodeproj
 xcuserdata/
+metal_lib/blitcurve/*.metal

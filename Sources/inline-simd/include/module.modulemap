@@ -1,0 +1,6 @@
+module inline_simd [system] {
+ umbrella header "simd.h"
+
+ export *
+ module * { export * }
+}

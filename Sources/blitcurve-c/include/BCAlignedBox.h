@@ -7,8 +7,11 @@
 #import "BCCubic.h"
 #import "BCStrategy.h"
 #import "BCMacros.h"
+
+#ifndef __METAL_VERSION__
 #import <simd/simd.h>
 #import <stdbool.h>
+#endif
 
 
 ///An axis-aligned bounding box (AABB).

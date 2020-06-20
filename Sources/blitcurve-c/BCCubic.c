@@ -33,8 +33,8 @@ bc_float_t BCCubicLength(BCCubic c) {
     simd_float4 v1_coef = simd_make_float4(-0.558983582205757, 0.325650248872424, 0.208983582205757,0.024349751127576);
     simd_float4 v3_coef = simd_make_float4(-0.024349751127576, -0.208983582205757, -0.325650248872424, 0.558983582205757);
     
-    simd_float4x2 mtxA = simd_matrix(c.a, c.c,c.d,c.b);
-    simd_float2x4 mtxB = simd_matrix(v1_coef, v3_coef);
+    simd_float4x2 mtxA = bc_make_4x2(c.a, c.c,c.d,c.b);
+    simd_float2x4 mtxB = bc_make_2x4(v1_coef, v3_coef);
 
     simd_float2x2 mtxC = simd_mul(mtxA, mtxB);
     
@@ -55,8 +55,8 @@ bc_float_t BCCubicLength(BCCubic c) {
      D                      E                     F
     */
     
-    simd_float4x2 mtxD = simd_matrix(c.c, c.b, c.b, c.d);
-    simd_float4x2 mtxE = simd_matrix(c.a, c.d, c.a, c.c);
+    simd_float4x2 mtxD = bc_make_4x2(c.c, c.b, c.b, c.d);
+    simd_float4x2 mtxE = bc_make_4x2(c.a, c.d, c.a, c.c);
     simd_float4x2 mtxF = simd_sub(mtxD, mtxE);
     
     //to complete v2, we need to get v21 + v22
@@ -78,12 +78,20 @@ bc_float_t BCCubicLength(BCCubic c) {
     
     //note: simd_float8/16 is not available in Metal
     //need a 4-wide abs solution for that case, we're just assembling and taking the abs of these 10 values
+#ifndef BC_NO_VEC8
     simd_float8 a8_v0_v4_v2_v1 = simd_make_float8(a_v0_v4,a_v2_v1);
     
     simd_float8 takenAbs_v0_v4_v2_v1 = simd_abs(a8_v0_v4_v2_v1);
     //get v1,v3 out
     //these terms are fully baked
     simd_float2 v1 = takenAbs_v0_v4_v2_v1.hi.hi;
+#else
+
+    simd_float4 takenAbs_v0_v4 = simd_abs(a_v0_v4);
+    simd_float4 takenAbs_v2_v1 = simd_abs(a_v2_v1);
+    simd_float2 v1 = takenAbs_v2_v1.hi;
+#endif
+    
     simd_float2 v3 = simd_abs(a_v3);
     
     /*Now wthe additional multiplication
@@ -100,14 +108,22 @@ bc_float_t BCCubicLength(BCCubic c) {
                                                       
      
      */
+#ifndef BC_NO_VEC8
     simd_float4 v0_v4_for_mul = takenAbs_v0_v4_v2_v1.lo;
+#else
+    simd_float4 v0_v4_for_mul = takenAbs_v0_v4;
+#endif
     simd_float4 v0_v4_coef = simd_make_float4(0.15,0.15,0.15,0.15);
     
     simd_float4 v0_v4_multiplied = v0_v4_for_mul * v0_v4_coef;
     
     //we are only multiplying by 6 terms so we don't care about the last 2
     simd_float2 v2_dc_coef = simd_make_float2(0.26666666666666666,0.26666666666666666);
+#ifndef BC_NO_VEC8
     simd_float2 v2_unmultiplied = takenAbs_v0_v4_v2_v1.hi.lo;
+#else
+    simd_float2 v2_unmultiplied = takenAbs_v2_v1.lo;
+#endif
     simd_float2 v2 = v2_unmultiplied * v2_dc_coef;
     
     /*To do our final reduction, we need to add v0,v1,v2,v3,v4 (5 terms) in 2 sets (seprately for x,y)
