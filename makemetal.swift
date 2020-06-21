@@ -12,4 +12,5 @@ for file in try m.contentsOfDirectory(atPath: sourceDir) {
         metalAccumulate += String(data: m.contents(atPath: sourceDir + file)!, encoding: .utf8)!
     }
 }
-try! metalAccumulate.write(to: URL(fileURLWithPath:"blitcurve.metal"), atomically: false, encoding:.utf8)
+let outPath = (ProcessInfo.processInfo.environment["SRCROOT"] ?? ".") + "/blitcurve.metal"
+try! metalAccumulate.write(to: URL(fileURLWithPath:outPath), atomically: false, encoding:.utf8)
