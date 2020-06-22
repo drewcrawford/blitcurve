@@ -187,5 +187,11 @@ __attribute__((const))
 __attribute__((swift_name("Cubic.split(self:t:)")))
 BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t);
 
+///Calculates the "left" split of the cubic.
+///- complexity: O(1).  This is faster than BCCubicSplit if you only need one half.  If you need both halves, it's faster to use BCCubicSplit.
+__attribute__((const))
+__attribute__((swift_name("Cubic.leftSplit(self:t:)")))
+BCCubic BCCubicLeftSplit(BCCubic c, bc_float_t t);
+
 #endif
 

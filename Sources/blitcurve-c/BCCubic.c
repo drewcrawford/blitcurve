@@ -162,22 +162,31 @@ bc_float_t BCCubicLength(BCCubic c) {
     return simd_length(reduce2D);
 }
 
+BCCubic BCCubicLeftSplit(BCCubic c, bc_float_t t) {
+    BCCubic out;
+    const bc_float_t t_minus_1 = t - 1;
+    const bc_float_t t_minus_1_squared = pow(t_minus_1,2);
+    const bc_float2_t t_squared_d = pow(t,2) * c.d;
+    const bc_float2_t t_c = t * c.c;
+    out.a = c.a;
+    out.b = pow(t,3) * c.b - 3 * t_squared_d * t_minus_1 + 3 * t_minus_1_squared * t_c - pow(t_minus_1,3) * c.a;
+    out.c = t_c - t_minus_1 * c.a;
+    out.d = t_squared_d - 2 * t_minus_1 * t_c + t_minus_1_squared * c.a;
+    return out;
+}
+
 BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
-    bc_float_t t_minus_1 = t - 1;
-    bc_float2_t t_minus_1_d = t_minus_1 * c.d;
-    bc_float2_t t_c = t * c.c;
-    bc_float_t t_minus_1_squared = pow(t_minus_1, 2);
-    bc_float2_t t_minus_1_squared_c = c.c * t_minus_1_squared;
-    bc_float_t t_2 = 2 * t;
+    const bc_float_t t_minus_1 = t - 1;
+    const bc_float2_t t_minus_1_d = t_minus_1 * c.d;
+    const bc_float2_t t_c = t * c.c;
+    const bc_float_t t_minus_1_squared = pow(t_minus_1, 2);
+    const bc_float2_t t_minus_1_squared_c = c.c * t_minus_1_squared;
+    const bc_float_t t_2 = 2 * t;
     
-    float t_squared = pow(t,2);
+    const float t_squared = pow(t,2);
     
     BCCubic2 out;
     out.a.xy = c.a;
-    bc_float2_t t1 = pow(t,3) * c.b;
-    bc_float2_t t2 = - 3 * t_squared * t_minus_1_d;
-    bc_float2_t t3 = 3 * t * t_minus_1_squared_c;
-    bc_float2_t t4 =  - pow(t_minus_1,3) * c.a;
     out.a.zw = pow(t,3) * c.b - 3 * t_squared * t_minus_1_d + 3 * t * t_minus_1_squared_c - pow(t_minus_1,3) * c.a;
     out.b.xy = out.a.zw;
     out.b.zw = c.b;
@@ -188,40 +197,5 @@ BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
     out.d.xy = t_squared * c.d - t_2 * t_minus_1 * c.c + t_minus_1_squared * c.a;
     out.d.zw = t * c.b - t_minus_1_d;
     return out;
-    
-    
-    
-    //    simd_float2 p1 = curve.a;
-    //    simd_float2 p2 = curve.c;
-    //    simd_float2 p3 = curve.d;
-    //    simd_float2 p4 = curve.b;
-    //
-    //    //p1: a
-    //    //p2 t * p2 - (t - 1) * p1
-    //    //p3 pow(t, 2) * p3 - 2 * t * (t - 1) * p2 + pow(t - 1,2) * p1
-    //    //p4 pow(t,3) * p4 - 3 * pow(t,2) * (t - 1) * p3 + 3 * t * pow(t - 1,2) * p2 - pow(t - 1,3) * p1
-    //    simd_float2 c1b_subexpression1 = pow(t,3) * p4;
-    //    simd_float2 c1b_subexpression2 = -3 * pow(t,2) * (t - 1) * p3;
-    //    simd_float2 c1b_subexpression3 = 3 * t * pow(t - 1,2) * p2;
-    //    simd_float2 c1b_subexpression4 = -pow(t - 1,3) * p1;
-    //    simd_float2 c1b = c1b_subexpression1 + c1b_subexpression2 + c1b_subexpression3 + c1b_subexpression4;
-    //    simd_float2 c1c = t * p2 - (t - 1) * p1;
-    //    simd_float2 c1d = pow(t, 2) * p3 - 2 * t * (t - 1) * p2 + pow(t - 1,2) * p1;
-    //
-    //    DoubleCubic out;
-    //
-    //    out.a.a = p1;
-    //    out.a.b = c1b;
-    //    out.a.c = c1c;
-    //    out.a.d = c1d;
-    //
-    //    //p1: curve1.b
-    //    //p2 pow(t, 2) * p4 - 2 * t * (t - 1) * p3 + pow(t - 1,2) * p2
-    //    //p3 t * p4 - (t - 1) * p3
-    //    //p4 p4
-    //    out.b.a = c1b;
-    //    out.b.b = curve.b;
-    //    out.b.c = pow(t, 2) * p4 - 2 * t * (t - 1) * p3 + pow(t - 1,2) * p2;
-    //    out.b.d = t * p4 - (t - 1) * p3;
-    //    return out;
 }
+

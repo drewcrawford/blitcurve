@@ -73,6 +73,12 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(curves.right.a, SIMD2<Float>(138.125, 185.0))
         XCTAssertEqual(curves.right.c, SIMD2<Float>(173.75, 190.0))
         XCTAssertEqual(curves.right.d, SIMD2<Float>(220.0, 150.0))
+        
+        let leftSplit = curve.leftSplit(t: 0.5)
+        XCTAssertEqual(leftSplit.a, curves.left.a)
+        XCTAssertEqual(leftSplit.b, curves.left.b)
+        XCTAssertEqual(leftSplit.c, curves.left.c)
+        XCTAssertEqual(leftSplit.d, curves.left.d)
     }
     #if DEBUG
     #else
