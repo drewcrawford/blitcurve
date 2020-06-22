@@ -71,7 +71,7 @@ static inline bc_float_t BCCubicFinalTangent(BCCubic c) {
 ///- returns: A point on the cubic at the bezier equation for t
 __attribute__((const))
 __attribute__((swift_name("Cubic.evaluate(self:t:)")))
-static inline bc_float2_t evaluate(BCCubic c,bc_float_t t) {
+static inline bc_float2_t BCCubicEvaluate(BCCubic c,bc_float_t t) {
     return c.a * pow(1-t,3) + c.c * 3 * pow(1-t, 2) * t + c.d * 3 * (1 - t) * pow(t, 2) + c.b * pow(t, 3);
 }
 
