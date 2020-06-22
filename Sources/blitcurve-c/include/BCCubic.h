@@ -9,6 +9,7 @@
 #import "BCLine.h"
 #import "BCMath.h"
 #import "BCLine2.h"
+#import "BCCubic2.h"
 
 #ifndef __METAL_VERSION__
 #include <stdbool.h>
@@ -178,17 +179,13 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.length(self:)")))
 bc_float_t BCCubicLength(BCCubic c);
-/*
 
-__attribute__((swift_name("Cubic.init(connecting:to:)")))
-BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b);
 
-__attribute__((swift_name("getter:Cubic.length(self:)")))
-bc_float_t BCCubicLength(BCCubic a);
-
-__attribute__((swift_name("Cubic.hasIntersection(self:with:)")))
-bool BCCubicHasIntersection(BCCubic a, BCCubic b);
- */
+///Splits the curve at a given bezier parameter
+///- complexity: O(1)
+__attribute__((const))
+__attribute__((swift_name("Cubic.split(self:t:)")))
+BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t);
 
 #endif
 

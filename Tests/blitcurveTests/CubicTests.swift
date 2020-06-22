@@ -56,7 +56,23 @@ final class CubicTests: XCTestCase {
         let box = AlignedBox(cubic: curve, strategy: .fastest)
         XCTAssertEqual(box.min, SIMD2<Float>(35,40))
         XCTAssertEqual(box.max, SIMD2<Float>(220,260))
-
+    }
+    
+    func testSplit() {
+        let curve = Cubic(a: SIMD2<Float>(x: 120, y: 60), b: SIMD2<Float>(x: 220, y: 40), c: SIMD2<Float>(x: 35, y: 200), d: SIMD2<Float>(x: 220, y: 260))
+        let curves = curve.split(t: 0.5)
+        
+        //endpoints
+        XCTAssertEqual(curves.left.a, curve.a)
+        XCTAssertEqual(curves.right.b, curve.b)
+        
+        XCTAssertEqual(curves.left.b, SIMD2<Float>(138.125, 185.0))
+        XCTAssertEqual(curves.left.c, SIMD2<Float>(77.5, 130.0))
+        XCTAssertEqual(curves.left.d, SIMD2<Float>(102.5, 180.0))
+        
+        XCTAssertEqual(curves.right.a, SIMD2<Float>(138.125, 185.0))
+        XCTAssertEqual(curves.right.c, SIMD2<Float>(173.75, 190.0))
+        XCTAssertEqual(curves.right.d, SIMD2<Float>(220.0, 150.0))
     }
     #if DEBUG
     #else
@@ -93,6 +109,7 @@ final class CubicTests: XCTestCase {
         ("testEvaluate", testEvaluate),
         ("testNormalize", testEvaluate),
         ("testLength",testLength),
+        ("testSplit",testSplit),
 
         ]
         
