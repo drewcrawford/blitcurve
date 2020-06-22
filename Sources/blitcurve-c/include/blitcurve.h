@@ -1,8 +1,14 @@
-//
-//  File.swift
-//  
-//
-//  Created by Drew Crawford on 6/21/20.
-//
+//blitcurve.h: Umbrella header
+// ©2020 DrewCrawfordApps LLC
 
-import Foundation
+#import "BCAlignedBox.h"
+#import "BCBezierParameter.h"
+#import "BCCubic.h"
+#import "BCLine.h"
+#import "BCLine2.h"
+#import "BCMacros.h"
+#import "BCMath.h"
+#import "BCMetalC.h"
+#import "BCStrategy.h"
+#import "BCTypes.h"
+
