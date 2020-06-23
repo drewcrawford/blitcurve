@@ -108,6 +108,12 @@ final class CubicTests: XCTestCase {
     }
     #endif
     
+    func testParametrization() {
+        let cubic = Cubic(a: .zero, b: SIMD2<Float>(x: 100, y: 0), c: SIMD2<Float>(x: 66.6667, y: 0), d: SIMD2<Float>(x: 100, y: 0))
+        let parameterization = cubic.parameterization(arclength: 50, threshold: 0.01)
+        XCTAssertEqual(parameterization, 0.289, accuracy: 0.01)
+    }
+    
     static var allTests: [(String,(CubicTests) -> () -> ())] = {
         
         var tests = [
@@ -116,6 +122,7 @@ final class CubicTests: XCTestCase {
         ("testNormalize", testEvaluate),
         ("testLength",testLength),
         ("testSplit",testSplit),
+        ("testParameterization",testParametrization)
 
         ]
         

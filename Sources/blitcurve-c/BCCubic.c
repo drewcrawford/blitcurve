@@ -51,3 +51,22 @@ BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
     return out;
 }
 
+bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t length, bc_float_t lowerBound, bc_float_t upperBound, bc_float_t threshold) {
+    while (true) {
+        bc_float2_t upperEvaluate = BCCubicEvaluate(cubic, upperBound);
+        simd_float2 lowerEvaluate = BCCubicEvaluate(cubic, lowerBound);
+        if (simd_distance(upperEvaluate, lowerEvaluate) < threshold) {
+            return lowerBound;
+        }
+        bc_float_t partition = (upperBound - lowerBound) / 2 + lowerBound;
+        BCCubic d = BCCubicLeftSplit(cubic, partition);
+
+        if (BCCubicLength(d) > length) { //choose left
+            upperBound = partition;
+        }
+        else { //choose right
+            lowerBound = partition;
+        }
+    }
+}
+
