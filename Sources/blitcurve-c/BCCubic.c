@@ -27,6 +27,18 @@ BCCubic BCCubicLeftSplit(BCCubic c, bc_float_t t) {
     return out;
 }
 
+BCCubic BCCubicRightSplit(BCCubic c, bc_float_t t) {
+    BCCubic out;
+    const bc_float_t t_squared = pow(t,2);
+    const bc_float2_t t_minus_1_d = (t-1) * c.d;
+    const bc_float2_t t_minus_1_squared_c = pow(t - 1,2) * c.c;
+    out.a = pow(t,3) * c.b - 3 * t_squared * t_minus_1_d  + 3 * t * t_minus_1_squared_c - pow(t - 1,3) * c.a;
+    out.b = c.b;
+    out.c = t_squared * c.b - 2 * t * t_minus_1_d + t_minus_1_squared_c;
+    out.d = t * c.b - t_minus_1_d;
+    return out;
+}
+
 BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
     const bc_float_t t_minus_1 = t - 1;
     const bc_float2_t t_minus_1_d = t_minus_1 * c.d;

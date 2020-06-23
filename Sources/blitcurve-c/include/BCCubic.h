@@ -193,6 +193,12 @@ __attribute__((const))
 __attribute__((swift_name("Cubic.leftSplit(self:t:)")))
 BCCubic BCCubicLeftSplit(BCCubic c, bc_float_t t);
 
+///Calculates the "right" split of the cubic.
+///- complexity: O(1).  This is faster than BCCubicSplit if you only need one half.  If you need both halves, it's faster to use BCCubicSplit.
+__attribute__((const))
+__attribute__((swift_name("Cubic.rightSplit(self:t:)")))
+BCCubic BCCubicRightSplit(BCCubic c, bc_float_t t);
+
 ///Performs an arclength parameterization.  This finds a bezier parameter t (in range 0,1) that is a length specified from cubic.a.
 ///- complexity: We use an iterative approach.  Passing a higher value for `threshold` will let us stop earlier.
 __attribute__((const))

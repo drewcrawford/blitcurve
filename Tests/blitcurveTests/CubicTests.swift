@@ -79,6 +79,12 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(leftSplit.b, curves.left.b)
         XCTAssertEqual(leftSplit.c, curves.left.c)
         XCTAssertEqual(leftSplit.d, curves.left.d)
+        
+        let rightSplit = curve.rightSplit(t: 0.5)
+        XCTAssertEqual(rightSplit.a, curves.right.a)
+        XCTAssertEqual(rightSplit.b, curves.right.b)
+        XCTAssertEqual(rightSplit.c, curves.right.c)
+        XCTAssertEqual(rightSplit.d, curves.right.d)
     }
     #if DEBUG
     #else
