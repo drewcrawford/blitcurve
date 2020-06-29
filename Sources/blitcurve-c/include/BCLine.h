@@ -12,16 +12,23 @@
 #import <assert.h>
 #import <simd/simd.h>
 #endif
-///BCLine is a linesegment defined on 2 points
-///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
+///\abstract BCLine is a linesegment defined on 2 points
+///\discussion Unlike some other notation, we use \c a and  \c b consistently for start and end points, reserving other values for control points.
 __attribute__((swift_name("Line")))
 typedef struct {
+    ///start point
     bc_float2_t a;
+    ///end point
     bc_float2_t b;
 } BCLine;
 
+
 __attribute__((const))
 __attribute__((swift_name("Line.init(point:angle:distance:)")))
+///\abstract Create a line with the start point and angle
+///\param a start point of the line
+///\param angle angle from the start point
+///\param distance distance from the start point
 static inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float distance) {
     BCLine l;
     l.a = a;
@@ -31,10 +38,11 @@ static inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, flo
     return l;
 }
 
-///Gets the slope of the line.
-///- note: Vertical lines are undefined
+
 __attribute__((const))
 __attribute__((swift_name("getter:Line.slope(self:)")))
+///\abstract Gets the slope of the line.
+///\warning Vertical lines are undefined
 static inline bc_float_t BCLineSlope(BCLine l) {
     bc_float2_t diff = l.a - l.b;
     ASSERT_UB(fabsf(diff.x) > 0);
@@ -42,7 +50,7 @@ static inline bc_float_t BCLineSlope(BCLine l) {
 }
 
 ///Y-intercept of the line
-///- note: Vertical lines are undefined
+///\warning Vertical lines are undefined
 __attribute__((const))
 __attribute__((swift_name("getter:Line.yIntercept(self:)")))
 static inline bc_float_t BCLineYIntercept(BCLine l) {
@@ -68,7 +76,7 @@ static inline BCLine BCLineReversed(BCLine l) {
 
 
 ///Tangent along the line.
-///- warning: In the case the line has 0 length, this is UB
+///\warning In the case the line has 0 length, this is UB
 __attribute__((const))
 __attribute__((swift_name("getter:Line.tangent(self:)")))
 static inline bc_float_t BCLineTangent(BCLine l) {
@@ -78,8 +86,8 @@ static inline bc_float_t BCLineTangent(BCLine l) {
 }
 
 
-///'Evaluates' the line with the 'bezier parameter' [0..1]'
-///This returns a for 0, b for 1, and otherwise a linear interpolation along the line
+///\abstract 'Evaluates' the line with the 'bezier parameter' [0..1]'
+///\returns \c a for \c 0, \c b for \c 1, and otherwise a linear interpolation along the line
 //__attribute__((const))
 __attribute__((swift_name("Line.evaluate(self:t:)")))
 static inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {

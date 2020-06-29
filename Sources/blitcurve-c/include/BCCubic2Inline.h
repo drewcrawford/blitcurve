@@ -4,6 +4,7 @@
 #import "BCCubic.h"
 __attribute__((const))
 __attribute__((swift_name("getter:BCCubic2.left(self:)")))
+///@abstract Gets the left cubic out of \c BCCubic2
 static inline BCCubic BCCubic2SeparateLeft(BCCubic2 c) {
     BCCubic out;
     out.a = c.a.xy;
@@ -15,6 +16,7 @@ static inline BCCubic BCCubic2SeparateLeft(BCCubic2 c) {
 
 __attribute__((const))
 __attribute__((swift_name("getter:BCCubic2.right(self:)")))
+///@abstract Gets the right cubic out of \c BCCubic2
 static inline BCCubic BCCubic2SeparateRight(BCCubic2 c) {
     BCCubic out;
     out.a = c.a.zw;

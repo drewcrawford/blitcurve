@@ -10,8 +10,8 @@
 #endif
 
 #import "BCMetalC.h"
-///BCLine is logically 2 BCLine.  In certain cases we can perform operations faster via vectorization.
-///Unlike some other notation, we use `a` and `b` consistently for start and end points, reserving other values for control points.
+///\abstract BCLine is logically 2 BCLine.  In certain cases we can perform operations faster via vectorization.
+///\discussion Unlike some other notation, we use \c a and \c b consistently for start and end points, reserving other values for control points.
 __attribute__((swift_name("Line2")))
 typedef struct {
     ///First point of both lines.  {x,w} are x and {y,z} are y.  Alternatively, "high half" is one point and "low half" is the other.
