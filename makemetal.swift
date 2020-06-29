@@ -33,5 +33,23 @@ func checkHeaderPath() {
     print("sp",searchPaths )
 }
 
+func checkNDEBUG() {
+    guard let srcRoot = ProcessInfo.processInfo.environment["SRCROOT"] else { return }
+    guard let projectName = ProcessInfo.processInfo.environment["PROJECT_NAME"] else { return }
+    guard let pbxproj = try? String(contentsOfFile: "\(srcRoot)/\(projectName).xcodeproj/project.pbxproj") else { return }
+    let lines = pbxproj.split(separator: "\n")
+    
+    var found = false
+    for line in lines {
+        if line.contains("MTL_PREPROCESSOR_DEFINITIONS") {
+            if line.contains("NDEBUG") { found = true }
+        }
+    }
+    if !found {
+        print("warning: Add NDEBUG to the 'Metal Compiler - Build Options - MTL_PREPROCESSOR_DEFINITIONS setting.")
+    }
+}
+
 checkPbxProj()
 checkHeaderPath()
+checkNDEBUG()

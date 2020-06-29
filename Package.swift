@@ -21,12 +21,12 @@ let package = Package(
         .target(
             name: "blitcurve",
             dependencies: ["blitcurve-c"],
-        cSettings:[.define("CHECK_UB", to: nil, .when(platforms: nil, configuration: .debug))]
+        cSettings:[.define("NDEBUG", to: nil, .when(platforms: nil, configuration: .release))]
 ),
         .target(
             name: "blitcurve-c",
             dependencies: [],
-            cSettings:[.define("CHECK_UB", to: nil, .when(platforms: nil, configuration: .debug))]
+            cSettings:[.define("NDEBUG", to: nil, .when(platforms: nil, configuration: .release))]
         ),
         .testTarget(
             name: "blitcurveTests",

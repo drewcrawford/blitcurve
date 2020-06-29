@@ -42,7 +42,7 @@ static inline BCAlignedBox BCAlignedBoxCreateFromCubic(BCCubic c, BCStrategy str
         }
             
         default:
-        ASSERT_UB(false);
+        BC_ASSERT(false);
     }
 }
 

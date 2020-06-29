@@ -45,7 +45,7 @@ __attribute__((swift_name("getter:Line.slope(self:)")))
 ///\warning Vertical lines are undefined
 static inline bc_float_t BCLineSlope(BCLine l) {
     bc_float2_t diff = l.a - l.b;
-    ASSERT_UB(fabsf(diff.x) > 0);
+    BC_ASSERT(fabsf(diff.x) > 0);
     return diff.y / diff.x;
 }
 
@@ -80,7 +80,7 @@ static inline BCLine BCLineReversed(BCLine l) {
 __attribute__((const))
 __attribute__((swift_name("getter:Line.tangent(self:)")))
 static inline bc_float_t BCLineTangent(BCLine l) {
-    ASSERT_UB(BCLineLength(l) > 0);
+    BC_ASSERT(BCLineLength(l) > 0);
         bc_float2_t diff = l.b - l.a;
     return atan2(diff.y, diff.x);
 }
@@ -91,7 +91,7 @@ static inline bc_float_t BCLineTangent(BCLine l) {
 //__attribute__((const))
 __attribute__((swift_name("Line.evaluate(self:t:)")))
 static inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
-    ASSERT_UB(t >= 0.0 && t <= 1.0);
+    BC_ASSERT(t >= 0.0 && t <= 1.0);
     return simd_mix(l.a,l.b,simd_make_float2(t,t));
 }
 

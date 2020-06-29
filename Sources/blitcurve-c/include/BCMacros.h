@@ -4,16 +4,18 @@
 #ifndef BCMacros_h
 #define BCMacros_h
 
-#if __METAL_VERSION__
-#define BC_ASSERT(X) if (__builtin_expect(X,0)) {__builtin_trap();}
+///The BC_ASSERT macro will perform a platform-agnostic assertion check.
+///BC_ASSERT will be a no-op if NDEBUG is defined.  This is set either by \c  Package.swift (CPU case) or in build settings (metal case)
+#ifdef NDEBUG
+#define BC_ASSERT(X)
 #else
+
+#ifndef __METAL_VERSION__
 #define BC_ASSERT(X) assert(X)
-#endif
-
-#if CHECK_UB
-#define ASSERT_UB(X) BC_ASSERT(X)
 #else
-#define ASSERT_UB(X)
+#define BC_ASSERT(X) if (__builtin_expect(X,0)) {float *f = 0; *f = 0;}
 #endif
 
-#endif
+#endif //NDEBUG
+
+#endif //BCMacros_h
