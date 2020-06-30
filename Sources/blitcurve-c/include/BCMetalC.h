@@ -46,8 +46,9 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define cos(X) metal::cos(X)
 #define atan2(X,Y) metal::atan2(X,Y)
 #define pow(X,Y) metal::pow(X,Y)
-#define fabs(X) metal::fabs(X)
 #define fabsf(X) metal::fabs(X)
+
+#define fabs(X) metal::fabs(X)
 
 //there is no simd_norm_inf in metal
 #define simd_norm_inf(N) metal::fmax(fabs(N.x),fabs(N.y))
