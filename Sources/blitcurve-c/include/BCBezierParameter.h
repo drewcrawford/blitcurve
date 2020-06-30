@@ -4,24 +4,24 @@
 #import "BCMacros.h"
 
 ///\abstract Converts between a vertex ID and a bezier parameter.
-///\param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.
+///\param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.  This must be \c <vertexesPerInstance.
 ///\param vertexesPerInstance The number of vertexes to draw for each instance.
 __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("VertexToBezierParameter(vertexID:vertexesPerInstance:)")))
 inline bc_float_t BCVertexToBezierParameter(uint16_t vertexID, char vertexesPerInstance) {
-    float vertexID_f = vertexID % vertexesPerInstance;
-    return ((float)vertexID_f) / (vertexesPerInstance - 1);
+    __BC_ASSERT(vertexID < vertexesPerInstance);
+    return ((float)vertexID) / (vertexesPerInstance - 1);
 }
 
 ///\abstract Converts between a vertex ID and a bezier parameter.
-///\param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.
+///\param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.  This must be \c <vertexesPerInstance.
 ///\param vertexesPerInstance The number of vertexes to draw for each instance.
 __attribute__((swift_name("VertexToBezierParameter(vertexID:vertexesPerInstance:)")))
 __attribute__((const))
 inline bc_float_t BCVertexToBezierParameter(uint32_t vertexID, char vertexesPerInstance) {
-    float vertexID_f = vertexID % vertexesPerInstance;
-    return ((float)vertexID_f) / (vertexesPerInstance - 1);
+    __BC_ASSERT(vertexID < vertexesPerInstance);
+    return ((float)vertexID) / (vertexesPerInstance - 1);
 }
 
 ///\abstract Converts between a vertex ID and a bezier parameter, with a custom min and max \c t.
@@ -34,10 +34,10 @@ __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("VertexToBezierParameter(vertexID:vertexesPerInstance:lowerT:upperT:)")))
 inline bc_float_t BCVertexToBezierParameterWithBounds(uint16_t vertexID, char vertexesPerInstance, float lowerT, float upperT) {
+    __BC_ASSERT(vertexID < vertexesPerInstance);
     __BC_ASSERT(lowerT < upperT);
-    float vertexID_f = vertexID % vertexesPerInstance;
     float range = upperT - lowerT;
-    return ((float)vertexID_f) / (vertexesPerInstance - 1) * range + lowerT;
+    return ((float)vertexID) / (vertexesPerInstance - 1) * range + lowerT;
 }
 
 

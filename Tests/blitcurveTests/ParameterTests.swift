@@ -11,7 +11,6 @@ class ParameterTests: XCTestCase {
         XCTAssertEqual(VertexToBezierParameter(vertexID: 2 as UInt16, vertexesPerInstance: 5),0.5)
         XCTAssertEqual(VertexToBezierParameter(vertexID: 3 as UInt16, vertexesPerInstance: 5),0.75)
         XCTAssertEqual(VertexToBezierParameter(vertexID: 4 as UInt16, vertexesPerInstance: 5),1)
-        XCTAssertEqual(VertexToBezierParameter(vertexID: 5 as UInt16, vertexesPerInstance: 5),0)
     }
     
     func testVertexIDBounds() {
@@ -20,7 +19,6 @@ class ParameterTests: XCTestCase {
         XCTAssertEqual(VertexToBezierParameter(vertexID: 2 as UInt16, vertexesPerInstance: 5, lowerT: 0.5, upperT: 3.0),1.75)
         XCTAssertEqual(VertexToBezierParameter(vertexID: 3 as UInt16, vertexesPerInstance: 5, lowerT: 0.5, upperT: 3.0),2.375)
         XCTAssertEqual(VertexToBezierParameter(vertexID: 4 as UInt16, vertexesPerInstance: 5, lowerT: 0.5, upperT: 3.0),3)
-        XCTAssertEqual(VertexToBezierParameter(vertexID: 5 as UInt16, vertexesPerInstance: 5, lowerT: 0.5, upperT: 3.0),0.5)
 
 
     }
