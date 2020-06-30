@@ -42,12 +42,11 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define M_PI M_PI_F
 #define M_PI_2 M_PI_2_F
 
+#define fabsf fabs
 #define sin(X) metal::sin(X)
 #define cos(X) metal::cos(X)
 #define atan2(X,Y) metal::atan2(X,Y)
 #define pow(X,Y) metal::pow(X,Y)
-#define fabsf(X) metal::fabs(X)
-
 #define fabs(X) metal::fabs(X)
 
 //there is no simd_norm_inf in metal
