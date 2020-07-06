@@ -9,7 +9,7 @@
 __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("VertexToBezierParameter(vertexID:vertexesPerInstance:)")))
-inline bc_float_t BCVertexToBezierParameter(uint16_t vertexID, char vertexesPerInstance) {
+inline bc_float_t BCVertexToBezierParameter(uint16_t vertexID, unsigned char vertexesPerInstance) {
     __BC_ASSERT(vertexID < vertexesPerInstance);
     return ((float)vertexID) / (vertexesPerInstance - 1);
 }
@@ -19,7 +19,7 @@ inline bc_float_t BCVertexToBezierParameter(uint16_t vertexID, char vertexesPerI
 ///\param vertexesPerInstance The number of vertexes to draw for each instance.
 __attribute__((swift_name("VertexToBezierParameter(vertexID:vertexesPerInstance:)")))
 __attribute__((const))
-inline bc_float_t BCVertexToBezierParameter(uint32_t vertexID, char vertexesPerInstance) {
+inline bc_float_t BCVertexToBezierParameter(uint32_t vertexID, unsigned char vertexesPerInstance) {
     __BC_ASSERT(vertexID < vertexesPerInstance);
     return ((float)vertexID) / (vertexesPerInstance - 1);
 }
@@ -33,7 +33,7 @@ inline bc_float_t BCVertexToBezierParameter(uint32_t vertexID, char vertexesPerI
 __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("VertexToBezierParameter(vertexID:vertexesPerInstance:lowerT:upperT:)")))
-inline bc_float_t BCVertexToBezierParameterWithBounds(uint16_t vertexID, char vertexesPerInstance, float lowerT, float upperT) {
+inline bc_float_t BCVertexToBezierParameterWithBounds(uint16_t vertexID, unsigned char vertexesPerInstance, float lowerT, float upperT) {
     __BC_ASSERT(vertexID < vertexesPerInstance);
     __BC_ASSERT(lowerT < upperT);
     float range = upperT - lowerT;
