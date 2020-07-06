@@ -78,6 +78,17 @@ __attribute__((swift_name("Cubic.evaluate(self:t:)")))
 static inline bc_float2_t BCCubicEvaluate(BCCubic c,bc_float_t t) {
     return c.a * pow(1-t,3) + c.c * 3 * pow(1-t, 2) * t + c.d * 3 * (1 - t) * pow(t, 2) + c.b * pow(t, 3);
 }
+__attribute__((const))
+__attribute__((swift_name("Cubic.isTechnicallyNormalized(self:)")))
+///\abstract Checks if the cubic is technically normalized
+///\discussion See the documentation for BCCubicNormalize for a discussion of this operation.
+///
+///\note In general, it's preferable to call an underlying function to perform a \a partial normalization check.  However, in some cases
+///this does not make sense.
+///In that situation, you can \c __BC_ASSERT(BCCubicIsNormalized(cubic)) instead.
+static inline bool BCCubicIsTechnicallyNormalized(BCCubic c) {
+    return simd_distance(c.c, c.a) != 0 && simd_distance(c.b, c.d)  != 0;
+}
 
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.asLine(self:)")))
@@ -89,8 +100,7 @@ static inline BCLine BCCubicAsLine(BCCubic c) {
     return l;
 }
 
-
-__attribute__((swift_name("Cubic.normalize(self:minimumDistance:)")))
+__attribute__((swift_name("Cubic.normalize(self:approximateDistance:)")))
 ///\abstract Normalize the cubic
 ///\discussion When a control point is exactly (or in some contexts, merely 'near') an endpoint, it creates various problems.  For example, the definition of an initial tangent is the angle between \c a and \c c, but if \c a=c this angle is undefined.  We call such difficult curves  \a non-normalized.
 ///
@@ -100,23 +110,22 @@ __attribute__((swift_name("Cubic.normalize(self:minimumDistance:)")))
 ///
 ///In practice, applications may want a curve to be \a generously normalized.  For example, a small distance between \c a and \c c may technically define \c initialTangent at \c t=0, but the value is not necessarily close to the tangent at \c t=0.01, so an application scanning the bezier parameters at "reasonable" intervals may see weird behavior.  For this reason an application may want to normalize more generously to provide a larger distance between endpoints and control points.
 ///\param c The cubic to normalize.  We will normalize it in-place.
-///\param minimumDistance The minimum distance that should occur between endpoints and control points.  Pass a non-zero value here.  Note that values close to the working precision (e.g. \c FLT_MIN) may not move the endpoints due to rounding, so you may need to pass a larger value here.
+///\param approximateDistance the desired distance between endpoints and control points.  Pass a positive nonzero value.  Note the follwoing cases:
+///1.  If the control/endpoints are already at least this distance, we will not alter them
+///2.  If the control/endpoints are less than this distance, we will adjust the control points to a value approximately this distance, but it will not be exact, and the value we choose may be higher or lower.  For this reason, avoid values near the working precision, such as \c FLT_MIN, and avoid treating this as a minimum distance.
 ///\return A normalized curve, with at least the distance specified between related endpoints and control points.
-static inline void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t minimumDistance) {
-    __BC_ASSERT(minimumDistance > 0);
-    if (simd_distance(c->c, c->a) < minimumDistance) {
-        BCLine asLine = BCCubicAsLine(*c);
-        bc_float_t t = BCLineArclengthParameterization(asLine, minimumDistance + FLT_MIN);
+static inline void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
+    __BC_ASSERT(approximateDistance > 0);
+    if (simd_distance(c->c, c->a) < approximateDistance) {
+        const BCLine asLine = BCCubicAsLine(*c);
+        bc_float_t t = BCLineArclengthParameterization(asLine, approximateDistance);
         c->c = BCLineEvaluate(asLine,t);
     }
-    __BC_ASSERT(simd_distance(c->c, c->a) >= minimumDistance);
-    if (simd_distance(c->d, c->b) < minimumDistance) {
-        BCLine asLine = BCCubicAsLine(*c);
-        bc_float_t t = BCLineArclengthParameterization(asLine, minimumDistance + FLT_MIN);
-        c->d = BCLineEvaluate(asLine,1 - t);
+    if (simd_distance(c->d, c->b) < approximateDistance) {
+        const BCLine asLine = BCCubicAsLine(*c);
+        bc_float_t t = 1 - BCLineArclengthParameterization(asLine, approximateDistance);
+        c->d = BCLineEvaluate(asLine,t);
     }
-    __BC_ASSERT(simd_distance(c->d, c->b) >= minimumDistance);
-
 }
 
 
