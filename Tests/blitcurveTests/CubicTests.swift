@@ -30,7 +30,7 @@ final class CubicTests: XCTestCase {
     
     func testNormalize() {
         var curve = Cubic(a: .zero, b: SIMD2<Float>(x: 100, y: 100), c: .zero, d: SIMD2<Float>(x: 100, y: 100))
-        curve.normalize()
+        curve.normalize(minimumDistance: 0.001)
         XCTAssert(curve.a != curve.c)
         XCTAssert(curve.b != curve.d)
     }

@@ -13,6 +13,7 @@
 
 #ifndef __METAL_VERSION__
 #include <stdbool.h>
+#include <float.h>
 #endif
 
 #include <simd/simd.h>
@@ -53,18 +54,20 @@ static inline BCLine BCCubicFinalTangentLine(BCCubic c) {
 }
 
 ///\abstract Returns the angle of the intitalTangent.
-///\warning For non-normalized cubic, this may be UB
+///\warning This requires the cubic to be partially normalized between \c a/c, see \c BCCubicNormalize for details.
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.initialTangent(self:)")))
 static inline bc_float_t BCCubicInitialTangent(BCCubic c) {
+    //UB checked inside BCLineTangent (e.g. the intial line would be 0)
     return BCLineTangent(BCCubicInitialTangentLine(c));
 }
 
 ///\abstract Returns the angle of the finalTangent.
-///\warning For non-normalized cubic, this may be UB
+///\warning This requires the cubic to be partially normalized between \c b/d, see \c BCCubicNormalize for details.
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.finalTangent(self:)")))
 static inline bc_float_t BCCubicFinalTangent(BCCubic c) {
+    //UB checked inside BCLineTanget (e.g. the initial line would be 0)
     return BCLineTangent(BCCubicFinalTangentLine(c));
 }
 
@@ -87,28 +90,42 @@ static inline BCLine BCCubicAsLine(BCCubic c) {
 }
 
 
-__attribute__((swift_name("Cubic.normalize(self:)")))
+__attribute__((swift_name("Cubic.normalize(self:minimumDistance:)")))
 ///\abstract Normalize the cubic
-///\discussion For various reaons, a cubic that has its extremity points close to its control points are problematic.
-///For example, the initial/final tangents of such a cubic are undefined.
-///This function will normalize the cubic by adjusting its control points if the cubic is badly-behaved.
-static inline void BCCubicNormalize(BCCubic __BC_DEVICE *c) {
-    if (BCIsNearlyEqual2(c->a,c->c)) {
+///\discussion When a control point is exactly (or in some contexts, merely 'near') an endpoint, it creates various problems.  For example, the definition of an initial tangent is the angle between \c a and \c c, but if \c a=c this angle is undefined.  We call such difficult curves  \a non-normalized.
+///
+///We say a curve is \a partially normalized to refer to normalization between some subset of endpoints and control points that are required to mathematically define a particular operation.  For example, as discussed \c intialTangent requires a \a partial \a normalization for \c a and \c c.
+///
+///We say a curve is \a technically normalized if there is some nonzero distance between all related endpoints and control points.  This generally provides a mathematical definition for operations on the curve.
+///
+///In practice, applications may want a curve to be \a generously normalized.  For example, a small distance between \c a and \c c may technically define \c initialTangent at \c t=0, but the value is not necessarily close to the tangent at \c t=0.01, so an application scanning the bezier parameters at "reasonable" intervals may see weird behavior.  For this reason an application may want to normalize more generously to provide a larger distance between endpoints and control points.
+///\param c The cubic to normalize.  We will normalize it in-place.
+///\param minimumDistance The minimum distance that should occur between endpoints and control points.  Pass a non-zero value here.  Note that values close to the working precision (e.g. \c FLT_MIN) may not move the endpoints due to rounding, so you may need to pass a larger value here.
+///\return A normalized curve, with at least the distance specified between related endpoints and control points.
+static inline void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t minimumDistance) {
+    __BC_ASSERT(minimumDistance > 0);
+    if (simd_distance(c->c, c->a) < minimumDistance) {
         BCLine asLine = BCCubicAsLine(*c);
-        c->c = BCLineEvaluate(asLine,0.001);
+        bc_float_t t = BCLineArclengthParameterization(asLine, minimumDistance + FLT_MIN);
+        c->c = BCLineEvaluate(asLine,t);
     }
-    if (BCIsNearlyEqual2(c->d,c->b)) {
+    __BC_ASSERT(simd_distance(c->c, c->a) >= minimumDistance);
+    if (simd_distance(c->d, c->b) < minimumDistance) {
         BCLine asLine = BCCubicAsLine(*c);
-        c->d = BCLineEvaluate(asLine,0.999);
+        bc_float_t t = BCLineArclengthParameterization(asLine, minimumDistance + FLT_MIN);
+        c->d = BCLineEvaluate(asLine,1 - t);
     }
+    __BC_ASSERT(simd_distance(c->d, c->b) >= minimumDistance);
+
 }
 
 
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:initialTangent:finalTangent:)")))
 ///Create a cubic that connects a line with initial and final tangents
-///\warning This may be UB ifconnecting line is 0-length
+///\warning This may be UBi if connecting is 0-len
 static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_t initialTangent, bc_float_t finalTangent) {
+    __BC_ASSERT(BCLineLength(connecting) > 0);
     BCCubic c;
     c.a = connecting.a;
     c.b = connecting.b;
@@ -167,13 +184,14 @@ static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_
 }
 
 ///Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
-///\warning UB if the cubics are not normalized
+///\warning This operation requires the curve to be technically normalized, see \c BCCubicNormalize
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:to:)")))
 static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
     BCLine connecting;
     connecting.a = a.b;
     connecting.b = b.a;
+    //UB checked inside BCCubicInitialTanget / BCCubicFinalTagent, respectively
     return BCCubicMakeConnectingTangents(connecting, BCCubicFinalTangent(a), BCCubicInitialTangent(b) + M_PI_2);
 }
 
