@@ -120,6 +120,28 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(parameterization, 0.289, accuracy: 0.01)
     }
     
+    func testTangent() {
+        let a = SIMD2<Float>(x: 192, y: 341)
+        let nearA = SIMD2<Float>(x: 189, y: 336)
+        var c = Cubic(a: a, b: SIMD2<Float>(x: 375, y: 667), c:nearA , d:nearA)
+        c.normalize(approximateDistance: 6)
+        XCTAssertEqual(c.tangentAt(t: 0.5), 1.0597466)
+        
+        //here are some tangents we've found to be "bad" with other approaches
+        let t1 = c.tangentAt(t: 0.10)
+        let t2 = c.tangentAt(t: 0.13)
+        XCTAssertEqual(t1, t2, accuracy: 0.1)
+        
+        let b = SIMD2<Float>(x: 375, y: 667)
+        let nearB = SIMD2<Float>(x: 376, y: 668)
+        var d = Cubic(a: SIMD2<Float>(x: 192, y: 341), b: b, c: nearB, d: nearB)
+        d.normalize(approximateDistance: 5)
+        let d1 = d.tangentAt(t: 0.94)
+        let d2 = d.tangentAt(t: 0.95)
+        XCTAssertEqual(d1, d2, accuracy: 0.1)
+        
+    }
+    
     static var allTests: [(String,(CubicTests) -> () -> ())] = {
         
         var tests = [
@@ -128,7 +150,8 @@ final class CubicTests: XCTestCase {
         ("testNormalize", testEvaluate),
         ("testLength",testLength),
         ("testSplit",testSplit),
-        ("testParameterization",testParametrization)
+        ("testParameterization",testParametrization),
+        ("testTangent",testTangent),
 
         ]
         

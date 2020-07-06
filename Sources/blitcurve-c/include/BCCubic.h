@@ -79,6 +79,21 @@ static inline bc_float2_t BCCubicEvaluate(BCCubic c,bc_float_t t) {
     return c.a * pow(1-t,3) + c.c * 3 * pow(1-t, 2) * t + c.d * 3 * (1 - t) * pow(t, 2) + c.b * pow(t, 3);
 }
 __attribute__((const))
+__attribute__((swift_name("Cubic.evaluatePrime(self:t:)")))
+///\abstract Evaluate the derivative of a BCCubic
+///\return A point on the derivative of the given cubic at the given bezier parameter.
+static inline bc_float2_t BCCubicEvaluatePrime(BCCubic c, bc_float_t t) {
+    //D[a * (1-t)^3 + c * 3 * (1-t)^2 * t + d * 3 * (1 - t) * t^2 + b * t^3,t]
+    //-3 a (1-t)^2+3 c (1-t)^2-6 c (1-t) t+6 d (1-t) t+3 b t^2-3 d t^2
+    //-3 * c.a * pow(1-t,2) + 3 * c.c * pow(1-t,2) - 6 * c.c * (1-t) * t + 6 * c.d * (1 - t) * t + 3 * c.b * pow(t,2) - 3 * c.d * pow(t,2);
+    const float one_minus_t = 1 - t;
+    const float three_by_one_minus_t_squared = 3 * pow(one_minus_t, 2);
+    const float three_by_t_squared = 3 * pow(t,2);
+    const float six_by_1_minus_t_t = 6 * one_minus_t * t;
+    return -three_by_one_minus_t_squared * c.a + three_by_one_minus_t_squared * c.c - six_by_1_minus_t_t * c.c + six_by_1_minus_t_t * c.d + three_by_t_squared * c.b - three_by_t_squared * c.d;
+}
+
+__attribute__((const))
 __attribute__((swift_name("Cubic.isTechnicallyNormalized(self:)")))
 ///\abstract Checks if the cubic is technically normalized
 ///\discussion See the documentation for BCCubicNormalize for a discussion of this operation.
@@ -89,6 +104,21 @@ __attribute__((swift_name("Cubic.isTechnicallyNormalized(self:)")))
 static inline bool BCCubicIsTechnicallyNormalized(BCCubic c) {
     return simd_distance(c.c, c.a) != 0 && simd_distance(c.b, c.d)  != 0;
 }
+
+
+
+__attribute__((const))
+__attribute__((swift_name("Cubic.tangentAt(self:t:)")))
+///\abstract Evaluates the tangent at the given point
+///\warning UB for non-normalized cubic
+static inline bc_float_t BCCubicTangent(BCCubic c, bc_float_t t) {
+    //check UB
+    __BC_ASSERT(BCCubicIsTechnicallyNormalized(c));
+    bc_float2_t prime = BCCubicEvaluatePrime(c, t);
+    return atan2(prime.y, prime.x);
+}
+
+
 
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.asLine(self:)")))
