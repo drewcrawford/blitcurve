@@ -50,12 +50,20 @@ final class LineTests: XCTestCase {
         XCTAssertEqual(l0.evaluate(t: 1), .zero)
         XCTAssertEqual(l0.evaluate(t: 0.5), .zero)
     }
+    
+    func testArcLengthParameterization() {
+        let l = Line(a: .zero, b: SIMD2<Float>(100,100))
+        XCTAssertEqual(l.parameterization(arclength: 0),0)
+        XCTAssertEqual(1, l.parameterization(arclength: l.length))
+        XCTAssertEqual(0.5, l.parameterization(arclength: 70.71067), accuracy: 0.1)
+    }
 
     static var allTests = [
         ("testLine", testLine),
         ("testSlope", testSlope),
         ("testLength",testLength),
         ("testTangent",testTangent),
-        ("testEvaluate",testEvaluate)
+        ("testEvaluate",testEvaluate),
+        ("testArcLengthParametrization",testArcLengthParameterization)
     ]
 }

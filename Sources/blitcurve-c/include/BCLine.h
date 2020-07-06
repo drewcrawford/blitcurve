@@ -88,11 +88,20 @@ static inline bc_float_t BCLineTangent(BCLine l) {
 
 ///\abstract 'Evaluates' the line with the 'bezier parameter' [0..1]'
 ///\returns \c a for \c 0, \c b for \c 1, and otherwise a linear interpolation along the line
-//__attribute__((const))
+__attribute__((const))
 __attribute__((swift_name("Line.evaluate(self:t:)")))
 static inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
     __BC_ASSERT(t >= 0.0 && t <= 1.0);
     return simd_mix(l.a,l.b,simd_make_float2(t,t));
+}
+
+///Performs an arclength parameterization.  This finds a bezier parameter \c t (in range 0,1) that is a length specified from \c line.a.
+///\performance This is O(1).
+__attribute__((const))
+__attribute__((swift_name("Line.parameterization(self:arclength:)")))
+static inline bc_float_t BCLineArclengthParameterization(BCLine c, bc_float_t distance) {
+    __BC_ASSERT(BCLineLength(c) >= distance);
+    return distance / BCLineLength(c);
 }
 
 
