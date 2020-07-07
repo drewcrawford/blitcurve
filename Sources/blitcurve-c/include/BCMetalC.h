@@ -53,6 +53,7 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define simd_norm_inf(N) metal::fmax(fabs(N.x),fabs(N.y))
 
 #define bc_make_4x2 metal::float4x2
+#define bc_make_2x2 metal::float2x2
 #define bc_make_2x4 metal::float2x4
 #define bc_make_4x4 metal::float4x4
 #define simd_mul(X,Y) X * Y
@@ -74,6 +75,7 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define bc_make_4x2 simd_matrix
 #define bc_make_2x4 simd_matrix
 #define bc_make_4x4 simd_matrix
+#define bc_make_2x2 simd_matrix
 
 //address space qualifier
 #define __BC_DEVICE

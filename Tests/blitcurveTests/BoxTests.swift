@@ -14,7 +14,12 @@ class BoxTests: XCTestCase {
         XCTAssert(!box.isPointOnOrInside(SIMD2<Float>(-1,90)))
     }
     
+    func testAngle() {
+        let box = Box(center: SIMD2<Float>(50,50),angle: 0, lengths: SIMD2<Float>(25,25))
+        
+    }
     static var allTests = [
         ("testPointInside",testPointInside),
+        ("testAngle",testAngle),
     ]
 }

@@ -26,6 +26,33 @@ __attribute__((swift_name("Box.isPointOnOrInside(self:_:)")))
 bool BCBoxIsPointOnOrInside(BCBox b, bc_float2_t point);
 
 __attribute__((const))
+__attribute__((swift_name("Box.init(center:angle:lengths:)")))
+/**\abstract Create a BCBox from a point and angle
+\param center The centerpoint for this BCBox
+\param angle The angle about which to rotate.  Each value in the vector will be treated as the length in that dimension.  See diagram.
+\param lengths The lengths of the box.  Each value in the float2 maps to a dimension.  See the diagram
+\code
+                              
+                 ╱╲   angle
+                ╱  ╲ ▲
+               ╱    ╳
+              ╱    ╱ ╲
+             ╱    ╱   ╲
+            ╱    ╱    ╱
+           ╱         ╱
+          ╱  center ╱
+         ╱         ╱
+       ╲╱         ╱
+        ╲        ╱lengths.y
+         ╲      ╱
+          ╲    ╱
+lengths.x  ╲  ╱
+            ╲╱
+\endcode
+ */
+BCBox BCBoxMakeWithCenterAndAngle(bc_float2_t center, bc_float_t angle, bc_float2_t lengths);
+
+__attribute__((const))
 __attribute__((swift_name("getter:Box.d(self:)")))
 ///\abstract Calcuates the point D.
 ///\todo Possibly algorithms that need this value should be extracted to a different type to improve performance
