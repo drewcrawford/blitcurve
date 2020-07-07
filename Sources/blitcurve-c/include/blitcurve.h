@@ -12,4 +12,5 @@
 #import "BCStrategy.h"
 #import "BCTypes.h"
 #import "BCCubic2.h"
+#import "BCBox.h"
 

@@ -129,7 +129,6 @@ static inline BCLine BCCubicAsLine(BCCubic c) {
     l.b = c.b;
     return l;
 }
-
 __attribute__((swift_name("Cubic.normalize(self:approximateDistance:)")))
 ///\abstract Normalize the cubic
 ///\discussion When a control point is exactly (or in some contexts, merely 'near') an endpoint, it creates various problems.  For example, the definition of an initial tangent is the angle between \c a and \c c, but if \c a=c this angle is undefined.  We call such difficult curves  \a non-normalized.

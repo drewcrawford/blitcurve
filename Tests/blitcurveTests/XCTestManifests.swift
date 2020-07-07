@@ -6,6 +6,10 @@ import XCTest
 public func allTests() -> [XCTestCaseEntry] {
     return [
         testCase(LineTests.allTests),
+        testCase(BoxTests.allTests),
+        testCase(CubicTests.allTests),
+        testCase(LineTests.allTests),
+        testCase(ParameterTests.allTests)
     ]
 }
 #endif
