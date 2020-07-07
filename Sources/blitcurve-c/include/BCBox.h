@@ -22,7 +22,7 @@ typedef struct {
 
 ///\abstract Determines if the given point is on or inside the BCBox.
 __attribute__((const))
-__attribute__((swift_name("Box.isPointOnOrInside(self:point:)")))
+__attribute__((swift_name("Box.isPointOnOrInside(self:_:)")))
 bool BCBoxIsPointOnOrInside(BCBox b, bc_float2_t point);
 
 __attribute__((const))
