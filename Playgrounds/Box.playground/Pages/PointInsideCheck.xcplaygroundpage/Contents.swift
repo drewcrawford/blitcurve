@@ -3,7 +3,41 @@ import SwiftUI
 import PlaygroundSupport
 import blitcurve
 
-//note: This cannot be extracted due to FB7859836 I believe
+//note: This cannot be extracted due to some combination of FB7859836 and/or FB7935846 I believe
+public struct HoverView:UIViewRepresentable {
+    var hoverCallback: ((CGPoint) -> Void)
+    
+    public init(hoverCallback: @escaping ((CGPoint) -> Void)) {
+        self.hoverCallback = hoverCallback
+    }
+    public func makeUIView(context: UIViewRepresentableContext<HoverView>) -> UIView {
+        let v = UIView(frame: .zero)
+        v.isUserInteractionEnabled = true
+        //you might think it makes sense to use 'hover' here, however that does not work due to FB7860081
+        let gesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.hovered))
+        v.addGestureRecognizer(gesture)
+        return v
+    }
+
+    public class Coordinator: NSObject {
+        var hoverCallback: ((CGPoint) -> Void)
+        init(hoverCallback: @escaping ((CGPoint) -> Void)) {
+            self.hoverCallback = hoverCallback
+        }
+        @objc func hovered(gesture:UIHoverGestureRecognizer) {
+            let point = gesture.location(in: gesture.view)
+            self.hoverCallback(point)
+        }
+    }
+
+    public func makeCoordinator() -> HoverView.Coordinator {
+        return Coordinator(hoverCallback:self.hoverCallback)
+    }
+
+    public func updateUIView(_ uiView: UIView,
+                       context: UIViewRepresentableContext<HoverView>) {
+    }
+}
 public struct PointInsideChecker: View {
     let box: Box
     @State var hoverLocation: CGPoint?
@@ -12,7 +46,7 @@ public struct PointInsideChecker: View {
     }
     public var body: some View {
         ZStack {
-            Image(uiImage: box.playgroundDescription as! UIImage)
+            Box.View(box: box)
             if let hoverLocation = hoverLocation {
                 let inside = box.isPointOnOrInside(SIMD2<Float>(Float(hoverLocation.x), Float(hoverLocation.y)))
                 let circleColor: Color = inside ? .red : .blue
@@ -21,7 +55,7 @@ public struct PointInsideChecker: View {
             HoverView { (point) in
                 self.hoverLocation = point
             }
-        }
+        }.padding(20)
         
     }
 }
