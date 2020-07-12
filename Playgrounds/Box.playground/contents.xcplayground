@@ -3,6 +3,6 @@
     <pages>
         <page name='AngleCheck'/>
         <page name='PointInsideCheck'/>
-        <page name='Cubic'/>
+        <page name='Body'/>
     </pages>
 </playground>

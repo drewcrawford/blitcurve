@@ -88,7 +88,7 @@ extension Box {
                 PointView("d", coordinate: box.d)
                 Path { path in
                     path.addLines([CGPoint(box.a, scale: scale),CGPoint(box.b, scale: scale),CGPoint(box.c, scale: scale),CGPoint(box.d, scale: scale),CGPoint(box.a, scale: scale)])
-                }.scale(scale).stroke()
+                }.stroke()
 
             }
         }
@@ -135,6 +135,9 @@ public struct BStack<Content>: View where Content: View {
 extension BStack: Drawable { }
 @available(OSX 10.15.0, iOS 13.0.0, *)
 extension Cubic.View: Drawable { }
+
+@available(OSX 10.15.0, iOS 13.0.0, *)
+extension Box.View: Drawable { }
 
 //this workflow is broken due to FB7872591
 @available(OSX 10.15.0, iOS 13.0.0, *)
