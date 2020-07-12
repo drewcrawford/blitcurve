@@ -46,7 +46,7 @@ public struct PointInsideChecker: View {
     }
     public var body: some View {
         ZStack {
-            Box.View(box: box)
+            Box.View(box)
             if let hoverLocation = hoverLocation {
                 let inside = box.isPointOnOrInside(SIMD2<Float>(Float(hoverLocation.x), Float(hoverLocation.y)))
                 let circleColor: Color = inside ? .red : .blue
