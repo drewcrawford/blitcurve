@@ -48,7 +48,7 @@ public struct PointInsideChecker: View {
         ZStack {
             Rect.View(rect)
             if let hoverLocation = hoverLocation {
-                let inside = rect.isPointOnOrInside(SIMD2<Float>(Float(hoverLocation.x), Float(hoverLocation.y)))
+                let inside = Rect.isPointOnOrInside(points: rect.points3, point: SIMD2<Float>(Float(hoverLocation.x), Float(hoverLocation.y)))
                 let circleColor: Color = inside ? .red : .blue
                 Circle().offset(hoverLocation).size(width: 5, height: 5).foregroundColor(circleColor)
             }
@@ -63,5 +63,5 @@ public struct PointInsideChecker: View {
 
 
 
-let rect = Rect(a: SIMD2<Float>(0,0), b: SIMD2<Float>(0,100),c: SIMD2<Float>(100,100))
+let rect = Rect(center: SIMD2<Float>(50,50), lengths: SIMD2<Float>(100,100), angle: 0)
 PlaygroundPage.current.setLiveView(PointInsideChecker(rect: rect))

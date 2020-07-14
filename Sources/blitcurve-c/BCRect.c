@@ -2,11 +2,11 @@
 // ©2020 DrewCrawfordApps LLC
 
 #include "BCRect.h"
-bool BCRectIsPointOnOrInside(BCBox b, bc_float2_t point) {
-    simd_float2 ab = b.b - b.a;
-    simd_float2 am = point - b.a;
-    simd_float2 bc = b.c - b.b;
-    simd_float2 bm = point - b.b;
+bool BCRectIsPointOnOrInside(BC3Points b, bc_float2_t point) {
+    simd_float2 ab = b.a_b.hi - b.a_b.lo;
+    simd_float2 am = point - b.a_b.lo;
+    simd_float2 bc = b.c - b.a_b.hi;
+    simd_float2 bm = point - b.a_b.hi;
 
     float abam = simd_dot(ab, am);
     float abab = simd_dot(ab, ab);
@@ -19,19 +19,35 @@ bool BCRectIsPointOnOrInside(BCBox b, bc_float2_t point) {
     return false;
 }
 
-BCBox BCRectMakeWithCenterAndAngle(bc_float2_t center, bc_float_t angle, bc_float2_t lengths) {
-    bc_float2_t halflengths = lengths / 2;
+BC4Points BCRectGet4Points(BCRect r) {
+    bc_float2_t halflengths = r.lengths / 2;
     bc_float2_t _a = simd_make_float2(-halflengths.x, -halflengths.y);
     bc_float2_t _b = simd_make_float2(-halflengths.x,halflengths.y);
     bc_float2_t _c = simd_make_float2(halflengths.x,halflengths.y);
-    simd_float2x2 magic = bc_make_2x2(simd_make_float2(cos(angle),sin(angle)), simd_make_float2(-sin(angle),cos(angle)));
+    bc_float2_t _d = simd_make_float2(halflengths.x, -halflengths.y);
+    simd_float2x2 magic = bc_make_2x2(simd_make_float2(cos(r.angle),sin(r.angle)), simd_make_float2(-sin(r.angle),cos(r.angle)));
     bc_float4_t a_b = simd_make_float4(simd_mul(_a,magic),simd_mul(_b,magic));
-    bc_float2_t c = simd_mul(_c,magic);
-    a_b += simd_make_float4(center,center);
-    c += center;
-    BCBox out;
-    out.a = a_b.xy;
-    out.b = a_b.zw;
+    bc_float4_t c_d = simd_make_float4(simd_mul(_c, magic),simd_mul(_d,magic));
+    a_b += simd_make_float4(r.center,r.center);
+    c_d += simd_make_float4(r.center,r.center);
+    BC4Points out;
+    out.a_b = a_b;
+    out.c_d = c_d;
+    return out;
+}
+
+BC3Points BCRectGet3Points(BCRect r) {
+    bc_float2_t halflengths = r.lengths / 2;
+    bc_float2_t _a = simd_make_float2(-halflengths.x, -halflengths.y);
+    bc_float2_t _b = simd_make_float2(-halflengths.x,halflengths.y);
+    bc_float2_t _c = simd_make_float2(halflengths.x,halflengths.y);
+    simd_float2x2 magic = bc_make_2x2(simd_make_float2(cos(r.angle),sin(r.angle)), simd_make_float2(-sin(r.angle),cos(r.angle)));
+    bc_float4_t a_b = simd_make_float4(simd_mul(_a,magic),simd_mul(_b,magic));
+    bc_float2_t c = simd_mul(_c, magic);
+    a_b += simd_make_float4(r.center,r.center);
+    c += r.center;
+    BC3Points out;
+    out.a_b = a_b;
     out.c = c;
     return out;
 }

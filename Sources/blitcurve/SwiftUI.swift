@@ -81,13 +81,17 @@ extension Rect {
         private let box: Rect
         @Environment(\.scale) private var scale
         public var body: some SwiftUI.View {
-            ZStack(alignment: .topLeading) {
-                PointView("a", coordinate: box.a)
-                PointView("b", coordinate: box.b)
-                PointView("c", coordinate: box.c)
-                PointView("d", coordinate: box.d)
+            let a = box.points4.a_b.lowHalf
+            let b = box.points4.a_b.highHalf
+            let c = box.points4.c_d.lowHalf
+            let d = box.points4.c_d.highHalf
+            return ZStack(alignment: .topLeading) {
+                PointView("a", coordinate: a)
+                PointView("b", coordinate: b)
+                PointView("c", coordinate: c)
+                PointView("d", coordinate: d)
                 Path { path in
-                    path.addLines([CGPoint(box.a, scale: scale),CGPoint(box.b, scale: scale),CGPoint(box.c, scale: scale),CGPoint(box.d, scale: scale),CGPoint(box.a, scale: scale)])
+                    path.addLines([CGPoint(a, scale: scale),CGPoint(b, scale: scale),CGPoint(c, scale: scale),CGPoint(d, scale: scale),CGPoint(a, scale: scale)])
                 }.stroke()
 
             }
