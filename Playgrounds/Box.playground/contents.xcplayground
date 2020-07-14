@@ -4,5 +4,6 @@
         <page name='AngleCheck'/>
         <page name='PointInsideCheck'/>
         <page name='Body'/>
+        <page name='Body2'/>
     </pages>
 </playground>

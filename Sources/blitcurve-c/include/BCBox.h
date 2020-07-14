@@ -57,15 +57,10 @@ __attribute__((swift_name("getter:Box.d(self:)")))
 ///\abstract Calcuates the point D.
 ///\todo Possibly algorithms that need this value should be extracted to a different type to improve performance
 static inline bc_float2_t BCBoxD(BCBox b) {
-    BCLine dim2;
-    dim2.a = b.b;
-    dim2.b = b.c;
-    bc_float_t angle = BCLineTangent(dim2);
-    
     BCLine dim1;
     dim1.a = b.a;
     dim1.b = b.b;
-    BCLine r = BCLineMakeWithPointAndAngle(b.c,angle - M_PI / 2, BCLineLength(dim1));
+    BCLine r = BCLineMakeWithPointAndAngle(b.c,BCLineTangent(dim1) + M_PI, BCLineLength(dim1));
     return r.b;
 }
 
