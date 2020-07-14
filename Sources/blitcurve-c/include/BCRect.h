@@ -9,7 +9,7 @@
 ///\discussion This represents a rectangle, which is not necessarily axis-aligned (that is, it can be rotated to an arbitrary angle).
 ///Since this type is guaranteed to be a rectangle, it can be defined on 3 points.
 ///\see \c BCAlignedBox, for an axis-aligned type
-__attribute__((swift_name("Box")))
+__attribute__((swift_name("Rect")))
 typedef struct {
     ///\abstract first point in the winding order
     bc_float2_t a;
@@ -22,11 +22,11 @@ typedef struct {
 
 ///\abstract Determines if the given point is on or inside the BCBox.
 __attribute__((const))
-__attribute__((swift_name("Box.isPointOnOrInside(self:_:)")))
-bool BCBoxIsPointOnOrInside(BCBox b, bc_float2_t point);
+__attribute__((swift_name("Rect.isPointOnOrInside(self:_:)")))
+bool BCRectIsPointOnOrInside(BCBox b, bc_float2_t point);
 
 __attribute__((const))
-__attribute__((swift_name("Box.init(center:angle:lengths:)")))
+__attribute__((swift_name("Rect.init(center:angle:lengths:)")))
 /**\abstract Create a BCBox from a point and angle
 \param center The centerpoint for this BCBox
 \param angle The angle about which to rotate.  Each value in the vector will be treated as the length in that dimension.  See diagram.
@@ -50,10 +50,10 @@ lengths.x  ╲  ╱
             ╲╱
 \endcode
  */
-BCBox BCBoxMakeWithCenterAndAngle(bc_float2_t center, bc_float_t angle, bc_float2_t lengths);
+BCBox BCRectMakeWithCenterAndAngle(bc_float2_t center, bc_float_t angle, bc_float2_t lengths);
 
 __attribute__((const))
-__attribute__((swift_name("getter:Box.d(self:)")))
+__attribute__((swift_name("getter:Rect.d(self:)")))
 ///\abstract Calcuates the point D.
 ///\todo Possibly algorithms that need this value should be extracted to a different type to improve performance
 static inline bc_float2_t BCBoxD(BCBox b) {
@@ -64,10 +64,12 @@ static inline bc_float2_t BCBoxD(BCBox b) {
     return r.b;
 }
 
+static inline
+
 __attribute__((const))
-__attribute__((swift_name("getter:Box.max(self:)")))
+__attribute__((swift_name("getter:Rect.max(self:)")))
 ///\abstract Find the maximum x/y coordinate in the box.
-static inline bc_float2_t  BCBoxMax(BCBox b) {
+static inline bc_float2_t  BCRectMax(BCBox b) {
     bc_float2_t d = BCBoxD(b);
     bc_float_t x = simd_reduce_max(simd_make_float4(b.a.x,b.b.x,b.c.x,d.x));
     bc_float_t y = simd_reduce_max(simd_make_float4(b.a.y,b.b.y,b.c.y,d.y));

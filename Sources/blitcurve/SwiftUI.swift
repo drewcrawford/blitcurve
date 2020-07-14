@@ -76,9 +76,9 @@ public struct ScaledView<Content>: View where Content: View {
 
 
 @available(OSX 10.15.0, iOS 13.0.0, *)
-extension Box {
+extension Rect {
     public struct View: SwiftUI.View {
-        private let box: Box
+        private let box: Rect
         @Environment(\.scale) private var scale
         public var body: some SwiftUI.View {
             ZStack(alignment: .topLeading) {
@@ -92,7 +92,7 @@ extension Box {
 
             }
         }
-        public init(_ box: Box) {
+        public init(_ box: Rect) {
             self.box = box
         }
     }
@@ -137,7 +137,7 @@ extension BStack: Drawable { }
 extension Cubic.View: Drawable { }
 
 @available(OSX 10.15.0, iOS 13.0.0, *)
-extension Box.View: Drawable { }
+extension Rect.View: Drawable { }
 
 //this workflow is broken due to FB7872591
 @available(OSX 10.15.0, iOS 13.0.0, *)

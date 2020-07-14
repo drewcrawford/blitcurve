@@ -39,16 +39,16 @@ public struct HoverView:UIViewRepresentable {
     }
 }
 public struct PointInsideChecker: View {
-    let box: Box
+    let rect: Rect
     @State var hoverLocation: CGPoint?
-    public init(box: Box) {
-        self.box = box
+    public init(rect: Rect) {
+        self.rect = rect
     }
     public var body: some View {
         ZStack {
-            Box.View(box)
+            Rect.View(rect)
             if let hoverLocation = hoverLocation {
-                let inside = box.isPointOnOrInside(SIMD2<Float>(Float(hoverLocation.x), Float(hoverLocation.y)))
+                let inside = rect.isPointOnOrInside(SIMD2<Float>(Float(hoverLocation.x), Float(hoverLocation.y)))
                 let circleColor: Color = inside ? .red : .blue
                 Circle().offset(hoverLocation).size(width: 5, height: 5).foregroundColor(circleColor)
             }
@@ -63,5 +63,5 @@ public struct PointInsideChecker: View {
 
 
 
-let box = Box(a: SIMD2<Float>(0,0), b: SIMD2<Float>(0,100),c: SIMD2<Float>(100,100))
-PlaygroundPage.current.setLiveView(PointInsideChecker(box: box))
+let rect = Rect(a: SIMD2<Float>(0,0), b: SIMD2<Float>(0,100),c: SIMD2<Float>(100,100))
+PlaygroundPage.current.setLiveView(PointInsideChecker(rect: rect))

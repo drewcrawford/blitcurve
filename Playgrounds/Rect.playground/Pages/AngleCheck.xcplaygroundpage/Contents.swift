@@ -2,7 +2,7 @@
 import blitcurve
 import SwiftUI
 import PlaygroundSupport
-let box = Box(center: SIMD2<Float>(50,50),angle: Float.pi / 16, lengths: SIMD2<Float>(25,50))
+let rect = Rect(center: SIMD2<Float>(50,50),angle: Float.pi / 16, lengths: SIMD2<Float>(25,50))
 
 //note: This cannot be extracted due to some combination of FB7859836 and/or FB7935846 I believe
 public struct HoverView:UIViewRepresentable {
@@ -40,16 +40,16 @@ public struct HoverView:UIViewRepresentable {
     }
 }
 public struct PointInsideChecker: View {
-    let box: Box
+    let rect: Rect
     @State var hoverLocation: CGPoint?
-    public init(box: Box) {
-        self.box = box
+    public init(rect: Rect) {
+        self.rect = rect
     }
     public var body: some View {
         ZStack {
-            Box.View(box)
+            Rect.View(rect)
             if let hoverLocation = hoverLocation {
-                let inside = box.isPointOnOrInside(SIMD2<Float>(Float(hoverLocation.x), Float(hoverLocation.y)))
+                let inside = rect.isPointOnOrInside(SIMD2<Float>(Float(hoverLocation.x), Float(hoverLocation.y)))
                 let circleColor: Color = inside ? .red : .blue
                 Circle().offset(hoverLocation).size(width: 5, height: 5).foregroundColor(circleColor)
             }
@@ -61,4 +61,4 @@ public struct PointInsideChecker: View {
     }
 }
 
-PlaygroundPage.current.setLiveView(PointInsideChecker(box: box))
+PlaygroundPage.current.setLiveView(PointInsideChecker(rect: rect))

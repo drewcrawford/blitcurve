@@ -1,7 +1,8 @@
 //blitcurve.h: Umbrella header
 // ©2020 DrewCrawfordApps LLC
 
-#import "BCAlignedBox.h"
+#import "BCRect.h"
+#import "BCAlignedRect.h"
 #import "BCBezierParameter.h"
 #import "BCCubic.h"
 #import "BCLine.h"
@@ -12,5 +13,4 @@
 #import "BCStrategy.h"
 #import "BCTypes.h"
 #import "BCCubic2.h"
-#import "BCBox.h"
 

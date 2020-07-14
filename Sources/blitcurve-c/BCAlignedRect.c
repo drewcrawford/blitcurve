@@ -1,7 +1,7 @@
 // BCAlignedBox: Axis-aligned box
 // ©2020 DrewCrawfordApps LLC
-#import "BCAlignedBox.h"
-bool BCAlignedBoxesCornerWithinDistance(BCAlignedBox a, BCAlignedBox b,bc_float_t distance) {
+#import "BCAlignedRect.h"
+bool BCAlignedRectsCornerWithinDistance(BCAlignedRect a, BCAlignedRect b,bc_float_t distance) {
     /*we need to compare, potentially, every point in a with every point in b.
      
      First, do the subtraction for  a: (x:min,y:min) , (x:max,y:min), against b: all

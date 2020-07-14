@@ -1,8 +1,8 @@
-//BCBox.c: BCBox functions
+//BCRect.c: BCRect functions
 // ©2020 DrewCrawfordApps LLC
 
-#include "BCBox.h"
-bool BCBoxIsPointOnOrInside(BCBox b, bc_float2_t point) {
+#include "BCRect.h"
+bool BCRectIsPointOnOrInside(BCBox b, bc_float2_t point) {
     simd_float2 ab = b.b - b.a;
     simd_float2 am = point - b.a;
     simd_float2 bc = b.c - b.b;
@@ -19,7 +19,7 @@ bool BCBoxIsPointOnOrInside(BCBox b, bc_float2_t point) {
     return false;
 }
 
-BCBox BCBoxMakeWithCenterAndAngle(bc_float2_t center, bc_float_t angle, bc_float2_t lengths) {
+BCBox BCRectMakeWithCenterAndAngle(bc_float2_t center, bc_float_t angle, bc_float2_t lengths) {
     bc_float2_t halflengths = lengths / 2;
     bc_float2_t _a = simd_make_float2(-halflengths.x, -halflengths.y);
     bc_float2_t _b = simd_make_float2(-halflengths.x,halflengths.y);

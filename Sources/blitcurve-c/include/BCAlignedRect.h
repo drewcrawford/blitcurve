@@ -17,20 +17,20 @@
 ///@abstract An axis-aligned bounding box (AABB).
 ///@discussion An AlignedBox bounds, in some way, an underlying curve.  Depending on how it was constructed, the box may contain area significantly beyond the curve.
 ///Precomputation of boxes is useful for the early parts of mass intersection tests.
-__attribute__((swift_name("AlignedBox")))
+__attribute__((swift_name("AlignedRect")))
 typedef struct {
     ///minimum coordinate in the box
     bc_float2_t min;
     ///maximum coordinate in the box
     bc_float2_t max;
     
-} BCAlignedBox;
+} BCAlignedRect;
 
 ///\abstract Calculates a bounding box for a cubic.
 ///\param strategy The only value supported currently is \c fastest, which is O(1) and ~4 SIMD instructions
-__attribute__((swift_name("AlignedBox.init(cubic:strategy:)")))
-static inline BCAlignedBox BCAlignedBoxCreateFromCubic(BCCubic c, BCStrategy strategy) {
-    BCAlignedBox b;
+__attribute__((swift_name("AlignedRect.init(cubic:strategy:)")))
+static inline BCAlignedRect BCAlignedRectCreateFromCubic(BCCubic c, BCStrategy strategy) {
+    BCAlignedRect b;
 
     switch (strategy) {
         case BCStrategyFastest: {
@@ -50,13 +50,13 @@ static inline BCAlignedBox BCAlignedBoxCreateFromCubic(BCCubic c, BCStrategy str
 ///\abstract Determines whether any point in a is within a given distance of any point in b.
 ///\note Does not test the center point
 __attribute__((const))
-__attribute__((swift_name("AlignedBox.isCornerWithinDistance(self:to:distance:)")))
-bool BCAlignedBoxesCornerWithinDistance(BCAlignedBox a, BCAlignedBox b,bc_float_t distance);
+__attribute__((swift_name("AlignedRect.isCornerWithinDistance(self:to:distance:)")))
+bool BCAlignedRectsCornerWithinDistance(BCAlignedRect a, BCAlignedRect b,bc_float_t distance);
 
 ///\abstract Gets the center of the box
 __attribute__((const))
-__attribute__((swift_name("getter:AlignedBox.center(self:)")))
-static inline bc_float2_t BCAlignedBoxCenterPoint(BCAlignedBox a) {
+__attribute__((swift_name("getter:AlignedRect.center(self:)")))
+static inline bc_float2_t BCAlignedRectCenterPoint(BCAlignedRect a) {
     simd_float2 sum = a.max - a.min;
     return sum / 2 + a.min;
 }

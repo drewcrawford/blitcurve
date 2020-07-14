@@ -51,9 +51,9 @@ final class CubicTests: XCTestCase {
         
     }
     
-    func testAlignedBox() {
+    func testAlignedRect() {
         let curve = Cubic(a: SIMD2<Float>(x: 120, y: 60), b: SIMD2<Float>(x: 220, y: 40), c: SIMD2<Float>(x: 35, y: 200), d: SIMD2<Float>(x: 220, y: 260))
-        let box = AlignedBox(cubic: curve, strategy: .fastest)
+        let box = AlignedRect(cubic: curve, strategy: .fastest)
         XCTAssertEqual(box.min, SIMD2<Float>(35,40))
         XCTAssertEqual(box.max, SIMD2<Float>(220,260))
     }
@@ -149,6 +149,7 @@ final class CubicTests: XCTestCase {
         ("testEvaluate", testEvaluate),
         ("testNormalize", testEvaluate),
         ("testLength",testLength),
+        ("testAlignedRect",testAlignedRect),
         ("testSplit",testSplit),
         ("testParameterization",testParametrization),
         ("testTangent",testTangent),
