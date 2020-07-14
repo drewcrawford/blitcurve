@@ -12,15 +12,18 @@ private extension CGPoint {
 
 
 @available(OSX 10.15.0, iOS 13.0.0, *)
-fileprivate struct PointView: SwiftUI.View {
+public struct PointView: SwiftUI.View {
     @Environment(\.scale) var scale
 
-    var body: some View {
-        Text(label).padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: 0, trailing: 0))
+    public var body: some View {
+        ZStack(alignment:.topLeading) {
+            Circle().fill().frame(width: 1, height: 1, alignment: .center)
+            Text(label).padding(EdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 0))
+        }.padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: 0, trailing: 0))
     }
     let label: String
     let coordinate: SIMD2<Float>
-    init(_ label: String, coordinate: SIMD2<Float>) {
+    public init(_ label: String, coordinate: SIMD2<Float>) {
         self.label = label
         self.coordinate = coordinate
     }
