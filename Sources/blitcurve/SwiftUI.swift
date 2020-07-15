@@ -29,12 +29,24 @@ public struct PointView: SwiftUI.View {
     }
 }
 
+///This protocol provides various useful features for types that have points
+private protocol HasPoints {
+    var points: [SIMD2<Float>] { get }
 
-//@available(OSX 10.15.0, iOS 13.0.0, *)
-//
-//private final class _AnyDrawableBox: _AnyDrawableBoxBase {
-//
-//}
+}
+@available(OSX 10.15.0, iOS 13.0.0, *)
+extension HasPoints {
+    var pointViews: [PointView] {
+        let labels = ["a","b","c","d"]
+        var views: [PointView] = []
+        for (p,point) in points.enumerated() {
+            views.append(PointView(labels[p], coordinate: point))
+        }
+        return views
+    }
+}
+
+
 
 
 
@@ -47,10 +59,9 @@ extension Cubic {
         @Environment(\.scale) private var scale
         public var body: some SwiftUI.View {
             ZStack(alignment: .topLeading) {
-                PointView("a", coordinate: cubic.a)
-                PointView("b", coordinate: cubic.b)
-                PointView("c", coordinate: cubic.c)
-                PointView("d", coordinate: cubic.d)
+                ForEach(0..<pointViews.count) {
+                    pointViews[$0]
+                }
                 Path { path in
                     path.move(to: CGPoint(cubic.a, scale: scale))
                     path.addCurve(to: CGPoint(cubic.b, scale: scale), control1: CGPoint(cubic.c, scale: scale), control2: CGPoint(cubic.d, scale: scale))
@@ -62,6 +73,13 @@ extension Cubic {
         public init(_ cubic: Cubic) {
             self.cubic = cubic
         }
+    }
+}
+
+@available(OSX 10.15.0, iOS 13.0.0, *)
+extension Cubic.View: HasPoints {
+    var points: [SIMD2<Float>] {
+        [cubic.a,cubic.b,cubic.d,cubic.d]
     }
 }
 
@@ -81,7 +99,7 @@ public struct ScaledView<Content>: View where Content: View {
 @available(OSX 10.15.0, iOS 13.0.0, *)
 extension Rect {
     public struct View: SwiftUI.View {
-        private let box: Rect
+        fileprivate let box: Rect
         @Environment(\.scale) private var scale
         public var body: some SwiftUI.View {
             let a = box.points4.a_b.lowHalf
@@ -89,10 +107,9 @@ extension Rect {
             let c = box.points4.c_d.lowHalf
             let d = box.points4.c_d.highHalf
             return ZStack(alignment: .topLeading) {
-                PointView("a", coordinate: a)
-                PointView("b", coordinate: b)
-                PointView("c", coordinate: c)
-                PointView("d", coordinate: d)
+                ForEach(0..<pointViews.count) {
+                    pointViews[$0]
+                }
                 Path { path in
                     path.addLines([CGPoint(a, scale: scale),CGPoint(b, scale: scale),CGPoint(c, scale: scale),CGPoint(d, scale: scale),CGPoint(a, scale: scale)])
                 }.stroke()
@@ -102,6 +119,14 @@ extension Rect {
         public init(_ box: Rect) {
             self.box = box
         }
+    }
+}
+
+@available(OSX 10.15.0, iOS 13.0.0, *)
+extension Rect.View: HasPoints {
+    var points: [SIMD2<Float>] {
+        let points = box.points4
+        return [points.a_b.lowHalf,points.a_b.highHalf,points.c_d.lowHalf,points.c_d.highHalf]
     }
 }
 
