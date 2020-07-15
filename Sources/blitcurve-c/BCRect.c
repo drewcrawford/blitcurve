@@ -21,10 +21,12 @@ bool BCRectIsPointOnOrInside(BC3Points b, bc_float2_t point) {
 
 BC4Points BCRectGet4Points(BCRect r) {
     bc_float2_t halflengths = r.lengths / 2;
-    bc_float2_t _a = simd_make_float2(-halflengths.x, -halflengths.y);
-    bc_float2_t _b = simd_make_float2(-halflengths.x,halflengths.y);
-    bc_float2_t _c = simd_make_float2(halflengths.x,halflengths.y);
-    bc_float2_t _d = simd_make_float2(halflengths.x, -halflengths.y);
+    //unclear to me why, but we need to flip y and x
+    bc_float2_t halflengths_t = simd_make_float2(halflengths.y,halflengths.x);
+    bc_float2_t _a = simd_make_float2(halflengths_t.x, -halflengths_t.y);
+    bc_float2_t _b = simd_make_float2(halflengths_t.x,halflengths_t.y);
+    bc_float2_t _c = simd_make_float2(-halflengths_t.x,halflengths_t.y);
+    bc_float2_t _d = simd_make_float2(-halflengths_t.x, -halflengths_t.y);
     simd_float2x2 magic = bc_make_2x2(simd_make_float2(cos(r.angle),sin(r.angle)), simd_make_float2(-sin(r.angle),cos(r.angle)));
     bc_float4_t a_b = simd_make_float4(simd_mul(_a,magic),simd_mul(_b,magic));
     bc_float4_t c_d = simd_make_float4(simd_mul(_c, magic),simd_mul(_d,magic));
@@ -38,9 +40,11 @@ BC4Points BCRectGet4Points(BCRect r) {
 
 BC3Points BCRectGet3Points(BCRect r) {
     bc_float2_t halflengths = r.lengths / 2;
-    bc_float2_t _a = simd_make_float2(-halflengths.x, -halflengths.y);
-    bc_float2_t _b = simd_make_float2(-halflengths.x,halflengths.y);
-    bc_float2_t _c = simd_make_float2(halflengths.x,halflengths.y);
+    //unclear to me why, but we need to flip y and x
+    bc_float2_t halflengths_t = simd_make_float2(halflengths.y,halflengths.x);
+    bc_float2_t _a = simd_make_float2(halflengths_t.x, -halflengths_t.y);
+    bc_float2_t _b = simd_make_float2(halflengths_t.x,halflengths_t.y);
+    bc_float2_t _c = simd_make_float2(-halflengths_t.x,halflengths_t.y);
     simd_float2x2 magic = bc_make_2x2(simd_make_float2(cos(r.angle),sin(r.angle)), simd_make_float2(-sin(r.angle),cos(r.angle)));
     bc_float4_t a_b = simd_make_float4(simd_mul(_a,magic),simd_mul(_b,magic));
     bc_float2_t c = simd_mul(_c, magic);

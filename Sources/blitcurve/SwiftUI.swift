@@ -18,7 +18,7 @@ public struct PointView: SwiftUI.View {
     public var body: some View {
         ZStack(alignment:.topLeading) {
             Circle().fill().frame(width: 1, height: 1, alignment: .center)
-            Text(label).padding(EdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 0))
+            Text(label).padding(EdgeInsets(top: 2, leading: 2, bottom: 0, trailing: 0))
         }.padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: 0, trailing: 0))
     }
     let label: String
@@ -145,6 +145,8 @@ extension Cubic.View: Drawable { }
 
 @available(OSX 10.15.0, iOS 13.0.0, *)
 extension Rect.View: Drawable { }
+@available(OSX 10.15.0, iOS 13.0.0, *)
+extension PointView: Drawable { }
 
 //this workflow is broken due to FB7872591
 @available(OSX 10.15.0, iOS 13.0.0, *)

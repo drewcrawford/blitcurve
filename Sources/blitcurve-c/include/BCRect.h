@@ -63,11 +63,13 @@ bool BCRectIsPointOnOrInside(BC3Points b, bc_float2_t point);
 __attribute__((const))
 __attribute__((swift_name("getter:Rect.points4(self:)")))
 ///\abstract Gets all 4 points of the rectangle.
+///\discussion This will return point \c a in the upper-left (relative to the rect's angle).  \c b, \c c, and \c d will be in clockwise order (for an upper-right coordinate space).
 BC4Points BCRectGet4Points(BCRect r);
 
 __attribute__((const))
 __attribute__((swift_name("getter:Rect.points3(self:)")))
 ///\abstract Gets 3 points of the rectangle.
+///\discussion This will return point \c a in the upper-left (relative to the rect's angle).  \c b, \c c will be in clockwise order (for an upper-right coordinate space).
 BC3Points BCRectGet3Points(BCRect r);
 
 __attribute__((const))
