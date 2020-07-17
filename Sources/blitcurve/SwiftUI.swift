@@ -29,10 +29,27 @@ public struct PointView: SwiftUI.View {
     }
 }
 
+///BScene reads this in order to crop the scene to the minimum point
+fileprivate struct MinCoordinatePreferenceKey: PreferenceKey {
+    static var defaultValue: SIMD2<Float> { return .zero }
+    static func reduce(value: inout SIMD2<Float>, nextValue: () -> SIMD2<Float>) {
+        value = reduceMin(a: value, b: nextValue())
+    }
+}
+
 ///This protocol provides various useful features for types that have points
 private protocol HasPoints {
     var points: [SIMD2<Float>] { get }
-
+}
+private func reduceMin(a: SIMD2<Float>, b: SIMD2<Float>) -> SIMD2<Float> {
+    var a = a
+    if b.x < a.x {
+        a.x = b.x
+    }
+    if b.y < a.y {
+        a.y = b.y
+    }
+    return a
 }
 @available(OSX 10.15.0, iOS 13.0.0, *)
 extension HasPoints {
@@ -44,9 +61,12 @@ extension HasPoints {
         }
         return views
     }
+    ///Returns the minimum X/Y coordinate for this type.  If the receiver contains no points, this will return `.infinity`
+    ///- note: This is used to crop the view hierarchy to an interesting region
+    var minPoint: SIMD2<Float> {
+        points.reduce(SIMD2<Float>(.infinity,.infinity), reduceMin)
+    }
 }
-
-
 
 
 
@@ -65,7 +85,7 @@ extension Cubic {
                 Path { path in
                     path.move(to: CGPoint(cubic.a, scale: scale))
                     path.addCurve(to: CGPoint(cubic.b, scale: scale), control1: CGPoint(cubic.c, scale: scale), control2: CGPoint(cubic.d, scale: scale))
-                }.stroke(lineWidth: 1)
+                }.stroke(lineWidth: 1).preference(key: MinCoordinatePreferenceKey, value: minPoint)
 
             }
             
@@ -112,7 +132,7 @@ extension Rect {
                 }
                 Path { path in
                     path.addLines([CGPoint(a, scale: scale),CGPoint(b, scale: scale),CGPoint(c, scale: scale),CGPoint(d, scale: scale),CGPoint(a, scale: scale)])
-                }.stroke()
+                }.stroke().preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
 
             }
         }
@@ -153,13 +173,17 @@ extension EnvironmentValues {
 @available(OSX 10.15.0, iOS 13.0.0, *)
 public struct BStack<Content>: View where Content: View {
     let viewBuilder: () -> Content
+    @State var offset: SIMD2<Float> = .zero
+    @Environment(\.scale) var scale: CGFloat
     public init(@ViewBuilder children: @escaping () -> Content) {
         self.viewBuilder = children
     }
     public var body: some View {
         ZStack(alignment: .topLeading) {
             viewBuilder()
-        }
+        }.onPreferenceChange(MinCoordinatePreferenceKey) { value in
+            self.offset = value
+        }.offset(x: -CGPoint(offset, scale: scale).x, y: -CGPoint(offset, scale: scale).y)
     }
 }
 
