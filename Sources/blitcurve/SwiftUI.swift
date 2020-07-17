@@ -85,7 +85,7 @@ extension Cubic {
                 Path { path in
                     path.move(to: CGPoint(cubic.a, scale: scale))
                     path.addCurve(to: CGPoint(cubic.b, scale: scale), control1: CGPoint(cubic.c, scale: scale), control2: CGPoint(cubic.d, scale: scale))
-                }.stroke(lineWidth: 1).preference(key: MinCoordinatePreferenceKey, value: minPoint)
+                }.stroke(lineWidth: 1).preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
 
             }
             
@@ -181,7 +181,7 @@ public struct BStack<Content>: View where Content: View {
     public var body: some View {
         ZStack(alignment: .topLeading) {
             viewBuilder()
-        }.onPreferenceChange(MinCoordinatePreferenceKey) { value in
+        }.onPreferenceChange(MinCoordinatePreferenceKey.self) { value in
             self.offset = value
         }.offset(x: -CGPoint(offset, scale: scale).x, y: -CGPoint(offset, scale: scale).y)
     }
