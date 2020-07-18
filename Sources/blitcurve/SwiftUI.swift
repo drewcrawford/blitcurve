@@ -16,16 +16,33 @@ public struct PointView: SwiftUI.View {
     @Environment(\.scale) var scale
 
     public var body: some View {
-        ZStack(alignment:.topLeading) {
-            Circle().fill().frame(width: 1, height: 1, alignment: .center)
-            Text(label).padding(EdgeInsets(top: 2, leading: 2, bottom: 0, trailing: 0))
-        }.padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: 0, trailing: 0))
+        GeometryReader { proxy in
+            ZStack(alignment:.topLeading) {
+                Circle().fill().frame(width: 1, height: 1, alignment: .center)
+                Text(label).padding(EdgeInsets(top: 2, leading: 2, bottom: 0, trailing: 0))
+            }.padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: 0, trailing: 0))
+            .anchorPreference(key: MaxPointPreferenceKey.self, value: .bottomTrailing) {proxy[$0]}
+        }
     }
     let label: String
     let coordinate: SIMD2<Float>
     public init(_ label: String, coordinate: SIMD2<Float>) {
         self.label = label
         self.coordinate = coordinate
+    }
+}
+
+@available(OSX 10.15.0, iOS 13.0.0, *)
+fileprivate struct MaxPointPreferenceKey: PreferenceKey {
+    static var defaultValue: CGPoint {.zero}
+    static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) {
+        let n = nextValue()
+        if value.x < n.x {
+            value.x = n.x
+        }
+        if value.y < n.y {
+            value.y = n.y
+        }
     }
 }
 
@@ -121,20 +138,29 @@ extension Rect {
     public struct View: SwiftUI.View {
         fileprivate let box: Rect
         @Environment(\.scale) private var scale
+        @State private var preferredSize: CGSize? = nil
         public var body: some SwiftUI.View {
             let a = box.points4.a_b.lowHalf
             let b = box.points4.a_b.highHalf
             let c = box.points4.c_d.lowHalf
             let d = box.points4.c_d.highHalf
-            return ZStack(alignment: .topLeading) {
-                ForEach(0..<pointViews.count) {
-                    pointViews[$0]
+            return GeometryReader { proxy in
+                ZStack(alignment: .topLeading) {
+                    ForEach(0..<pointViews.count) {
+                        pointViews[$0]
+                    }
+                    Text(preferredSize?.debugDescription ?? "<nil>")
+                    Path { path in
+                        path.addLines([CGPoint(a, scale: scale),CGPoint(b, scale: scale),CGPoint(c, scale: scale),CGPoint(d, scale: scale),CGPoint(a, scale: scale)])
+                    }.stroke().preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
                 }
-                Path { path in
-                    path.addLines([CGPoint(a, scale: scale),CGPoint(b, scale: scale),CGPoint(c, scale: scale),CGPoint(d, scale: scale),CGPoint(a, scale: scale)])
-                }.stroke().preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
-
+                .border(Color.blue, width: 5)
+                .onPreferenceChange(MaxPointPreferenceKey.self) { value in
+                    self.preferredSize = CGSize(width: value.x, height: value.y)
+                }
+                .frame(width: preferredSize?.width, height: preferredSize?.height, alignment: .topLeading)
             }
+            
         }
         public init(_ box: Rect) {
             self.box = box
@@ -183,7 +209,8 @@ public struct BStack<Content>: View where Content: View {
             viewBuilder()
         }.onPreferenceChange(MinCoordinatePreferenceKey.self) { value in
             self.offset = value
-        }.offset(x: -CGPoint(offset, scale: scale).x, y: -CGPoint(offset, scale: scale).y)
+        }
+        //.offset(x: -CGPoint(offset, scale: scale).x, y: -CGPoint(offset, scale: scale).y)
     }
 }
 
