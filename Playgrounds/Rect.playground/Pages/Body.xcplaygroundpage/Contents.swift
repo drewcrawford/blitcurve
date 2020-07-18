@@ -9,7 +9,7 @@ struct D: View {
         BStack {
             Rect.View(rect)
             PointView("x",coordinate:SIMD2<Float>(11.925,10))
-        }.scale(by: 5)
+        }.scale(by: 20)
     }
 }
 PlaygroundPage.current.setLiveView(D())

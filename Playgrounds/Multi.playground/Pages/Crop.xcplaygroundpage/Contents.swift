@@ -10,7 +10,8 @@ struct PageView: View {
         BStack {
             Rect.View(b)
             Rect.View(b1)
-        }.frame(width: 200, height: 200)
+        }
+        
     }
 }
 

@@ -14,15 +14,19 @@ private extension CGPoint {
 @available(OSX 10.15.0, iOS 13.0.0, *)
 public struct PointView: SwiftUI.View {
     @Environment(\.scale) var scale
-
     public var body: some View {
-        GeometryReader { proxy in
-            ZStack(alignment:.topLeading) {
-                Circle().fill().frame(width: 1, height: 1, alignment: .center)
-                Text(label).padding(EdgeInsets(top: 2, leading: 2, bottom: 0, trailing: 0))
-            }.padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: 0, trailing: 0))
-            .anchorPreference(key: MaxPointPreferenceKey.self, value: .bottomTrailing) {proxy[$0]}
-        }
+        ZStack(alignment:.topLeading) {
+            Circle().fill().frame(width: 1, height: 1, alignment: .center)
+            Text(label).padding(EdgeInsets(top: 2, leading: 2, bottom: 0, trailing: 0))
+
+        }.padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: 0, trailing: 0))
+        .background(GeometryReader { proxy in
+            Color.clear //FBFB8061577
+            .anchorPreference(key: MaxPointPreferenceKey.self, value: .bottomTrailing) { anchor in
+                proxy[anchor]
+            }
+        })
+        
     }
     let label: String
     let coordinate: SIMD2<Float>
@@ -144,22 +148,19 @@ extension Rect {
             let b = box.points4.a_b.highHalf
             let c = box.points4.c_d.lowHalf
             let d = box.points4.c_d.highHalf
-            return GeometryReader { proxy in
-                ZStack(alignment: .topLeading) {
-                    ForEach(0..<pointViews.count) {
-                        pointViews[$0]
-                    }
-                    Text(preferredSize?.debugDescription ?? "<nil>")
-                    Path { path in
-                        path.addLines([CGPoint(a, scale: scale),CGPoint(b, scale: scale),CGPoint(c, scale: scale),CGPoint(d, scale: scale),CGPoint(a, scale: scale)])
-                    }.stroke().preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
+            return ZStack(alignment: .topLeading) {
+                ForEach(0..<pointViews.count) {
+                    pointViews[$0]
                 }
-                .border(Color.blue, width: 5)
-                .onPreferenceChange(MaxPointPreferenceKey.self) { value in
-                    self.preferredSize = CGSize(width: value.x, height: value.y)
-                }
-                .frame(width: preferredSize?.width, height: preferredSize?.height, alignment: .topLeading)
+                Path { path in
+                    path.addLines([CGPoint(a, scale: scale),CGPoint(b, scale: scale),CGPoint(c, scale: scale),CGPoint(d, scale: scale),CGPoint(a, scale: scale)])
+                }.stroke().preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
             }
+            .onPreferenceChange(MaxPointPreferenceKey.self) { value in
+                self.preferredSize = CGSize(width: value.x, height: value.y)
+            }
+            //.border(Color.red, width: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/)
+            .frame(width: preferredSize?.width, height: preferredSize?.height, alignment: .topLeading)
             
         }
         public init(_ box: Rect) {
@@ -200,6 +201,7 @@ extension EnvironmentValues {
 public struct BStack<Content>: View where Content: View {
     let viewBuilder: () -> Content
     @State var offset: SIMD2<Float> = .zero
+    @State var maxPoint: CGPoint? = nil
     @Environment(\.scale) var scale: CGFloat
     public init(@ViewBuilder children: @escaping () -> Content) {
         self.viewBuilder = children
@@ -210,7 +212,11 @@ public struct BStack<Content>: View where Content: View {
         }.onPreferenceChange(MinCoordinatePreferenceKey.self) { value in
             self.offset = value
         }
-        //.offset(x: -CGPoint(offset, scale: scale).x, y: -CGPoint(offset, scale: scale).y)
+        .onPreferenceChange(MaxPointPreferenceKey.self) { maxPoint = $0 }
+        .offset(x: -CGPoint(offset, scale: scale).x, y: -CGPoint(offset, scale: scale).y)
+        //.frame(width: maxPoint?.x, height: maxPoint?.y, alignment: .topLeading)
+        //note that setting a frame has no effect in playgrounds: FB8061500
+
     }
 }
 
