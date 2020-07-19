@@ -98,6 +98,8 @@ extension Cubic {
                 
         let cubic: Cubic
         @Environment(\.scale) private var scale
+        @State private var maxCoordinate: CGPoint? = nil
+
         public var body: some SwiftUI.View {
             ZStack(alignment: .topLeading) {
                 ForEach(0..<pointViews.count) {
@@ -109,6 +111,8 @@ extension Cubic {
                 }.stroke(lineWidth: 1).preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
 
             }
+            .frame(width: maxCoordinate?.x, height: maxCoordinate?.y, alignment: .topLeading)
+            .onPreferenceChange(MaxPointPreferenceKey.self) { maxCoordinate = $0}
             
         }
         public init(_ cubic: Cubic) {
@@ -120,7 +124,7 @@ extension Cubic {
 @available(OSX 10.15.0, iOS 13.0.0, *)
 extension Cubic.View: HasPoints {
     var points: [SIMD2<Float>] {
-        [cubic.a,cubic.b,cubic.d,cubic.d]
+        [cubic.a,cubic.b,cubic.c,cubic.d]
     }
 }
 
