@@ -19,7 +19,12 @@ public struct PointView: SwiftUI.View {
             Circle().fill().frame(width: 1, height: 1, alignment: .center)
             Text(label).padding(EdgeInsets(top: 2, leading: 2, bottom: 0, trailing: 0))
 
-        }.padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: 0, trailing: 0))
+        }
+        //setting padding does not inherently change the frame of the view.
+        //the frame here is frequently some viewport size, so if we set a top/leading padding that is well otuside of it,
+        //the Text may try to crop, leading to mysterously missing points.
+        //Setting the bottom /trailing to the equivalent negative value will allow us to extend outside the frame here
+        .padding(EdgeInsets(top: CGFloat(coordinate.y) * scale, leading: CGFloat(coordinate.x) * scale, bottom: -CGFloat(coordinate.y) * scale, trailing: -CGFloat(coordinate.x) * scale))
         .background(GeometryReader { proxy in
             Color.clear //FBFB8061577
             .anchorPreference(key: MaxPointPreferenceKey.self, value: .bottomTrailing) { anchor in
@@ -111,6 +116,7 @@ extension Cubic {
                 }.stroke(lineWidth: 1).preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
 
             }
+            //.border(Color.red, width: 2) //debugging purposes
             .frame(width: maxCoordinate?.x, height: maxCoordinate?.y, alignment: .topLeading)
             .onPreferenceChange(MaxPointPreferenceKey.self) { maxCoordinate = $0}
             

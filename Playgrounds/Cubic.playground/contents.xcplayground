@@ -3,5 +3,6 @@
     <pages>
         <page name='MissingPoints'/>
         <page name='Untitled Page'/>
+        <page name='MissingPoints2'/>
     </pages>
 </playground>
