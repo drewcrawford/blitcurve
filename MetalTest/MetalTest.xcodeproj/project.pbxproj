@@ -3,25 +3,27 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3A013EAA249ED4C200DAAEC8 /* MetalTest.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */; };
-		3A013EBC249EE5BF00DAAEC8 /* blitcurve.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EBB249EE5BF00DAAEC8 /* blitcurve.metal */; };
+		3A52F44D24C8DCDF00391C2A /* MetalTest.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MetalTest.metal; sourceTree = "<group>"; };
-		3A013EBB249EE5BF00DAAEC8 /* blitcurve.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = blitcurve.metal; sourceTree = "<group>"; };
+		3A41E8F424C7B744004A8BCA /* blitcurve */ = {isa = PBXFileReference; lastKnownFileType = folder; name = blitcurve; path = ..; sourceTree = "<group>"; };
+		3A85744F24C8AEAE004D0B91 /* MetalTest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MetalTest.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		3A013EA1249ED4C200DAAEC8 = {
 			isa = PBXGroup;
 			children = (
-				3A013EBB249EE5BF00DAAEC8 /* blitcurve.metal */,
+				3A85744F24C8AEAE004D0B91 /* MetalTest.xcodeproj */,
 				3A013EA8249ED4C200DAAEC8 /* MetalTest */,
+				3A41E8F424C7B744004A8BCA /* blitcurve */,
 			);
 			sourceTree = "<group>";
 		};
@@ -33,6 +35,11 @@
 			path = MetalTest;
 			sourceTree = "<group>";
 		};
+		3A85745024C8AEAE004D0B91 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -40,7 +47,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3A013EAD249ED4C200DAAEC8 /* Build configuration list for PBXNativeTarget "MetalTest" */;
 			buildPhases = (
-				3A013EB0249ED4CD00DAAEC8 /* ShellScript */,
+				3A85744D24C7E381004D0B91 /* ShellScript */,
 				3A013EA6249ED4C200DAAEC8 /* Sources */,
 			);
 			buildRules = (
@@ -49,6 +56,21 @@
 			);
 			name = MetalTest;
 			productName = MetalTest;
+			productType = "com.apple.product-type.metal-library";
+		};
+		3A52F44624C8DCD800391C2A /* MetalTest-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A52F44A24C8DCD900391C2A /* Build configuration list for PBXNativeTarget "MetalTest-ios" */;
+			buildPhases = (
+				3A52F44E24C8DCF800391C2A /* ShellScript */,
+				3A52F44524C8DCD800391C2A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MetalTest-ios";
+			productName = "MetalTest-ios";
 			productType = "com.apple.product-type.metal-library";
 		};
 /* End PBXNativeTarget section */
@@ -63,6 +85,9 @@
 					3A013EA7249ED4C200DAAEC8 = {
 						CreatedOnToolsVersion = 11.5;
 					};
+					3A52F44624C8DCD800391C2A = {
+						CreatedOnToolsVersion = 12.0;
+					};
 				};
 			};
 			buildConfigurationList = 3A013EA5249ED4C200DAAEC8 /* Build configuration list for PBXProject "MetalTest" */;
@@ -75,31 +100,58 @@
 			);
 			mainGroup = 3A013EA1249ED4C200DAAEC8;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3A85745024C8AEAE004D0B91 /* Products */;
+					ProjectRef = 3A85744F24C8AEAE004D0B91 /* MetalTest.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				3A013EA7249ED4C200DAAEC8 /* MetalTest */,
+				3A52F44624C8DCD800391C2A /* MetalTest-ios */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3A013EB0249ED4CD00DAAEC8 /* ShellScript */ = {
+		3A52F44E24C8DCF800391C2A /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${BLITCURVE_DIR}/inputfiles.txt",
 			);
 			inputPaths = (
 			);
 			outputFileListPaths = (
+				"${BLITCURVE_DIR}/outputfiles.txt",
 			);
 			outputPaths = (
-				"${SRCROOT}/blitcurve.metal",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n../makemetal.swift\n";
+			shellScript = "if [ -z ${BLITCURVE_DIR+x} ]; then \necho \"error: set BLITCURVE_DIR\"\nexit 1\nfi\n\n(\n    . \"${BLITCURVE_DIR}/makemetal.sh\"\n)\n";
+		};
+		3A85744D24C7E381004D0B91 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${BLITCURVE_DIR}/inputfiles.txt",
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+				"${BLITCURVE_DIR}/outputfiles.txt",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -z ${BLITCURVE_DIR+x} ]; then \necho \"error: set BLITCURVE_DIR\"\nexit 1\nfi\n\n(\n    . \"${BLITCURVE_DIR}/makemetal.sh\"\n)\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -108,8 +160,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A013EBC249EE5BF00DAAEC8 /* blitcurve.metal in Sources */,
 				3A013EAA249ED4C200DAAEC8 /* MetalTest.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A52F44524C8DCD800391C2A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A52F44D24C8DCDF00391C2A /* MetalTest.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +179,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BLITCURVE_DIR = ../;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -148,6 +208,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTLLINKER_FLAGS = "-L ${BUILT_PRODUCTS_DIR} -l blitcurve-metal ";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				MTL_HEADER_SEARCH_PATHS = "${SRCROOT}/../Sources/blitcurve-c/include";
@@ -160,6 +221,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BLITCURVE_DIR = ../;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -187,6 +249,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTLLINKER_FLAGS = "-L ${BUILT_PRODUCTS_DIR} -l blitcurve-metal ";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				MTL_HEADER_SEARCH_PATHS = "${SRCROOT}/../Sources/blitcurve-c/include";
@@ -213,6 +276,26 @@
 			};
 			name = Release;
 		};
+		3A52F44B24C8DCD900391C2A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		3A52F44C24C8DCD900391C2A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -230,6 +313,15 @@
 			buildConfigurations = (
 				3A013EAE249ED4C200DAAEC8 /* Debug */,
 				3A013EAF249ED4C200DAAEC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A52F44A24C8DCD900391C2A /* Build configuration list for PBXNativeTarget "MetalTest-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A52F44B24C8DCD900391C2A /* Debug */,
+				3A52F44C24C8DCD900391C2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

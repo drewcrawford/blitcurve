@@ -1,0 +1,7 @@
+${SCRIPT_DIR}/Sources/blitcurve-c/BCAlignedRect.c
+${SCRIPT_DIR}/Sources/blitcurve-c/BCBezierParameter.c
+${SCRIPT_DIR}/Sources/blitcurve-c/BCCubic.c
+${SCRIPT_DIR}/Sources/blitcurve-c/BCLine.c
+${SCRIPT_DIR}/Sources/blitcurve-c/BCLine2.c
+${SCRIPT_DIR}/Sources/blitcurve-c/BCMath.c
+${SCRIPT_DIR}/Sources/blitcurve-c/BCRect.c

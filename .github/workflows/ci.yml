@@ -30,4 +30,6 @@ jobs:
 
        # try metal
        cd MetalTest
-       xcodebuild | xcpretty && exit ${PIPESTATUS[0]}
+       xcodebuild -scheme MetalTest | xcpretty && exit ${PIPESTATUS[0]}
+       # need to use simulator here to avoid CS issues
+       xcodebuild -scheme MetalTest-ios -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
