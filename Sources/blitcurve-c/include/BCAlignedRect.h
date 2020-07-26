@@ -3,14 +3,14 @@
 
 #ifndef BCAlignedBox_h
 #define BCAlignedBox_h
-#import "BCTypes.h"
-#import "BCCubic.h"
-#import "BCStrategy.h"
-#import "BCMacros.h"
+#include "BCTypes.h"
+#include "BCCubic.h"
+#include "BCStrategy.h"
+#include "BCMacros.h"
 
 #ifndef __METAL_VERSION__
-#import <simd/simd.h>
-#import <stdbool.h>
+#include <simd/simd.h>
+#include <stdbool.h>
 #endif
 
 

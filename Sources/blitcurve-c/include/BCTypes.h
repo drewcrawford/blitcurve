@@ -5,7 +5,7 @@
 #define Types_h
 
 #ifndef __METAL_VERSION__
-#import <simd/simd.h>
+#include <simd/simd.h>
 #endif
 __attribute__((swift_name("BCFloat")))
 ///@typedef BlitCurve's internal float type.

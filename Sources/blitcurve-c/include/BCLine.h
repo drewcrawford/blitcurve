@@ -3,14 +3,14 @@
 
 #ifndef Line_h
 #define Line_h
-#import "BCTypes.h"
-#import "BCMacros.h"
-#import "BCMetalC.h"
+#include "BCTypes.h"
+#include "BCMacros.h"
+#include "BCMetalC.h"
 
 #ifndef __METAL_VERSION__
-#import <math.h>
-#import <assert.h>
-#import <simd/simd.h>
+#include <math.h>
+#include <assert.h>
+#include <simd/simd.h>
 #endif
 ///\abstract BCLine is a linesegment defined on 2 points
 ///\discussion Unlike some other notation, we use \c a and  \c b consistently for start and end points, reserving other values for control points.

@@ -1,9 +1,11 @@
 //BCBox.h: Arbitrary 2D box
 // ©2020 DrewCrawfordApps LLC
-#import "BCTypes.h"
-#import "BCLine.h"
+#ifndef BCBox_h
+#define BCBox_h
+#include "BCTypes.h"
+#include "BCLine.h"
 #ifndef __METAL_VERSION__
-#import <stdbool.h>
+#include <stdbool.h>
 #endif
 
 __attribute__((swift_name("Rect")))
@@ -87,3 +89,4 @@ static inline bc_float2_t  BCRectMax(BCRect b) {
     
     return simd_make_float2(x_f,y_f);
 }
+#endif

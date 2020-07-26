@@ -3,12 +3,12 @@
 
 #ifndef Math_h
 #define Math_h
-#import "BCMetalC.h"
+#include "BCMetalC.h"
 #ifndef __METAL_VERSION__
-#import <stdbool.h>
+#include <stdbool.h>
 #endif
 
-#import "BCTypes.h"
+#include "BCTypes.h"
 
 __attribute__((const))
 __attribute__((swift_name("IsNearlyEqual(a:b:)")))

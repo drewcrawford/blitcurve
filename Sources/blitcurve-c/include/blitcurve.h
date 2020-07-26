@@ -1,16 +1,17 @@
 //blitcurve.h: Umbrella header
 // ©2020 DrewCrawfordApps LLC
-
-#import "BCRect.h"
-#import "BCAlignedRect.h"
-#import "BCBezierParameter.h"
-#import "BCCubic.h"
-#import "BCLine.h"
-#import "BCLine2.h"
-#import "BCMacros.h"
-#import "BCMath.h"
-#import "BCMetalC.h"
-#import "BCStrategy.h"
-#import "BCTypes.h"
-#import "BCCubic2.h"
-
+#ifndef blitcurve_h
+#define blitcurve_h
+#include "BCRect.h"
+#include "BCAlignedRect.h"
+#include "BCBezierParameter.h"
+#include "BCCubic.h"
+#include "BCLine.h"
+#include "BCLine2.h"
+#include "BCMacros.h"
+#include "BCMath.h"
+#include "BCMetalC.h"
+#include "BCStrategy.h"
+#include "BCTypes.h"
+#include "BCCubic2.h"
+#endif

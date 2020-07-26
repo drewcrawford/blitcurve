@@ -11,7 +11,7 @@
 #else
 
 #ifndef __METAL_VERSION__
-#import <assert.h>
+#include <assert.h>
 #define __BC_ASSERT(X) assert(X)
 #else
 #define __BC_ASSERT(X) if (__builtin_expect(!(X),0)) {float device *f = 0; *f = 0;}

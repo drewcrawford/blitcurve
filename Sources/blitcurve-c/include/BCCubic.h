@@ -3,13 +3,13 @@
 
 #ifndef Cubic_h
 #define Cubic_h
-#import "BCMetalC.h"
+#include "BCMetalC.h"
 
-#import "BCTypes.h"
-#import "BCLine.h"
-#import "BCMath.h"
-#import "BCLine2.h"
-#import "BCCubic2.h"
+#include "BCTypes.h"
+#include "BCLine.h"
+#include "BCMath.h"
+#include "BCLine2.h"
+#include "BCCubic2.h"
 
 #ifndef __METAL_VERSION__
 #include <stdbool.h>

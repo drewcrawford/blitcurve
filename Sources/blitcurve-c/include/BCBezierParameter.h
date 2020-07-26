@@ -1,7 +1,9 @@
 //BCBezierParameter.h: Bezier parameter functions
 // ©2020 DrewCrawfordApps LLC
-#import "BCTypes.h"
-#import "BCMacros.h"
+#ifndef BCBezierParameter_h
+#define BCBezierParameter_h
+#include "BCTypes.h"
+#include "BCMacros.h"
 
 ///\abstract Converts between a vertex ID and a bezier parameter.
 ///\param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.  This must be \c <vertexesPerInstance.
@@ -39,5 +41,4 @@ inline bc_float_t BCVertexToBezierParameterWithBounds(uint16_t vertexID, unsigne
     float range = upperT - lowerT;
     return ((float)vertexID) / (vertexesPerInstance - 1) * range + lowerT;
 }
-
-
+#endif
