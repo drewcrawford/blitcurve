@@ -188,6 +188,42 @@ extension Rect.View: HasPoints {
 }
 
 @available(OSX 10.15.0, iOS 13.0.0, *)
+extension Line {
+    public struct View: SwiftUI.View {
+        fileprivate let line: Line
+        @Environment(\.scale) private var scale
+        @State private var preferredSize: CGSize? = nil
+        public var body: some SwiftUI.View {
+            ZStack(alignment: .topLeading) {
+                ForEach(0..<pointViews.count) {
+                    pointViews[$0]
+                }
+                Path { path in
+                    path.addLines([CGPoint(line.a, scale: scale),CGPoint(line.b, scale: scale)])
+                }.stroke()
+                .preference(key: MinCoordinatePreferenceKey.self, value: minPoint)
+            }
+            .onPreferenceChange(MaxPointPreferenceKey.self) { value in
+                self.preferredSize = CGSize(width: value.x, height: value.y)
+            }
+            //.border(Color.red, width: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/)
+            .frame(width: preferredSize?.width, height: preferredSize?.height, alignment: .topLeading)
+            
+        }
+        public init(_ line: Line) {
+            self.line = line
+        }
+    }
+}
+
+@available(OSX 10.15.0, iOS 13.0.0, *)
+extension Line.View: HasPoints {
+    var points: [SIMD2<Float>] {
+        return [line.a,line.b]
+    }
+}
+
+@available(OSX 10.15.0, iOS 13.0.0, *)
 private struct ScaleKey: EnvironmentKey {
     static var defaultValue: CGFloat { 1 }
 }
