@@ -1,9 +1,9 @@
 // BCMetalC.h: C-style syntax for metal
 // ©2020 DrewCrawfordApps LLC
 
-//#ifndef BCMetalC_h
-//#define BCMetalC_h
-//
+#ifndef BCMetalC_h
+#define BCMetalC_h
+
 #ifdef __METAL_VERSION__
 #include <metal_stdlib>
 //__attribute__((__overloadable__))
@@ -80,7 +80,6 @@ static inline float simd_reduce_max(simd::float4 x) {
 
 //address space qualifier
 #define __BC_DEVICE
-
 #endif
 
-//#endif
+#endif //BCMetalC_h
