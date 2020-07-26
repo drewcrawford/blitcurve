@@ -9,40 +9,12 @@ blitcurve has a first-class Swift API for use in iOS and macOS applications.  It
 
 
 
-## Linking blitcurve (Xcode)
-
-1.  Add a dependency on blitcurve.  File->Swift Packages->Add Package Dependencies...
-2.  In your target settings, add blitcurve to your "Frameworks, Libraries, and Embedded Content".
-
-### Linking the metal version
-
-Blitcurve is cross-compiled: there's a C version and a metal shader version, so you can use it from inside metal shaders.
-To add the metal shader version, you need to perform some additional steps.
-1.  First, you need to add a build setting.  Scroll down to the "Metal Compiler - Build Options" heading and set `MTL_HEADER_SEARCH_PATHS` to be `${HEADER_SEARCH_PATHS}`.  
-2.  Now you need to add some *custom* build settings.  You can do this by opening the project settings, and then choosing Edit -> Add Build Setting -> Add User Defined Setting.
-    * Set `BLITCURVE_DIR` to the path to blitcurve on disk.  This is typically `${BUILD_ROOT}/../../SourcePackages/Checkouts/blitcurve` if your dependency is managed by Xcode.
-    * Set `MTLLINKER_FLAGS` to `-L ${BUILT_PRODUCTS_DIR} -l blitcurve-metal`.  
-    ![Example of settings](https://media.githubusercontent.com/media/drewcrawford/blitcurve/master/Documentation/images/build_settings.png)
-    
-3.  Create a "run script" phase for your target.  
-    * The phase should be before the "Compile Sources" phase in your target settings.  You may need to drag it earlier in the list.
-    * The phase should have the following contents:
-        ```sh
-        if [ -z ${BLITCURVE_DIR+x} ]; then 
-        echo "error: set BLITCURVE_DIR"
-        exit 1
-        fi
-        (
-            . "${BLITCURVE_DIR}/makemetal.sh"
-        )
-        ```
-    * The "Input file lists" should contain one entry, `${BLITCURVE_DIR}/inputfiles.txt`.  This improves incremental compile speeds.
-    * The "Output file lists" should contain one entry, `${BLITCURVE_DIR}/outputfiles.txt`  This improves incremental compile speeds.
-    ![Example of phase](https://media.githubusercontent.com/media/drewcrawford/blitcurve/master/Documentation/images/script_phase.png)
-    
+# Installation
+See the [Installation](https://github.com/drewcrawford/blitcurve/wiki/Installation) page.
 
 # Using blitcurve
 
+For more examples, see the [Wiki](https://github.com/drewcrawford/blitcurve/wiki/Installation) and the [Playgrounds](Playgrounds) directory.
 
 ## SwiftUI 
 
