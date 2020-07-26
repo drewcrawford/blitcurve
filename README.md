@@ -1,6 +1,12 @@
 # blitcurve
 
-A description of this package.
+blitcurve is a C/C++ library for bezier curves and similar 2D geometric primitives, including common algorithms.  
+These mathematical objects have applications in games, animations, physical behaviors, simulations, etc. 
+
+blitcurve has a first-class Swift API for use in iOS and macOS applications.  It also cross-compiles for Metal and can be used entirely on-GPU, in which case it is many orders-of-magnitude faster than alternative bezier curve approaches.
+
+![status](https://img.shields.io/badge/status-alpha-red) ![xcode](https://img.shields.io/badge/xcode-12-blue) ![platforms](https://img.shields.io/badge/platforms-ios%20%7C%20macOS-lightgrey) ![license](https://img.shields.io/badge/license-noncommercial-important)
+
 
 
 ## Linking blitcurve (Xcode)
