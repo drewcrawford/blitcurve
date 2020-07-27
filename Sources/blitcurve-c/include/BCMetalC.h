@@ -65,6 +65,7 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define simd_distance simd::distance
 #define simd_dot simd::dot
 #define simd_max simd::max
+#define simd_sign simd::sign
 
 #define __BC_DEVICE device
 

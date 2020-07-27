@@ -89,4 +89,11 @@ static inline bc_float2_t  BCRectMax(BCRect b) {
     
     return simd_make_float2(x_f,y_f);
 }
+
+__attribute__((const))
+__attribute__((swift_name("BCRect.intersects(_:_:)")))
+///\abstract Calculates whether 2 \c BCRect intersect
+///\param e 4 points.  Result is undefined if these do not define a \c BCRect
+///\param f 4 points.  Result is undefined if these do not define a \c BCRect
+bool BCRectIntersects(BC4Points e, BC4Points f);
 #endif

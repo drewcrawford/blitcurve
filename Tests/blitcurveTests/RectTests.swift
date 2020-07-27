@@ -42,10 +42,21 @@ class BoxTests: XCTestCase {
         XCTAssertEqual(points.c_d.lowHalf, points3.c)
     }
     
+    func testIntersection() {
+        let r = Rect(center: SIMD2<Float>(10,10), lengths: SIMD2<Float>(1,1), angle: 0)
+        let r2 = Rect(center: SIMD2<Float>(15,15), lengths: SIMD2<Float>(1,1), angle: 0)
+        XCTAssert(!Rect.intersects(r.points4,r2.points4))
+        
+        let ra =  Rect(center: SIMD2<Float>(58.95, 110.0), lengths: SIMD2<Float>(1.675, 3.85), angle: -2.0940719)
+        let rb = Rect(center: SIMD2<Float>(58.95, 110.0), lengths: SIMD2<Float>(1.675, 3.85), angle: -0.5216182)
+        XCTAssert(Rect.intersects(ra.points4, rb.points4))
+    }
+    
 
     static var allTests = [
         ("testPointInside",testPointInside),
         ("testPoints",testPoints),
         ("testPointsWithRotation",testPointsWithRotation),
+        ("testIntersection",testIntersection),
     ]
 }
