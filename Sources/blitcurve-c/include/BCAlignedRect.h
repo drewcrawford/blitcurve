@@ -61,4 +61,10 @@ static inline bc_float2_t BCAlignedRectCenterPoint(BCAlignedRect a) {
     return sum / 2 + a.min;
 }
 
+///\abstract Determines whether the given point is on or inside the rect.
+__attribute__((const))
+__attribute__((swift_name("AlignedRect.isPointOnOrInside(self:_:)")))
+static inline bool BCAlignedRectIsPointOnOrInside(BCAlignedRect a, bc_float2_t point) {
+    return (a.min.x <= point.x && a.max.x >= point.x && a.min.y <= point.y && a.max.y >= point.y);
+}
 #endif

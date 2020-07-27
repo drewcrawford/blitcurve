@@ -24,9 +24,22 @@ class AlignedRectTests: XCTestCase {
         XCTAssert(a.center == SIMD2<Float>(1.5,1.5))
     }
     
+    func testIsPointOnOrInside() {
+        let a = AlignedRect(min: .one, max: SIMD2<Float>(2,2))
+        XCTAssert(a.isPointOnOrInside(SIMD2<Float>(1.5,1.5)))
+        XCTAssert(a.isPointOnOrInside(a.min))
+        XCTAssert(a.isPointOnOrInside(a.max))
+        XCTAssert(!a.isPointOnOrInside(SIMD2<Float>(2.01,2)))
+        XCTAssert(!a.isPointOnOrInside(SIMD2<Float>(2,2.01)))
+        XCTAssert(!a.isPointOnOrInside(SIMD2<Float>(0.99,0.99)))
+        XCTAssert(!a.isPointOnOrInside(SIMD2<Float>(0.99,1.5)))
+
+    }
+    
     static var allTests = [
         ("testApartCorners", testApartCorners),
         ("testFarCorners", testFarCorners),
         ("testCenterPoint", testCenterPoint),
+        ("testIsPointOnOrInside",testIsPointOnOrInside),
     ]
 }
