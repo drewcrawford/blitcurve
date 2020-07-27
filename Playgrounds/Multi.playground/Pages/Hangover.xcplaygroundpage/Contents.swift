@@ -17,6 +17,7 @@ struct D: View {
             Cubic.View(r2).foregroundColor(.blue)
             Rect.View(b1)
         }.scale(by: 10)
+        .frame(width: 300, height: 300, alignment: .topLeading)
     }
     
 }

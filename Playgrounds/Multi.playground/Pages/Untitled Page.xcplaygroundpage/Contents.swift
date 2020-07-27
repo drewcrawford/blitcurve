@@ -21,6 +21,7 @@ struct PageView: View {
             Cubic.View(b2Rail).foregroundColor(.green)
             Rect.View(b2).foregroundColor(Color.yellow)
         }.scale(by: 5)
+        .frame(width: 300, height: 300, alignment: .topLeading)
     }
 }
 

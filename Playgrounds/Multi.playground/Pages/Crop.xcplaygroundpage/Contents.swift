@@ -11,6 +11,7 @@ struct PageView: View {
             Rect.View(b)
             Rect.View(b1)
         }
+        .frame(width: 300, height: 300, alignment: .topLeading)
         
     }
 }
