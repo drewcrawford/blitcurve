@@ -29,10 +29,23 @@ class BoxTests: XCTestCase {
 
     }
     
+    func testPointsWithRotation() {
+        //This test case also checks the rotation, by providing a non-zero angle
+        let r = Rect(center: SIMD2<Float>(58.491684, 109.1976), lengths: SIMD2<Float>(1.675, 3.85), angle: -2.0864184)
+        let points = r.points4
+        
+        XCTAssertEqual(points.a_b, SIMD4<Float>(56.8139, 107.93583, 58.271126, 107.109924))
+        XCTAssertEqual(points.c_d, SIMD4<Float>(60.169468, 110.45937, 58.712242, 111.28528))
+        
+        let points3 = r.points3
+        XCTAssertEqual(points.a_b, points3.a_b)
+        XCTAssertEqual(points.c_d.lowHalf, points3.c)
+    }
+    
 
     static var allTests = [
         ("testPointInside",testPointInside),
         ("testPoints",testPoints),
-
+        ("testPointsWithRotation",testPointsWithRotation),
     ]
 }

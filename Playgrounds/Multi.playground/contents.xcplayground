@@ -3,5 +3,7 @@
     <pages>
         <page name='Hangover'/>
         <page name='Untitled Page'/>
+        <page name='Crop'/>
+        <page name='BoxTangent'/>
     </pages>
 </playground>
