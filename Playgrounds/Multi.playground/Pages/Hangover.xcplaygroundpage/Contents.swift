@@ -9,7 +9,6 @@ let r1 = Cubic(connecting: Line(a: .zero, b: SIMD2<Float>(10,10)), initialTangen
 let r2 = Cubic(connecting: Line(a: SIMD2<Float>(10,10), b: SIMD2<Float>(20,20)), initialTangent: 0, finalTangent: 0)
 
 let b1 = Rect(center: r1.evaluate(t: 1), lengths: SIMD2<Float>(1.675,3.85),angle: r1.tangentAt(t: 1))
-
 struct D: View {
     var body: some View {
         BStack {

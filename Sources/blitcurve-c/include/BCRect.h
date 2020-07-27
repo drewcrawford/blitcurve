@@ -14,22 +14,22 @@ __attribute__((swift_name("Rect")))
 Since this type is guaranteed to be a rectangle, it can be defined on 3 points.
 \see \c BCAlignedBox, for an axis-aligned type
  \code
-                               
+                   a
                   ╱╲   angle
                  ╱  ╲ ▲
                 ╱    ╳
                ╱    ╱ ╲
-              ╱    ╱   ╲
+              ╱    ╱   ╲ b
              ╱    ╱    ╱
             ╱         ╱
            ╱  center ╱
           ╱         ╱
-        ╲╱         ╱
+      d  ╱         ╱
          ╲        ╱lengths.y
           ╲      ╱
            ╲    ╱
  lengths.x  ╲  ╱
-             ╲╱
+             ╲╱c
  \endcode
  */
 typedef struct {
