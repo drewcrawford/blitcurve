@@ -68,17 +68,17 @@ static bool BCRectHalfIntersects(BCRect fixed, BCRect movable) {
     //this is mostly to assist the compiler in vectorizing if it would like
     bc_float4_t xPoints = simd_make_float4(testPoints.a_b.even, testPoints.c_d.even);
     bc_float4_t yPoints = simd_make_float4(testPoints.a_b.odd, testPoints.c_d.odd);
-    if (xPoints.x <= -fixed.lengths.y && xPoints.y <= -fixed.lengths.y && xPoints.z <= -fixed.lengths.y && xPoints.w <= -fixed.lengths.y ) {
+    if (xPoints.x <= -halflengths.y && xPoints.y <= -halflengths.y && xPoints.z <= -halflengths.y && xPoints.w <= -halflengths.y ) {
         return false; //no intersection
     }
-    if (xPoints.x >= fixed.lengths.y && xPoints.y >= fixed.lengths.y && xPoints.z >= fixed.lengths.y && xPoints.w >= fixed.lengths.y ) {
+    if (xPoints.x >= halflengths.y && xPoints.y >= halflengths.y && xPoints.z >= halflengths.y && xPoints.w >= halflengths.y ) {
         return false; //no intersection
     }
     
-    if (yPoints.x <= -fixed.lengths.x && yPoints.y <= -fixed.lengths.x && yPoints.z <= -fixed.lengths.x && yPoints.w <= -fixed.lengths.x ) {
+    if (yPoints.x <= -halflengths.x && yPoints.y <= -halflengths.x && yPoints.z <= -halflengths.x && yPoints.w <= -halflengths.x ) {
         return false; //no intersection
     }
-    if (yPoints.x >= fixed.lengths.x && yPoints.y >= fixed.lengths.x && yPoints.z >= fixed.lengths.x && yPoints.w >= fixed.lengths.x ) {
+    if (yPoints.x >= halflengths.x && yPoints.y >= halflengths.x && yPoints.z >= halflengths.x && yPoints.w >= halflengths.x ) {
         return false; //no intersection
     }
     return true;

@@ -85,6 +85,14 @@ class BoxTests: XCTestCase {
             XCTAssert(rb1.intersects(rb2))
         }
         
+        //new counterexample
+        do {
+            let rb1 = Rect(center: SIMD2<Float>(14.456929,13.791821), lengths: SIMD2<Float>(1,1), angle: 0)
+            let rb2 = Rect(center: SIMD2<Float>(15,15), lengths: SIMD2<Float>(1,1), angle: 0)
+            XCTAssert(!rb1.intersects(rb2))
+        }
+        
+        
     }
     
 
