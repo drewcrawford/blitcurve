@@ -62,7 +62,7 @@ static bool BCRectHalfIntersects(BCRect fixed, BCRect movable) {
     bc_float2_t halflengths = fixed.lengths / 2;
     movable.angle -= fixed.angle;
     movable.center -= fixed.center;
-    movable.center -= halflengths;
+    movable.center += halflengths;
     
     BC4Points testPoints = BCRectGet4Points(movable);
     //swap all the x/y coordinates into a simd4
