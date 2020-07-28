@@ -43,7 +43,7 @@ struct R: View {
     @State var r1 = Rect(center: SIMD2<Float>(10,10), lengths: SIMD2<Float>(1,1), angle: 0)
     @State var r2 = Rect(center: SIMD2<Float>(15,15), lengths: SIMD2<Float>(1,1), angle: 0)
     var color: Color {
-        if Rect.intersects(r1.points4, r2.points4) {
+        if r1.intersects(r2) {
             return .red
         }
         return .black

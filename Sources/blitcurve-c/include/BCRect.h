@@ -74,6 +74,8 @@ __attribute__((swift_name("getter:Rect.points3(self:)")))
 ///\discussion This will return point \c a in the upper-left (relative to the rect's angle).  \c b, \c c will be in clockwise order (for an upper-right coordinate space).
 BC3Points BCRectGet3Points(BCRect r);
 
+
+
 __attribute__((const))
 __attribute__((swift_name("getter:Rect.max(self:)")))
 ///\abstract Find the maximum x/y coordinate in the box.
@@ -90,10 +92,10 @@ static inline bc_float2_t  BCRectMax(BCRect b) {
     return simd_make_float2(x_f,y_f);
 }
 
+
+
 __attribute__((const))
-__attribute__((swift_name("BCRect.intersects(_:_:)")))
+__attribute__((swift_name("BCRect.intersects(self:_:)")))
 ///\abstract Calculates whether 2 \c BCRect intersect
-///\param e 4 points.  Result is undefined if these do not define a \c BCRect
-///\param f 4 points.  Result is undefined if these do not define a \c BCRect
-bool BCRectIntersects(BC4Points e, BC4Points f);
+bool BCRectIntersects(BCRect e, BCRect f);
 #endif

@@ -56,88 +56,34 @@ BC3Points BCRectGet3Points(BCRect r) {
     return out;
 }
 
-__attribute__((const))
-///This is an implementation detail of\c  BCRectIntersects
-static float BCRectIntersectsMakePointsign(bc_float2_t testPoint, bc_float2_t edgePoint, bc_float2_t perpendicular) {
-    bc_float2_t sub = testPoint - edgePoint;
-    bc_float_t dot = simd_dot(perpendicular, sub);
-    return simd_sign(dot);
-}
-
-__attribute__((const))
-///This is an implementation detail of \c BCRectIntersects
-///\param e_a This is a point to check on e.  Note that we don't check points that are part of the edge itself.
-static bool BCRectIntersectsLineSeparates(bc_float2_t e_a,  BC4Points f, bc_float2_t edgePoint, bc_float2_t perpendicular) {
-     
-    //first, we calculate sign for e_a
-    float sign = BCRectIntersectsMakePointsign(e_a, edgePoint, perpendicular);
-    //ensure that all f points are on a different side
-    if (BCRectIntersectsMakePointsign(f.a_b.lo, edgePoint, perpendicular) == sign) {
-        return false;
+///\abstract implementation detail of \c BCRectIntersects
+///\return \c false if we know there is no intersection, or \c true for inconclusive
+static bool BCRectHalfIntersects(BCRect fixed, BCRect movable) {
+    bc_float2_t halflengths = fixed.lengths / 2;
+    movable.angle -= fixed.angle;
+    movable.center -= fixed.center;
+    movable.center -= halflengths;
+    
+    BC4Points testPoints = BCRectGet4Points(movable);
+    //swap all the x/y coordinates into a simd4
+    //this is mostly to assist the compiler in vectorizing if it would like
+    bc_float4_t xPoints = simd_make_float4(testPoints.a_b.even, testPoints.c_d.even);
+    bc_float4_t yPoints = simd_make_float4(testPoints.a_b.odd, testPoints.c_d.odd);
+    if (xPoints.x <= -fixed.lengths.x && xPoints.y <= -fixed.lengths.x && xPoints.z <= -fixed.lengths.x && xPoints.w <= -fixed.lengths.x ) {
+        return false; //no intersection
     }
-    if (BCRectIntersectsMakePointsign(f.a_b.hi, edgePoint, perpendicular) == sign) {
-        return false;
+    if (xPoints.x >= fixed.lengths.x && xPoints.y >= fixed.lengths.x && xPoints.z >= fixed.lengths.x && xPoints.w >= fixed.lengths.x ) {
+        return false; //no intersection
     }
-    if (BCRectIntersectsMakePointsign(f.c_d.lo, edgePoint, perpendicular) == sign) {
-        return false;
+    
+    if (yPoints.x <= -fixed.lengths.y && yPoints.y <= -fixed.lengths.y && yPoints.z <= -fixed.lengths.y && yPoints.w <= -fixed.lengths.y ) {
+        return false; //no intersection
     }
-    if (BCRectIntersectsMakePointsign(f.c_d.hi, edgePoint, perpendicular) == sign) {
-        return false;
+    if (yPoints.x >= fixed.lengths.y && yPoints.y >= fixed.lengths.y && yPoints.z >= fixed.lengths.y && yPoints.w >= fixed.lengths.y ) {
+        return false; //no intersection
     }
     return true;
 }
-
-
-bool BCRectIntersects(BC4Points e, BC4Points f) {
-    
-    //edges from a
-    bc_float2_t edgePoint = e.a_b.lo; //needs to a be some point from the edge
-
-    //edge from a to b
-    bc_float2_t edge = e.a_b.lo - e.a_b.hi;
-    bc_float2_t perpendicular = simd_make_float2(-edge.y, edge.x);
-    if (BCRectIntersectsLineSeparates(e.c_d.lo, f, edgePoint, perpendicular)) {
-        return false;
-    }
-    //edge from a to c
-    edge = e.a_b.lo - e.c_d.lo;
-    perpendicular = simd_make_float2(-edge.y, edge.x);
-    if (BCRectIntersectsLineSeparates(e.a_b.hi, f, edgePoint, perpendicular)) {
-        return false;
-    }
-    
-    //edge from a to d
-    edge = e.a_b.lo - e.c_d.hi;
-    perpendicular = simd_make_float2(-edge.y, edge.x);
-    if (BCRectIntersectsLineSeparates(e.a_b.hi, f, edgePoint, perpendicular)) {
-        return false;
-    }
-    
-    //edges from b
-    edgePoint = e.a_b.hi;
-    
-    //edge from b to c
-    edge = e.a_b.hi - e.c_d.lo;
-    perpendicular = simd_make_float2(-edge.y, edge.x);
-    if (BCRectIntersectsLineSeparates(e.a_b.lo, f, edgePoint, perpendicular)) {
-        return false;
-    }
-    
-    //edge from b to d
-    edge = e.a_b.hi - e.c_d.hi;
-    perpendicular = simd_make_float2(-edge.y, edge.x);
-    if (BCRectIntersectsLineSeparates(e.a_b.lo, f, edgePoint, perpendicular)) {
-        return false;
-    }
-    
-    //edges from c
-    edgePoint = e.c_d.lo;
-    
-    //edge from c to d
-    edge = e.c_d.lo - e.c_d.hi;
-    perpendicular = simd_make_float2(-edge.y, edge.x);
-    if (BCRectIntersectsLineSeparates(e.a_b.lo, f, edgePoint, perpendicular)) {
-        return false;
-    }
-    return true;
+bool BCRectIntersects(BCRect e, BCRect f) {
+    return BCRectHalfIntersects(e, f) && BCRectHalfIntersects(f, e);
 }

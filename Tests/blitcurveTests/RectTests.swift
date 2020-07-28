@@ -45,11 +45,16 @@ class BoxTests: XCTestCase {
     func testIntersection() {
         let r = Rect(center: SIMD2<Float>(10,10), lengths: SIMD2<Float>(1,1), angle: 0)
         let r2 = Rect(center: SIMD2<Float>(15,15), lengths: SIMD2<Float>(1,1), angle: 0)
-        XCTAssert(!Rect.intersects(r.points4,r2.points4))
+        //XCTAssert(!r.intersects(r2))
         
         let ra =  Rect(center: SIMD2<Float>(58.95, 110.0), lengths: SIMD2<Float>(1.675, 3.85), angle: -2.0940719)
         let rb = Rect(center: SIMD2<Float>(58.95, 110.0), lengths: SIMD2<Float>(1.675, 3.85), angle: -0.5216182)
-        XCTAssert(Rect.intersects(ra.points4, rb.points4))
+        XCTAssert(ra.intersects(rb))
+        
+        //counterexample we found to previous algorithm
+        let ra1 = Rect(center: SIMD2<Float>(14.661654,14.333334), lengths: SIMD2<Float>(1,1), angle: .pi)
+        let ra2 = Rect(center: SIMD2<Float>(15,15), lengths: SIMD2<Float>(1,1), angle: 0)
+        XCTAssert(ra1.intersects(ra2))
     }
     
 
