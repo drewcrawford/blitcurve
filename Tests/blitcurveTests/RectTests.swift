@@ -50,8 +50,8 @@ class BoxTests: XCTestCase {
         }
 
         do {
-            let ra =  Rect(center: SIMD2<Float>(58.95, 110.0), lengths: SIMD2<Float>(1.675, 3.85), angle: -2.0940719)
-            let rb = Rect(center: SIMD2<Float>(58.95, 110.0), lengths: SIMD2<Float>(1.675, 3.85), angle: -0.5216182)
+            let ra =  Rect(center: SIMD2<Float>(15, 15), lengths: SIMD2<Float>(1.675, 3.85), angle: 1.05)
+            let rb = Rect(center: SIMD2<Float>(15, 15), lengths: SIMD2<Float>(1.675, 3.85), angle: 2.619)
             XCTAssert(ra.intersects(rb))
         }
 
@@ -89,6 +89,14 @@ class BoxTests: XCTestCase {
         do {
             let rb1 = Rect(center: SIMD2<Float>(14.456929,13.791821), lengths: SIMD2<Float>(1,1), angle: 0)
             let rb2 = Rect(center: SIMD2<Float>(15,15), lengths: SIMD2<Float>(1,1), angle: 0)
+            XCTAssert(!rb1.intersects(rb2))
+        }
+        
+        
+        //new counterexample
+        do {
+            let rb1 = Rect(center: SIMD2<Float>(10,10), lengths: SIMD2<Float>(1,1), angle: 0)
+            let rb2 = Rect(center: SIMD2<Float>(10.992657,11.697417), lengths: SIMD2<Float>(2.592592,1), angle: 0.760294)
             XCTAssert(!rb1.intersects(rb2))
         }
         
