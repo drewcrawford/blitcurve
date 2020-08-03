@@ -13,12 +13,21 @@
 
 using namespace metal;
 
+kernel void shapeSimulator(uint position[[thread_position_in_grid]], device const float2 *vectors, device BCRect *rects) {
+    if (position >= RECT_COUNT) {
+        return;
+    }
+    if (rects[position].lengths.x == 0 && rects[position].lengths.y == 0) {
+        return;
+    }
+    rects[position].center += vectors[position];
+}
 
 
-vertex float4 vertexShader(uint instanceID [[instance_id]], uint vertexID [[vertex_id]],
-                               constant const uint16_t &instanceCount, device const BCRect *rects)
+
+vertex float4 vertexShader(uint instanceID [[instance_id]], uint vertexID [[vertex_id]], device const BCRect *rects)
 {
-    if (instanceID > instanceCount) {
+    if (instanceID >= RECT_COUNT) {
         return simd_make_float4(2,2,2,2);
     }
     BCRect rect = rects[instanceID];
