@@ -27,6 +27,7 @@ class Renderer: NSObject, MTKViewDelegate {
     var nextShapeIndex = 0
     let rects: MTLBuffer
     let vectors: MTLBuffer
+    let intersects: MTLBuffer
 
     init?(metalKitView: MTKView) {
         self.device = metalKitView.device!
@@ -51,14 +52,17 @@ class Renderer: NSObject, MTKViewDelegate {
         
         vectors = device.makeBuffer(length: MemoryLayout<SIMD2<Float>>.stride * Int(RECT_COUNT), options: .storageModeShared)!
         
+        intersects = device.makeBuffer(length: MemoryLayout<UInt8>.stride * Int(RECT_COUNT), options: .storageModeShared)!
 
         nextShapeTimer = nil
         super.init()
         generateShape()
-        nextShapeTimer = Timer(timeInterval: 0.1, repeats: true, block: { [weak self] _ in
+        nextShapeTimer = Timer(timeInterval: 0.001, repeats: true, block: { [weak self] _ in
             self?.generateShape()
         })
-        RunLoop.main.add(nextShapeTimer, forMode: .default)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(10)) {
+            RunLoop.main.add(self.nextShapeTimer, forMode: .default)
+        }
     }
     
     private func generateShape() {
@@ -69,7 +73,7 @@ class Renderer: NSObject, MTKViewDelegate {
         }
         
         let rectPtr = rects.contents().assumingMemoryBound(to: Rect.self).advanced(by: nextShapeIndex)
-        var nextRect = Rect(center: .zero, lengths: SIMD2<Float>(Float.random(in: 0..<0.5), Float.random(in: 0..<0.5)), angle: Float.random(in: 0..<Float.pi))
+        var nextRect = Rect(center: .zero, lengths: SIMD2<Float>(Float.random(in: 0..<0.05), Float.random(in: 0..<0.05)), angle: Float.random(in: 0..<Float.pi))
         withUnsafeMutablePointer(to: &nextRect, {ptr in
             rectPtr.moveAssign(from: ptr, count: 1)
         })
@@ -125,13 +129,13 @@ class Renderer: NSObject, MTKViewDelegate {
                 let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
                 computeEncoder.setComputePipelineState(computeState)
                 computeEncoder.setBuffer(vectors, offset: 0, index: 0)
-                computeEncoder.setBuffer(rects, offset: 0, index: 1)
+                computeEncoder.setBuffer(intersects, offset: 0, index: 1)
+                computeEncoder.setBuffer(rects, offset: 0, index: 2)
                 
                 let threadgroupSize = MTLSize(width: computeState.maxTotalThreadsPerThreadgroup, height: 1, depth: 1)
                 let tgWidth = max(1, Int(ceil(Float(RECT_COUNT) / Float(threadgroupSize.width))))
                 let threadgroups = MTLSize(width: tgWidth, height: 1, depth: 1)
                 computeEncoder.dispatchThreadgroups(threadgroups, threadsPerThreadgroup: threadgroupSize)
-                
                 computeEncoder.endEncoding()
                 
                 /// Final pass rendering code here
@@ -144,6 +148,7 @@ class Renderer: NSObject, MTKViewDelegate {
                     
                     
                     renderEncoder.setVertexBuffer(rects, offset: 0, index: 0)
+                    renderEncoder.setVertexBuffer(intersects, offset: 0, index: 1)
                     
                     renderEncoder.drawPrimitives(type: .lineStrip, vertexStart: 0, vertexCount: 5, instanceCount: Int(RECT_COUNT))
                     renderEncoder.endEncoding()

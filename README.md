@@ -16,6 +16,16 @@ See the [Installation](https://github.com/drewcrawford/blitcurve/wiki/Installati
 
 For more examples, see the [Wiki](https://github.com/drewcrawford/blitcurve/wiki/Installation) and the [Playgrounds](Playgrounds) directory.
 
+# Demos
+## Rect intersection
+<video controls muted width="800">
+    <source src="https://github.com/drewcrawford/blitcurve/videos/intersection/demo-vp9-30.webm" type='video/webm; codecs="vp9"'>
+    <source src="https://github.com/drewcrawford/blitcurve/videos/intersection/demo-h265-40-195.mp4" type='video/mp4; codecs="hvc"'>
+    <source src="https://github.com/drewcrawford/blitcurve/videos/intersection/demo-h264-41-20.mp4" type='video/mp4; codecs="avc1.640029"'>
+</video>
+
+This demo is located [here](https://github.com/drewcrawford/blitcurve/demos/RectIntersect).  For more details, see [this blogpost](https://sealedabstract.com/posts/rectangle-intersection/).
+
 ## SwiftUI 
 
 Many types embed a `View` type which is a SwiftUI view.

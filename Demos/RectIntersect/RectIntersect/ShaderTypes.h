@@ -15,10 +15,10 @@
 
 #include <simd/simd.h>
 #if __METAL_VERSION__
-constant static const uint16_t RECT_COUNT = 256;
 #else
-static const uint16_t RECT_COUNT = 256;
+#define constant
 #endif
+constant static const uint32_t RECT_COUNT = 8192;
 
 #endif /* ShaderTypes_h */
 
