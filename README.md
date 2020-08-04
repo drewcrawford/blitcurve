@@ -18,13 +18,11 @@ For more examples, see the [Wiki](https://github.com/drewcrawford/blitcurve/wiki
 
 # Demos
 ## Rect intersection
-<video controls muted width="800">
-    <source src="https://github.com/drewcrawford/blitcurve/videos/intersection/demo-vp9-30.webm" type='video/webm; codecs="vp9"'>
-    <source src="https://github.com/drewcrawford/blitcurve/videos/intersection/demo-h265-40-195.mp4" type='video/mp4; codecs="hvc"'>
-    <source src="https://github.com/drewcrawford/blitcurve/videos/intersection/demo-h264-41-20.mp4" type='video/mp4; codecs="avc1.640029"'>
-</video>
+Intersecting rects at 4 gigaintersections/sec:
 
-This demo is located [here](https://github.com/drewcrawford/blitcurve/demos/RectIntersect).  For more details, see [this blogpost](https://sealedabstract.com/posts/rectangle-intersection/).
+![intersect](https://raw.githubusercontent.com/wiki/drewcrawford/blitcurve/gifs/intersect.gif)
+
+This demo is located [here](https://github.com/drewcrawford/blitcurve/Demos/RectIntersect).  For more details, see [this blogpost](https://sealedabstract.com/posts/rectangle-intersection/).
 
 ## SwiftUI 
 
