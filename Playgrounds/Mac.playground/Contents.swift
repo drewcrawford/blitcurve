@@ -1,3 +1,6 @@
+//this playground is supposed to show connecting cubics
+//but currently fails due to 
+
 import SwiftUI
 import blitcurve
 import PlaygroundSupport
