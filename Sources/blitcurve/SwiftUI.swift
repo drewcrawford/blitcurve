@@ -245,7 +245,7 @@ extension EnvironmentValues {
 ///coordinate space
 @available(OSX 10.15.0, iOS 13.0.0, *)
 public struct BStack<Content>: View where Content: View {
-    let viewBuilder: () -> Content
+    var viewBuilder: () -> Content
     @State var offset: SIMD2<Float> = .zero
     @State var maxPoint: CGPoint? = nil
     @Environment(\.scale) var scale: CGFloat
@@ -255,7 +255,8 @@ public struct BStack<Content>: View where Content: View {
     public var body: some View {
         ZStack(alignment: .topLeading) {
             viewBuilder()
-        }.onPreferenceChange(MinCoordinatePreferenceKey.self) { value in
+        }
+        .onPreferenceChange(MinCoordinatePreferenceKey.self) { value in
             self.offset = value
         }
         .onPreferenceChange(MaxPointPreferenceKey.self) { maxPoint = $0 }
