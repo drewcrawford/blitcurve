@@ -37,12 +37,23 @@ final class CubicTests: XCTestCase {
     
     func testConnectingTangents() {
         let railLine = Line(a: SIMD2<Float>(x: 510.37002139454205, y: 343.83395079162915), b: SIMD2<Float>(x: 1712.387147298103, y: 298.4828489580134))
-        //let finalTangent = Line(a: SIMD2<Float>(x: 1712.387147298103, y: 298.4828489580134), b: SIMD2<Float>(x: 1808.2719716869988, y: 244.57458936905402)).tangent
-        let finalTangent = Line(a:SIMD2<Float>(x: 1808.2719716869988, y: 244.57458936905402), b: SIMD2<Float>(x: 1712.387147298103, y: 298.4828489580134) ).tangent
+        let finalTangent = Line(a: SIMD2<Float>(x: 1712.387147298103, y: 298.4828489580134), b: SIMD2<Float>(x: 1808.2719716869988, y: 244.57458936905402)).tangent
         let initialTangent = Line(a: SIMD2<Float>(x: 376.872572406239, y: 106.38648819110057), b: SIMD2<Float>(x: 510.37002139454205, y: 343.83395079162915)).tangent
         let cube = Cubic(connecting: railLine, initialTangent: initialTangent, finalTangent: finalTangent)
         XCTAssertEqual(cube.initialTangent, initialTangent, accuracy: 0.1)
-        XCTAssertEqual(cube.finalTangent, finalTangent, accuracy: 0.1)
+        XCTAssertEqual(cube.finalTangent, finalTangent + .pi, accuracy: 0.1)
+    }
+    
+    func testConnectingCubics() {
+        let aRail = Cubic(a: SIMD2<Float>(2.6605175, 9.86255), b: SIMD2<Float>(0.21252254, 5.5065603), c: SIMD2<Float>(1.8522768, 8.424357), d: SIMD2<Float>(1.0362785, 6.9723616))
+        let nextRail = Cubic(a: SIMD2<Float>(4.6373005, 3.1232715), b: SIMD2<Float>(7.0850296, 7.478789), c: SIMD2<Float>(5.4609714, 4.5889215), d: SIMD2<Float>(6.276881, 6.04076))
+        let c = Cubic(connecting: aRail, to: nextRail)
+        
+        XCTAssertEqual(aRail.b, c.a)
+        XCTAssertEqual(nextRail.a, c.b)
+        XCTAssertEqual(c.initialTangent, aRail.finalTangent)
+        //final tangent is reversed nextRail.initialTangent
+        XCTAssertEqual(c.finalTangent, nextRail.initialTangent, accuracy: 0.1)
     }
     
     func testLength() {
@@ -153,6 +164,8 @@ final class CubicTests: XCTestCase {
         ("testSplit",testSplit),
         ("testParameterization",testParametrization),
         ("testTangent",testTangent),
+        ("testConnectingCubics",testConnectingCubics),
+        ("testConnectingTangents",testConnectingTangents),
 
         ]
         

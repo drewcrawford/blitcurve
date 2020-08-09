@@ -213,8 +213,7 @@ static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_
      
         */
     //find the difference between angles in (i,f) format
-    //we subtract by M_PI here to reverse the finalTangent we were given
-    bc_float2_t diff = simd_make_float2(initialTangent, finalTangent - M_PI);
+    bc_float2_t diff = simd_make_float2(initialTangent, finalTangent);
     BCLine2 i_f = BCLine2MakeWithPointAndAngle(simd_make_float4(connecting.a,connecting.b),diff,simd_make_float2(1,1));
     c.c = i_f.b.xy;
     c.d = i_f.b.zw;
@@ -230,7 +229,9 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
     connecting.a = a.b;
     connecting.b = b.a;
     //UB checked inside BCCubicInitialTanget / BCCubicFinalTagent, respectively
-    return BCCubicMakeConnectingTangents(connecting, BCCubicFinalTangent(a), BCCubicInitialTangent(b) + M_PI_2);
+    //need to reverse b's initial tangent
+    float reversed = BCCubicInitialTangent(b) - M_PI;
+    return BCCubicMakeConnectingTangents(connecting, BCCubicFinalTangent(a), reversed);
 }
 
 ///\abstract Calculates the arclength.
