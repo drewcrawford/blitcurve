@@ -12,7 +12,9 @@ private extension CGPoint {
 
 
 @available(OSX 10.15.0, iOS 13.0.0, *)
-public struct PointView: SwiftUI.View {
+public struct PointView: SwiftUI.View, Identifiable {
+    public var id: String { return label }
+    
     @Environment(\.scale) var scale
     public var body: some View {
         ZStack(alignment:.topLeading) {
@@ -237,6 +239,24 @@ extension EnvironmentValues {
         set {
             self[ScaleKey] = newValue
         }
+    }
+}
+
+@available(OSX 10.15.0, iOS 13.0.0, *)
+public struct PointViews: View {
+    private var pointViews: [PointView]
+    
+    public var body: some View {
+        ForEach(pointViews) { $0 }
+    }
+    
+    public init(cubic: Cubic, eachT: Float) {
+        var pointViews: [PointView] = []
+        for t in stride(from: 0 as Float, to: 1, by: eachT) {
+            pointViews.append(PointView(String(format: "%.02f",t), coordinate: cubic.evaluate(t: t)))
+        }
+        pointViews.append(PointView("\(1.0)",coordinate: cubic.evaluate(t: 1)))
+        self.pointViews = pointViews
     }
 }
 
