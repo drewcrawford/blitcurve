@@ -12,8 +12,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  test:
+  # check swift tests
+  swift-test:
     # The type of runner that the job will run on
     runs-on: macos-latest
 
@@ -22,14 +22,34 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Runs a single command using the runners shell
-    - name: Test
-      run: |
-       sudo xcode-select -s /Applications/Xcode_12_beta.app
-       swift test
+    - name: xcode-select
+      run: sudo xcode-select -s /Applications/Xcode_12_beta.app
+    - name: test
+      run: swift test
+  # check the metal situation
+  metal-test: 
+      runs-on: macos-latest
 
-       # try metal
-       cd MetalTest
-       xcodebuild -scheme MetalTest | xcpretty && exit ${PIPESTATUS[0]}
-       # need to use simulator here to avoid CS issues
-       xcodebuild -scheme MetalTest-ios -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
+      steps:
+      - uses: actions/checkout@v2
+      - name: xcode-select
+        run: sudo xcode-select -s /Applications/Xcode_12_beta.app
+      - name: test
+        run: |
+             cd ExtraTests/MetalTest
+             xcodebuild -scheme MetalTest | xcpretty && exit ${PIPESTATUS[0]}
+             # need to use simulator here to avoid CS issues
+             xcodebuild -scheme MetalTest-ios -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
+
+  dep-check: 
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: xcode-select
+      run: sudo xcode-select -s /Applications/Xcode_12_beta.app
+    - name: test
+      run: |
+           cd ExtraTests/DepCheck
+           # need to use simulator here to avoid CS issues
+           # note that we check iOS release mode due to FB8430635
+           xcodebuild -scheme "DepCheck (iOS)" -sdk iphonesimulator -configuration Release | xcpretty && exit ${PIPESTATUS[0]}

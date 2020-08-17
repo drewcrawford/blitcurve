@@ -5,6 +5,8 @@ import PackageDescription
 
 let package = Package(
     name: "blitcurve",
+    //this is here to work around FB8430635
+    platforms: [.iOS("13.0")],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(

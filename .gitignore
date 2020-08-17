@@ -6,3 +6,4 @@ xcuserdata/
 blitcurve.metal
 timeline.xctimeline
 playground.xcworkspace
+/ExtraTests/DepCheck/build
