@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,8 +11,26 @@
 		3A52F44D24C8DCDF00391C2A /* MetalTest.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3A01731124EA0A3500403E8A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A01730C24EA09D600403E8A /* blitcurveMetal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A17DE6524C675ED00412CC1;
+			remoteInfo = "blitcurveMetal (iOS)";
+		};
+		3A01731324EA0AF300403E8A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A01730C24EA09D600403E8A /* blitcurveMetal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A41E8FE24C7B918004A8BCA;
+			remoteInfo = "blitcurveMetal (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MetalTest.metal; sourceTree = "<group>"; };
+		3A01730C24EA09D600403E8A /* blitcurveMetal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = blitcurveMetal.xcodeproj; path = ../../blitcurveMetal.xcodeproj; sourceTree = "<group>"; };
 		3A41E8F424C7B744004A8BCA /* blitcurve */ = {isa = PBXFileReference; lastKnownFileType = folder; name = blitcurve; path = ..; sourceTree = "<group>"; };
 		3A85744F24C8AEAE004D0B91 /* MetalTest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MetalTest.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -21,6 +39,7 @@
 		3A013EA1249ED4C200DAAEC8 = {
 			isa = PBXGroup;
 			children = (
+				3A01730C24EA09D600403E8A /* blitcurveMetal.xcodeproj */,
 				3A85744F24C8AEAE004D0B91 /* MetalTest.xcodeproj */,
 				3A013EA8249ED4C200DAAEC8 /* MetalTest */,
 				3A41E8F424C7B744004A8BCA /* blitcurve */,
@@ -35,6 +54,13 @@
 			path = MetalTest;
 			sourceTree = "<group>";
 		};
+		3A01730D24EA09D600403E8A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3A85745024C8AEAE004D0B91 /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
@@ -43,33 +69,33 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3A013EA7249ED4C200DAAEC8 /* MetalTest */ = {
+		3A013EA7249ED4C200DAAEC8 /* MetalTest (macOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A013EAD249ED4C200DAAEC8 /* Build configuration list for PBXNativeTarget "MetalTest" */;
+			buildConfigurationList = 3A013EAD249ED4C200DAAEC8 /* Build configuration list for PBXNativeTarget "MetalTest (macOS)" */;
 			buildPhases = (
-				3A85744D24C7E381004D0B91 /* ShellScript */,
 				3A013EA6249ED4C200DAAEC8 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3A01731424EA0AF300403E8A /* PBXTargetDependency */,
 			);
-			name = MetalTest;
+			name = "MetalTest (macOS)";
 			productName = MetalTest;
 			productType = "com.apple.product-type.metal-library";
 		};
-		3A52F44624C8DCD800391C2A /* MetalTest-ios */ = {
+		3A52F44624C8DCD800391C2A /* MetalTest (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A52F44A24C8DCD900391C2A /* Build configuration list for PBXNativeTarget "MetalTest-ios" */;
+			buildConfigurationList = 3A52F44A24C8DCD900391C2A /* Build configuration list for PBXNativeTarget "MetalTest (iOS)" */;
 			buildPhases = (
-				3A52F44E24C8DCF800391C2A /* ShellScript */,
 				3A52F44524C8DCD800391C2A /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3A01731224EA0A3500403E8A /* PBXTargetDependency */,
 			);
-			name = "MetalTest-ios";
+			name = "MetalTest (iOS)";
 			productName = "MetalTest-ios";
 			productType = "com.apple.product-type.metal-library";
 		};
@@ -102,58 +128,21 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 3A01730D24EA09D600403E8A /* Products */;
+					ProjectRef = 3A01730C24EA09D600403E8A /* blitcurveMetal.xcodeproj */;
+				},
+				{
 					ProductGroup = 3A85745024C8AEAE004D0B91 /* Products */;
 					ProjectRef = 3A85744F24C8AEAE004D0B91 /* MetalTest.xcodeproj */;
 				},
 			);
 			projectRoot = "";
 			targets = (
-				3A013EA7249ED4C200DAAEC8 /* MetalTest */,
-				3A52F44624C8DCD800391C2A /* MetalTest-ios */,
+				3A013EA7249ED4C200DAAEC8 /* MetalTest (macOS) */,
+				3A52F44624C8DCD800391C2A /* MetalTest (iOS) */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		3A52F44E24C8DCF800391C2A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${BLITCURVE_DIR}/inputfiles.txt",
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-				"${BLITCURVE_DIR}/outputfiles.txt",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -z ${BLITCURVE_DIR+x} ]; then \necho \"error: set BLITCURVE_DIR\"\nexit 1\nfi\n\n(\n    . \"${BLITCURVE_DIR}/makemetal.sh\"\n)\n";
-		};
-		3A85744D24C7E381004D0B91 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${BLITCURVE_DIR}/inputfiles.txt",
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-				"${BLITCURVE_DIR}/outputfiles.txt",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -z ${BLITCURVE_DIR+x} ]; then \necho \"error: set BLITCURVE_DIR\"\nexit 1\nfi\n\n(\n    . \"${BLITCURVE_DIR}/makemetal.sh\"\n)\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3A013EA6249ED4C200DAAEC8 /* Sources */ = {
@@ -173,6 +162,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3A01731224EA0A3500403E8A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "blitcurveMetal (iOS)";
+			targetProxy = 3A01731124EA0A3500403E8A /* PBXContainerItemProxy */;
+		};
+		3A01731424EA0AF300403E8A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "blitcurveMetal (macOS)";
+			targetProxy = 3A01731324EA0AF300403E8A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3A013EAB249ED4C200DAAEC8 /* Debug */ = {
@@ -211,7 +213,7 @@
 				MTLLINKER_FLAGS = "-L ${BUILT_PRODUCTS_DIR} -l blitcurve-metal ";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				MTL_HEADER_SEARCH_PATHS = "${SRCROOT}/../Sources/blitcurve-c/include";
+				MTL_HEADER_SEARCH_PATHS = "${SRCROOT}/../../Sources/blitcurve-c/include";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -252,7 +254,7 @@
 				MTLLINKER_FLAGS = "-L ${BUILT_PRODUCTS_DIR} -l blitcurve-metal ";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				MTL_HEADER_SEARCH_PATHS = "${SRCROOT}/../Sources/blitcurve-c/include";
+				MTL_HEADER_SEARCH_PATHS = "${SRCROOT}/../../Sources/blitcurve-c/include";
 				MTL_PREPROCESSOR_DEFINITIONS = NDEBUG;
 				SDKROOT = macosx;
 			};
@@ -308,7 +310,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A013EAD249ED4C200DAAEC8 /* Build configuration list for PBXNativeTarget "MetalTest" */ = {
+		3A013EAD249ED4C200DAAEC8 /* Build configuration list for PBXNativeTarget "MetalTest (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A013EAE249ED4C200DAAEC8 /* Debug */,
@@ -317,7 +319,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A52F44A24C8DCD900391C2A /* Build configuration list for PBXNativeTarget "MetalTest-ios" */ = {
+		3A52F44A24C8DCD900391C2A /* Build configuration list for PBXNativeTarget "MetalTest (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A52F44B24C8DCD900391C2A /* Debug */,

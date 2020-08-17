@@ -37,9 +37,9 @@ jobs:
       - name: test
         run: |
              cd ExtraTests/MetalTest
-             xcodebuild -scheme MetalTest | xcpretty && exit ${PIPESTATUS[0]}
+             xcodebuild -scheme "MetalTest (macOS)" | xcpretty && exit ${PIPESTATUS[0]}
              # need to use simulator here to avoid CS issues
-             xcodebuild -scheme MetalTest-ios -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
+             xcodebuild -scheme "MetalTest (iOS)" -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
 
   dep-check: 
     runs-on: macos-latest

@@ -26,9 +26,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3A17DE6524C675ED00412CC1 /* blitcurveMetal */ = {
+		3A17DE6524C675ED00412CC1 /* blitcurveMetal (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A17DE6B24C675ED00412CC1 /* Build configuration list for PBXNativeTarget "blitcurveMetal" */;
+			buildConfigurationList = 3A17DE6B24C675ED00412CC1 /* Build configuration list for PBXNativeTarget "blitcurveMetal (iOS)" */;
 			buildPhases = (
 				3A17DE7C24C676F900412CC1 /* ShellScript */,
 				3A17DE6424C675ED00412CC1 /* Sources */,
@@ -38,13 +38,13 @@
 			);
 			dependencies = (
 			);
-			name = blitcurveMetal;
+			name = "blitcurveMetal (iOS)";
 			productName = blitcurveMetal;
 			productType = "com.apple.product-type.metal-library";
 		};
-		3A41E8FE24C7B918004A8BCA /* blitcurveMetal-macOS */ = {
+		3A41E8FE24C7B918004A8BCA /* blitcurveMetal (macOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A41E90424C7B918004A8BCA /* Build configuration list for PBXNativeTarget "blitcurveMetal-macOS" */;
+			buildConfigurationList = 3A41E90424C7B918004A8BCA /* Build configuration list for PBXNativeTarget "blitcurveMetal (macOS)" */;
 			buildPhases = (
 				3A41E90624C7B942004A8BCA /* ShellScript */,
 				3A41E8FD24C7B918004A8BCA /* Sources */,
@@ -54,7 +54,7 @@
 			);
 			dependencies = (
 			);
-			name = "blitcurveMetal-macOS";
+			name = "blitcurveMetal (macOS)";
 			productName = "blitcurveMetal-macOS";
 			productType = "com.apple.product-type.metal-library";
 		};
@@ -86,8 +86,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3A17DE6524C675ED00412CC1 /* blitcurveMetal */,
-				3A41E8FE24C7B918004A8BCA /* blitcurveMetal-macOS */,
+				3A17DE6524C675ED00412CC1 /* blitcurveMetal (iOS) */,
+				3A41E8FE24C7B918004A8BCA /* blitcurveMetal (macOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -135,7 +135,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "metal-libtool -static ${TARGET_TEMP_DIR}/Metal/blitcurve.air  -o ${BUILT_PRODUCTS_DIR}/libblitcurve-metal.a\n";
+			shellScript = "metal-libtool -static \"${TARGET_TEMP_DIR}/Metal/blitcurve.air\"  -o \"${BUILT_PRODUCTS_DIR}/libblitcurve-metal.a\"\n";
 		};
 		3A41E90624C7B942004A8BCA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -179,7 +179,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "metal-libtool -static ${TARGET_TEMP_DIR}/Metal/blitcurve.air  -o ${BUILT_PRODUCTS_DIR}/libblitcurve-metal.a\n";
+			shellScript = "metal-libtool -static \"${TARGET_TEMP_DIR}/Metal/blitcurve.air\"  -o \"${BUILT_PRODUCTS_DIR}/libblitcurve-metal.a\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -275,7 +275,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A17DE6B24C675ED00412CC1 /* Build configuration list for PBXNativeTarget "blitcurveMetal" */ = {
+		3A17DE6B24C675ED00412CC1 /* Build configuration list for PBXNativeTarget "blitcurveMetal (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A17DE6C24C675ED00412CC1 /* Debug */,
@@ -284,7 +284,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A41E90424C7B918004A8BCA /* Build configuration list for PBXNativeTarget "blitcurveMetal-macOS" */ = {
+		3A41E90424C7B918004A8BCA /* Build configuration list for PBXNativeTarget "blitcurveMetal (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A41E90224C7B918004A8BCA /* Debug */,
