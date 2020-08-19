@@ -21,7 +21,6 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-
     - name: xcode-select
       run: sudo xcode-select -s /Applications/Xcode_12_beta.app
     - name: test
@@ -32,19 +31,67 @@ jobs:
 
       steps:
       - uses: actions/checkout@v2
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=minute::$(/bin/date -u "+%M")"
+          echo "::set-output name=week::$(/bin/date -u "+%U")"
+          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
+          echo "::set-output name=hour::$(/bin/date -u "+%H")"
+        shell: bash
+      - uses: actions/cache@v2
+        with:
+          path: dd-tar-cache
+          key: metaltest-1-${{ steps.get-date.outputs.week }}-${{ steps.get-date.outputs.date }}-${{ steps.get-date.outputs.hour }}-${{ steps.get-date.outputs.minute }}
+          restore-keys: |
+            metaltest-1-${{ steps.get-date.outputs.week }}-${{ steps.get-date.outputs.date }}-${{ steps.get-date.outputs.hour }}
+            metaltest-1-${{ steps.get-date.outputs.week }}-${{ steps.get-date.outputs.date }}
+            metaltest-1-${{ steps.get-date.outputs.week }}
+            metaltest-1
+      - name: dd untar
+        run: if [ -f dd-tar-cache/dd.tar ]; then tar xvPpf dd-tar-cache/dd.tar; else echo "No cache file"; fi
+
+      - name: set mtime
+        run: |
+          set +e
+          git submodule foreach 'rev=HEAD; for f in $(git ls-tree -r -t --full-name --name-only "$rev") ; do     touch -t $(git log --pretty=format:%cd --date=format:%Y%m%d%H%M.%S -1 "$rev" -- "$f") "$f"; done'
+          rev=HEAD; for f in $(git ls-tree -r -t --full-name --name-only "$rev") ; do     touch -t $(git log --pretty=format:%cd --date=format:%Y%m%d%H%M.%S -1 "$rev" -- "$f") "$f"; done
       - name: xcode-select
         run: sudo xcode-select -s /Applications/Xcode_12_beta.app
       - name: test
         run: |
              cd ExtraTests/MetalTest
-             xcodebuild -scheme "MetalTest (macOS)" | xcpretty && exit ${PIPESTATUS[0]}
+             xcodebuild -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData -scheme "MetalTest (macOS)" | xcpretty && exit ${PIPESTATUS[0]}
              # need to use simulator here to avoid CS issues
-             xcodebuild -scheme "MetalTest (iOS)" -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
+             xcodebuild -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData -scheme "MetalTest (iOS)" -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
 
   dep-check: 
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Get Date
+      id: get-date
+      run: |
+        echo "::set-output name=minute::$(/bin/date -u "+%M")"
+        echo "::set-output name=week::$(/bin/date -u "+%U")"
+        echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
+        echo "::set-output name=hour::$(/bin/date -u "+%H")"
+      shell: bash
+    - uses: actions/cache@v2
+      with:
+        path: dd-tar-cache
+        key: depcheck1-${{ steps.get-date.outputs.week }}-${{ steps.get-date.outputs.date }}-${{ steps.get-date.outputs.hour }}-${{ steps.get-date.outputs.minute }}
+        restore-keys: |
+          depcheck1-${{ steps.get-date.outputs.week }}-${{ steps.get-date.outputs.date }}-${{ steps.get-date.outputs.hour }}
+          depcheck1-${{ steps.get-date.outputs.week }}-${{ steps.get-date.outputs.date }}
+          depcheck1-${{ steps.get-date.outputs.week }}
+          depcheck1
+    - name: dd untar
+      run: if [ -f dd-tar-cache/dd.tar ]; then tar xvPpf dd-tar-cache/dd.tar; else echo "No cache file"; fi
+    - name: set mtime
+      run: |
+        set +e
+        git submodule foreach 'rev=HEAD; for f in $(git ls-tree -r -t --full-name --name-only "$rev") ; do     touch -t $(git log --pretty=format:%cd --date=format:%Y%m%d%H%M.%S -1 "$rev" -- "$f") "$f"; done'
+        rev=HEAD; for f in $(git ls-tree -r -t --full-name --name-only "$rev") ; do     touch -t $(git log --pretty=format:%cd --date=format:%Y%m%d%H%M.%S -1 "$rev" -- "$f") "$f"; done
     - name: xcode-select
       run: sudo xcode-select -s /Applications/Xcode_12_beta.app
     - name: test
@@ -52,4 +99,4 @@ jobs:
            cd ExtraTests/DepCheck
            # need to use simulator here to avoid CS issues
            # note that we check iOS release mode due to FB8430635
-           xcodebuild -scheme "DepCheck (iOS)" -sdk iphonesimulator -configuration Release | xcpretty && exit ${PIPESTATUS[0]}
+           xcodebuild -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData -scheme "DepCheck (iOS)" -sdk iphonesimulator -configuration Release | xcpretty && exit ${PIPESTATUS[0]}
