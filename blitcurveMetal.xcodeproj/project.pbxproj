@@ -6,20 +6,24 @@
 	objectVersion = 50;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		3A17DE7E24C6787200412CC1 /* blitcurve.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A17DE7D24C6787200412CC1 /* blitcurve.metal */; };
-		3A41E90524C7B925004A8BCA /* blitcurve.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A17DE7D24C6787200412CC1 /* blitcurve.metal */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXFileReference section */
-		3A17DE7D24C6787200412CC1 /* blitcurve.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = blitcurve.metal; sourceTree = "<group>"; };
-/* End PBXFileReference section */
+/* Begin PBXBuildRule section */
+		3A11481324ECA7E600F18E22 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = pattern.proxy;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXGroup section */
 		3A17DE5F24C675ED00412CC1 = {
 			isa = PBXGroup;
 			children = (
-				3A17DE7D24C6787200412CC1 /* blitcurve.metal */,
 			);
 			sourceTree = "<group>";
 		};
@@ -30,11 +34,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3A17DE6B24C675ED00412CC1 /* Build configuration list for PBXNativeTarget "blitcurveMetal (iOS)" */;
 			buildPhases = (
-				3A17DE7C24C676F900412CC1 /* ShellScript */,
-				3A17DE6424C675ED00412CC1 /* Sources */,
-				3A17DE8124C67A7C00412CC1 /* ShellScript */,
+				3A17DE7C24C676F900412CC1 /* Concat sources */,
+				3A11481124ECA7BF00F18E22 /* Compile metal */,
+				3A17DE8124C67A7C00412CC1 /* Link library */,
 			);
 			buildRules = (
+				3A11481324ECA7E600F18E22 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -46,9 +51,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3A41E90424C7B918004A8BCA /* Build configuration list for PBXNativeTarget "blitcurveMetal (macOS)" */;
 			buildPhases = (
-				3A41E90624C7B942004A8BCA /* ShellScript */,
-				3A41E8FD24C7B918004A8BCA /* Sources */,
-				3A41E90724C7B99B004A8BCA /* ShellScript */,
+				3A41E90624C7B942004A8BCA /* Concat sources */,
+				3A11481024ECA21D00F18E22 /* compile lib */,
+				3A41E90724C7B99B004A8BCA /* link */,
 			);
 			buildRules = (
 			);
@@ -93,7 +98,47 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3A17DE7C24C676F900412CC1 /* ShellScript */ = {
+		3A11481024ECA21D00F18E22 /* compile lib */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DERIVED_SOURCES_DIR}/blitcurve.metal",
+			);
+			name = "compile lib";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_TEMP_DIR}/Metal/blitcurve.air",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ $MTL_ENABLE_DEBUG_INFO = \"INCLUDE_SOURCE\" ]; then\nMOREARGS=\"-gline-tables-only -MO\" \nelse\nMOREARGS=\"\"\nfi\n\nmetal -c -target air64-apple-macos10.15 $MOREARGS -MO -I${MTL_HEADER_SEARCH_PATHS} -F${HEADER_SEARCH_PATHS} -isysroot \"${SDKROOT}\" -ffast-math  -o \"${TARGET_TEMP_DIR}/Metal/blitcurve.air\"  -MMD  \"${DERIVED_SOURCES_DIR}/blitcurve.metal\"\n";
+		};
+		3A11481124ECA7BF00F18E22 /* Compile metal */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(DERIVED_SOURCES_DIR)/blitcurve.metal",
+			);
+			name = "Compile metal";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_TEMP_DIR}/Metal/blitcurve.air",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ $MTL_ENABLE_DEBUG_INFO = \"INCLUDE_SOURCE\" ]; then\nMOREARGS=\"-gline-tables-only -MO\"\nelse\nMOREARGS=\"\"\nfi\n\nmetal -c -target air64-apple-ios14.0 $MOREARGS -MO -I${MTL_HEADER_SEARCH_PATHS} -F${HEADER_SEARCH_PATHS} -isysroot \"${SDKROOT}\" -ffast-math  -o \"${TARGET_TEMP_DIR}/Metal/blitcurve.air\"  -MMD  \"${DERIVED_SOURCES_DIR}/blitcurve.metal\"\n";
+		};
+		3A17DE7C24C676F900412CC1 /* Concat sources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -109,16 +154,17 @@
 				"$(SRCROOT)/Sources/blitcurve-c/BCMath.c",
 				"$(SRCROOT)/Sources/blitcurve-c/BCRect.c",
 			);
+			name = "Concat sources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(SRCROOT)/blitcurve.metal",
+				"$(DERIVED_SOURCES_DIR)/blitcurve.metal",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "COUNTER=0\nrm -f \"${SCRIPT_OUTPUT_FILE_0}\"\nwhile [ $COUNTER -lt ${SCRIPT_INPUT_FILE_COUNT} ]; do\n    tmp=\"SCRIPT_INPUT_FILE_$COUNTER\"\n    FILE=${!tmp}\n\n    cat \"$FILE\" >> \"${SCRIPT_OUTPUT_FILE_0}\"\n\n    let COUNTER=COUNTER+1\ndone\n";
 		};
-		3A17DE8124C67A7C00412CC1 /* ShellScript */ = {
+		3A17DE8124C67A7C00412CC1 /* Link library */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -128,6 +174,7 @@
 			inputPaths = (
 				"${TARGET_TEMP_DIR}/Metal/blitcurve.air",
 			);
+			name = "Link library";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -137,7 +184,7 @@
 			shellPath = /bin/sh;
 			shellScript = "metal-libtool -static \"${TARGET_TEMP_DIR}/Metal/blitcurve.air\"  -o \"${BUILT_PRODUCTS_DIR}/libblitcurve-metal.a\"\n";
 		};
-		3A41E90624C7B942004A8BCA /* ShellScript */ = {
+		3A41E90624C7B942004A8BCA /* Concat sources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -153,16 +200,17 @@
 				"$(SRCROOT)/Sources/blitcurve-c/BCMath.c",
 				"$(SRCROOT)/Sources/blitcurve-c/BCRect.c",
 			);
+			name = "Concat sources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(SRCROOT)/blitcurve.metal",
+				"$(DERIVED_SOURCES_DIR)/blitcurve.metal",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "COUNTER=0\nrm -f \"${SCRIPT_OUTPUT_FILE_0}\"\nwhile [ $COUNTER -lt ${SCRIPT_INPUT_FILE_COUNT} ]; do\n    tmp=\"SCRIPT_INPUT_FILE_$COUNTER\"\n    FILE=${!tmp}\n\n    cat \"$FILE\" >> \"${SCRIPT_OUTPUT_FILE_0}\"\n\n    let COUNTER=COUNTER+1\ndone\n";
 		};
-		3A41E90724C7B99B004A8BCA /* ShellScript */ = {
+		3A41E90724C7B99B004A8BCA /* link */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -172,6 +220,7 @@
 			inputPaths = (
 				"${TARGET_TEMP_DIR}/Metal/blitcurve.air",
 			);
+			name = link;
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -182,25 +231,6 @@
 			shellScript = "metal-libtool -static \"${TARGET_TEMP_DIR}/Metal/blitcurve.air\"  -o \"${BUILT_PRODUCTS_DIR}/libblitcurve-metal.a\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		3A17DE6424C675ED00412CC1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3A17DE7E24C6787200412CC1 /* blitcurve.metal in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A41E8FD24C7B918004A8BCA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3A41E90524C7B925004A8BCA /* blitcurve.metal in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
 		3A17DE6924C675ED00412CC1 /* Debug */ = {
