@@ -64,7 +64,8 @@ jobs:
              xcodebuild -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData -scheme "MetalTest (macOS)" | xcpretty && exit ${PIPESTATUS[0]}
              # need to use simulator here to avoid CS issues
              xcodebuild -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData -scheme "MetalTest (iOS)" -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
-
+      - name: dd-tar
+        run: mkdir -p dd-tar-cache && tar cfPp dd-tar-cache/dd.tar --format posix localDerivedData
   dep-check: 
     runs-on: macos-latest
     steps:
@@ -101,3 +102,5 @@ jobs:
            # need to use simulator here to avoid CS issues
            # note that we check iOS release mode due to FB8430635
            xcodebuild -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData -scheme "DepCheck (iOS)" -sdk iphonesimulator -configuration Release | xcpretty && exit ${PIPESTATUS[0]}
+    - name: dd-tar
+      run: mkdir -p dd-tar-cache && tar cfPp dd-tar-cache/dd.tar --format posix localDerivedData
