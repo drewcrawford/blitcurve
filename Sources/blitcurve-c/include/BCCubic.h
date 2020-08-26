@@ -234,6 +234,19 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
     return BCCubicMakeConnectingTangents(connecting, BCCubicFinalTangent(a), reversed);
 }
 
+///Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.
+///\seealso \c BCCubicMakeConnectingTangents
+__attribute__((const))
+__attribute__((swift_name("Cubic.init(connecting:)")))
+static inline BCCubic BCCubicMakeWithLine(BCLine a) {
+    BCCubic out;
+    out.a = a.a;
+    out.b = a.b;
+    out.c = BCLineEvaluate(a, 0.25);
+    out.d = BCLineEvaluate(a, 0.75);
+    return out;
+}
+
 ///\abstract Calculates the arclength.
 ///\note This is a fast numerical and vectorized approximation for the arc length.
 ///\performance O(1)
