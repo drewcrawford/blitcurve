@@ -5,9 +5,11 @@
 #include "BCTypes.h"
 #include "BCMacros.h"
 
-///\abstract Converts between a vertex ID and a bezier parameter.
-///\param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.  This must be \c <vertexesPerInstance.
-///\param vertexesPerInstance The number of vertexes to draw for each instance.
+/**\abstract Converts between a vertex ID and a bezier parameter.
+\param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.  This must be \c <vertexesPerInstance.
+ \param vertexesPerInstance The number of vertexes to draw for each instance.
+@see BCLUTParameterForIndex for non-graphical use
+ */
 __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("VertexToBezierParameter(vertexID:vertexesPerInstance:)")))
@@ -20,12 +22,15 @@ __attribute__((diagnose_if(!(vertexesPerInstance > 1), "vertexesPerInstance out 
     return ((float)vertexID) / (vertexesPerInstance - 1);
 }
 
-///\abstract Converts between a vertex ID and a bezier parameter, with a custom min and max \c t.
-///\discussion This is primarily useful for the case that you want to evaluate points in a region of the curve, but without splitting the curve.  Splitting the curve is generally more efficient if the split can be used across multiple points, but that would require additional memory.
-///\param vertexID The vertex id, e.g. a shader parameter.
-///\param vertexesPerInstance The number of vertexes to draw for each instance.
-///\param lowerT The return value will be \c >= this number
-///\param upperT The return value will be \c <= this number.
+/**
+\abstract Converts between a vertex ID and a bezier parameter, with a custom min and max \c t.
+\discussion This is primarily useful for the case that you want to evaluate points in a region of the curve, but without splitting the curve.  Splitting the curve is generally more efficient if the split can be used across multiple points, but that would require additional memory.
+\param vertexID The vertex id, e.g. a shader parameter.
+\param vertexesPerInstance The number of vertexes to draw for each instance.
+\param lowerT The return value will be \c >= this number
+\param upperT The return value will be \c <= this number.
+ @see \c BCLUTParameterForIndex for non-graphical use
+ */
 __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("VertexToBezierParameter(vertexID:vertexesPerInstance:lowerT:upperT:)")))
@@ -47,8 +52,16 @@ __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("LUTParameter(index:LUTCapacity:lowerT:upperT:)")))
 /**
- Calculates which bezier parameter to use for a LUT of given size.
- @seealso The variant with no \c lowerT or \c upperT, if you want a value on the range 0,1
+ Calculates which bezier parameter to use in an LUT of given size.
+ @seealso BCVertexToBezierParameter,  a variant for graphical use
+ @seealso This is the inverse of \c BCLUTIndexForParameter
+ @seealso The overload without \c lowerT or \c upperT, if you want a value on the range 0,1
+ @discussion This variant is generally useful in the case that you want to LUT on a region of the curve without splitting.  Splitting the curve may be more efficient.
+ @param lutIndex index into the LUT
+ @param lutCapacity total capacity of the LUT
+ @param lowerT lower bound of the curve.
+ @param upperT upper bound of the curve
+ @returns a bezier parameter on the interval \c [lowerT,upperT] suitable for storing in a LUT of \c lutCapacity at index \c lutIndex.  The LUT is equally-weighted for any bezier parameter.
  */
 inline bc_float_t BCLUTParameterForIndex(uint8_t lutIndex, uint8_t lutCapacity, float lowerT, float upperT)
 __attribute__((diagnose_if(!(lowerT < upperT), "bezier upper/lower out of range","error")))
@@ -68,7 +81,13 @@ __attribute__((overloadable))
 __attribute__((swift_name("LUTParameter(index:capacity:)")))
 /**
  Calculates which bezier parameter to use for a LUT of given size.  This version assumes a parameter in the range 0,1
- @seealso The variant with \c lowerT or \c upperT, to build a LUT for a given range of parameters.
+ @seealso Compare with the variant with \c lowerT or \c upperT, to build a LUT for a given range of parameters.
+ @seealso This is the inverse of \c BCLUTIndexForParameter
+ @seealso Compare with BCVertexToBezierParameter,  a variant for graphical use
+ 
+ @param lutIndex index into the LUT
+ @param lutCapacity total capacity of the LUT
+ @returns a bezier parameter on the interval \c [0,1] suitable for storing in a LUT of \c lutCapacity at index \c lutIndex.  The LUT is equally-weighted for any bezier parameter.
  */
 inline bc_float_t BCLUTParameterForIndex(uint8_t lutIndex, uint8_t lutCapacity)
 __attribute__((diagnose_if(!(lutIndex < lutCapacity), "lutIndex out of range","error")))
@@ -94,7 +113,15 @@ __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("LUTIndex(t:capacity:roundingMode:lowerT:upperT:)")))
 /**Finds an index into a LUT for the given parameter.
- @seealso The variant without \c lowerT/upperT
+ @seealso Compare with the variant without \c lowerT/upperT
+ @seealso This is the inverse of \c BCLUTParameterForIndex
+ @discussion This is generally useful in the case that you want to LUT on a region of the curve without splitting.  Splitting the curve may be more efficient.
+ @param t A bezier parameter on range \c [lowerT,upperT]
+ @param lutCapacity total capacity of the LUT
+ @param roundingMode The rounding mode to use when converting a parameter to an index.  For most cases, \c BCLUTRoundingModeClosest is appropriate and will choose the closest index to the parameter.  If the LUT comprises a minimum or maximum bounds, a different mode might be appropriate.
+ @param lowerT lower bound of the curve.
+ @param upperT upper bound of the curve.
+ @returns A LUT index for for a table with \c lutCapacity, table covering the curve range \c [lowerT,upperT].  The LUT is equally-weighted for any bezier parameter.
  */
 inline uint8_t BCLUTIndexForParameter(float t, uint8_t lutCapacity, BCLUTRoundingMode roundingMode, float lowerT, float upperT)
 __attribute__((diagnose_if(!(lowerT < upperT), "bezier upper/lower out of range","error")))
@@ -122,7 +149,12 @@ __attribute__((const))
 __attribute__((overloadable))
 __attribute__((swift_name("LUTIndex(t:capacity:roundingMode:)")))
 /**Finds an index into a LUT for the given parameter.
- @seealso The variant without \c lowerT/upperT
+ @seealso This is the inverse of \c BCLUTParameterForIndex
+ @seealso Compare with the variant with \c lowerT/upperT
+ @param t A bezier parameter on range \c [0,1]
+ @param lutCapacity total capacity of the LUT
+ @param roundingMode The rounding mode to use when converting a parameter to an index.  For most cases, \c BCLUTRoundingModeClosest is appropriate and will choose the closest index to the parameter.  If the LUT comprises a minimum or maximum bounds, a different mode might be appropriate.
+ @returns A LUT index for for a table with \c lutCapacity, table covering the curve range \c [0,1].  The LUT is equally-weighted for any bezier parameter.
  */
 inline uint8_t BCLUTIndexForParameter(float t, uint8_t lutCapacity, BCLUTRoundingMode roundingMode)
 __attribute__((diagnose_if(!(t>=0 && t <=1), "parameter out of range","error")))
