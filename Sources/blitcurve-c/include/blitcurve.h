@@ -14,4 +14,5 @@
 #include "BCStrategy.h"
 #include "BCTypes.h"
 #include "BCCubic2.h"
+#include "BCAlignedCubic.h"
 #endif
