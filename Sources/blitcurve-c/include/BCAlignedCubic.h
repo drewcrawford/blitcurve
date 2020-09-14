@@ -33,5 +33,10 @@ __attribute__((const))
 __attribute__((swift_name("AlignedCubic.kappa(self:t:)")))
 bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t)
 __attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error")));
+
+__attribute__((swift_name("AlignedCubic.kappaPrime(self:t:)")))
+bc_float_t BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
 #endif
+
+
 

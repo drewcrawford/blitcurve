@@ -51,6 +51,14 @@ final class AlignedCubicTests: XCTestCase {
         #endif
 
     }
+    
+    func testKappaPrime() {
+        let c = Cubic(a: SIMD2<Float>(0,0), b: SIMD2<Float>(1000,1000), c: SIMD2<Float>(0,250), d: SIMD2<Float>(750, 0))
+        let a = AlignedCubic(cubic: c)
+        XCTAssertEqual(a.kappaPrime(t: 0), -0.0826, accuracy: 0.1)
+        XCTAssertEqual(a.kappaPrime(t: 0.5), 0.003304, accuracy: 0.01)
+        XCTAssertEqual(a.kappaPrime(t: 1), -0.00211, accuracy: 0.01)        
+    }
     static var allTests = [
         ("testMake", testMake),
         ("testKappaBench",testKappaBench)

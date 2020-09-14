@@ -6,6 +6,7 @@
 #include "BCMetalC.h"
 #ifndef __METAL_VERSION__
 #include <stdbool.h>
+#include <math.h>
 #endif
 
 #include "BCTypes.h"
