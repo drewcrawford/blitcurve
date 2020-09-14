@@ -28,7 +28,10 @@ final class AlignedCubicTests: XCTestCase {
         let alignedSmall = AlignedCubic(cubic: small)
         XCTAssertLessThan(alignedSmall.kappa(t: 0.07617), 0.00001)
     }
-    func testKappaBench() {
+    func testKappaBench() throws {
+        #if DEBUG
+        throw XCTSkip()
+        #endif
         let small = Cubic(a: SIMD2<Float>(619.19244,913.3555), b: SIMD2<Float>(888.6296,1392.5944), c: SIMD2<Float>(709.89105,1074.6781), d: SIMD2<Float>(799.70337,1234.4243))
         let alignedSmall = AlignedCubic(cubic: small)
         

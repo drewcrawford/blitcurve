@@ -29,23 +29,23 @@ bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
     const bc_float_t p2_t = p2 * t;
     const bc_float_t p3 = t * t;
     const bc_float_t p4 = p2 * p2;
-    const bc_float_t p5 = 3 * c.c.x * p4;
-    const bc_float_t p6 = -6 * c.c.x * p2_t;
-    const bc_float_t p7 = 6 * c.d.x * p2_t;
+    const bc_float2_t p5_p11 = 3 * c.c * p4;
+    const bc_float2_t p6_p12 = -6 * c.c * p2_t;
+    const bc_float2_t p7_p13 = 6 * c.d * p2_t;
     const bc_float_t p8 = 3 * c.b_x * p3;
-    const bc_float_t p9 = -3 * c.d.x * p3;
-    const bc_float_t p10 = p5 + p6 + p7 + p8 + p9;
-    const bc_float_t p11 = 3 * c.c.y * p4;
-    const bc_float_t p12 = -6 * c.c.y * p2_t;
-    const bc_float_t p13 = 6 * c.d.y * p2_t;
-    const bc_float_t p14 = -3 * c.d.y * p3;
-    const bc_float_t p15 = p11 + p12 + p13 + p14;
+    const bc_float2_t p9_p14 = -3 * c.d * p3;
     
-    const bc_float_t n1 = -12 * c.c.y * p2 + 6 * c.d.y * p2 + 6 * c.c.y * t - 12 * c.d.y * t * p10;
-    const bc_float_t n2 = -12 * c.c.x * p2 + 6 * c.d.x * p2 + 6 * c.b_x * t + 6 * c.c.x * t - 12 * c.d.x * t * p15;
+    const bc_float2_t p10pre_p15 = p5_p11 + p6_p12 + p7_p13 + p9_p14;
+    const bc_float_t p10 = p10pre_p15.x + p8;
     
-    const bc_float_t d1 = p10 * p10 + p15 * p15;
+    const bc_float4_t p2by = simd_make_float4(c.c,c.d) * p2;
+    const bc_float4_t tby = simd_make_float4(c.c,c.d) * t;
+    
+    const bc_float2_t n2pre_n1 = -12 * p2by.lo + 6 * p2by.hi + 6 * tby.lo - 12 * tby.hi * simd_make_float2(p10pre_p15.y,p10);
+    const bc_float_t n2 = n2pre_n1.x + 6 * c.b_x * t;
+    
+    const bc_float_t d1 = p10 * p10 + p10pre_p15.y * p10pre_p15.y; //simd-length may be slow here
     const bc_float_t d2 = powf(d1, 3.0/2.0);
     
-    return (n1 - n2) / d2;
+    return (n2pre_n1.y - n2) / d2;
 }
