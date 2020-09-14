@@ -23,5 +23,9 @@ typedef struct {
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.init(cubic:)")))
 BCAlignedCubic BCAlignedCubicMake(BCCubic c);
+
+__attribute__((const))
+__attribute__((swift_name("AlignedCubic.kappa(self:t:)")))
+bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t);
 #endif
 

@@ -22,3 +22,30 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
     return r;
 }
 
+
+bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
+    const bc_float_t p1 = -t;
+    const bc_float_t p2 = 1 + p1;
+    const bc_float_t p2_t = p2 * t;
+    const bc_float_t p3 = t * t;
+    const bc_float_t p4 = p2 * p2;
+    const bc_float_t p5 = 3 * c.c.x * p4;
+    const bc_float_t p6 = -6 * c.c.x * p2_t;
+    const bc_float_t p7 = 6 * c.d.x * p2_t;
+    const bc_float_t p8 = 3 * c.b_x * p3;
+    const bc_float_t p9 = -3 * c.d.x * p3;
+    const bc_float_t p10 = p5 + p6 + p7 + p8 + p9;
+    const bc_float_t p11 = 3 * c.c.y * p4;
+    const bc_float_t p12 = -6 * c.c.y * p2_t;
+    const bc_float_t p13 = 6 * c.d.y * p2_t;
+    const bc_float_t p14 = -3 * c.d.y * p3;
+    const bc_float_t p15 = p11 + p12 + p13 + p14;
+    
+    const bc_float_t n1 = -12 * c.c.y * p2 + 6 * c.d.y * p2 + 6 * c.c.y * t - 12 * c.d.y * t * p10;
+    const bc_float_t n2 = -12 * c.c.x * p2 + 6 * c.d.x * p2 + 6 * c.b_x * t + 6 * c.c.x * t - 12 * c.d.x * t * p15;
+    
+    const bc_float_t d1 = p10 * p10 + p15 * p15;
+    const bc_float_t d2 = powf(d1, 3.0/2.0);
+    
+    return (n1 - n2) / d2;
+}

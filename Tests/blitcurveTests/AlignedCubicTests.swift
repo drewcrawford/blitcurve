@@ -12,6 +12,22 @@ final class AlignedCubicTests: XCTestCase {
         XCTAssertLessThan(simd_distance(alignedCubic.c, SIMD2<Float>(-85,-40)), 2)
         XCTAssertLessThan(simd_distance(alignedCubic.d, SIMD2<Float>(SIMD2<Float>(-12,140))), 2)
     }
+    
+    func testKappa() {
+        //basically a line
+        let basicallyALine = Cubic(connecting: Line(a: .zero, b: SIMD2<Float>(100,100)))
+        let alignedLine = AlignedCubic(cubic: basicallyALine)
+        XCTAssertEqual(alignedLine.kappa(t: 0.5),0, accuracy: 0.01)
+        
+        //fromQuad
+        let fromQuad = Cubic(a: .zero, b: SIMD2<Float>(100,100), c: SIMD2<Float>(66.66667, 0), d: SIMD2<Float>(100,33.3333))
+        let alignedFromQuad = AlignedCubic(cubic: fromQuad)
+        XCTAssertEqual(alignedFromQuad.kappa(t: 0.5), 0.0147, accuracy: 0.001)
+        
+        let small = Cubic(a: SIMD2<Float>(619.19244,913.3555), b: SIMD2<Float>(888.6296,1392.5944), c: SIMD2<Float>(709.89105,1074.6781), d: SIMD2<Float>(799.70337,1234.4243))
+        let alignedSmall = AlignedCubic(cubic: small)
+        XCTAssertLessThan(alignedSmall.kappa(t: 0.07617), 0.00001)
+    }
     static var allTests = [
         ("testMake", testMake),
     ]
