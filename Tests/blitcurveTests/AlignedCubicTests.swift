@@ -31,7 +31,7 @@ final class AlignedCubicTests: XCTestCase {
     func testKappaBench() throws {
         #if DEBUG
         throw XCTSkip()
-        #endif
+        #else
         let small = Cubic(a: SIMD2<Float>(619.19244,913.3555), b: SIMD2<Float>(888.6296,1392.5944), c: SIMD2<Float>(709.89105,1074.6781), d: SIMD2<Float>(799.70337,1234.4243))
         let alignedSmall = AlignedCubic(cubic: small)
         
@@ -48,6 +48,8 @@ final class AlignedCubicTests: XCTestCase {
             }
         }
         print(i)
+        #endif
+
     }
     static var allTests = [
         ("testMake", testMake),

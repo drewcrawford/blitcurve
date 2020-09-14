@@ -24,8 +24,14 @@ __attribute__((const))
 __attribute__((swift_name("AlignedCubic.init(cubic:)")))
 BCAlignedCubic BCAlignedCubicMake(BCCubic c);
 
+/**
+ This calculates the kappa function (curvature).
+ @discussion This returns the curvature of the curve at a specific bezier parameter.  The turning radius is \c 1/abs(kappa).
+ @param t The bezier parameter on interval [0,1] at which to measure the curvature.
+ */
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.kappa(self:t:)")))
-bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t);
+bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t)
+__attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error")));
 #endif
 
