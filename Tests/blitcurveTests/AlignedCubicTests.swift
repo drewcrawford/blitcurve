@@ -28,7 +28,26 @@ final class AlignedCubicTests: XCTestCase {
         let alignedSmall = AlignedCubic(cubic: small)
         XCTAssertLessThan(alignedSmall.kappa(t: 0.07617), 0.00001)
     }
+    func testKappaBench() {
+        let small = Cubic(a: SIMD2<Float>(619.19244,913.3555), b: SIMD2<Float>(888.6296,1392.5944), c: SIMD2<Float>(709.89105,1074.6781), d: SIMD2<Float>(799.70337,1234.4243))
+        let alignedSmall = AlignedCubic(cubic: small)
+        
+        var floats: [Float] = []
+        for _ in 0..<10000000 {
+            floats.append(Float.random(in: 0...1))
+        }
+        
+
+        var i: UInt32 = 0
+        measure {
+            for float in floats {
+                i ^= alignedSmall.kappa(t: float).bitPattern
+            }
+        }
+        print(i)
+    }
     static var allTests = [
         ("testMake", testMake),
+        ("testKappaBench",testKappaBench)
     ]
 }
