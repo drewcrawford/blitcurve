@@ -76,7 +76,7 @@ static inline bc_float_t BCCubicFinalTangent(BCCubic c) {
 __attribute__((const))
 __attribute__((swift_name("Cubic.evaluate(self:t:)")))
 static inline bc_float2_t BCCubicEvaluate(BCCubic c,bc_float_t t) {
-    return c.a * pow(1-t,3) + c.c * 3 * pow(1-t, 2) * t + c.d * 3 * (1 - t) * pow(t, 2) + c.b * pow(t, 3);
+    return c.a * powf(1-t,3) + c.c * 3 * powf(1-t, 2) * t + c.d * 3 * (1 - t) * powf(t, 2) + c.b * powf(t, 3);
 }
 __attribute__((const))
 __attribute__((swift_name("Cubic.evaluatePrime(self:t:)")))
@@ -87,8 +87,8 @@ static inline bc_float2_t BCCubicEvaluatePrime(BCCubic c, bc_float_t t) {
     //-3 a (1-t)^2+3 c (1-t)^2-6 c (1-t) t+6 d (1-t) t+3 b t^2-3 d t^2
     //-3 * c.a * pow(1-t,2) + 3 * c.c * pow(1-t,2) - 6 * c.c * (1-t) * t + 6 * c.d * (1 - t) * t + 3 * c.b * pow(t,2) - 3 * c.d * pow(t,2);
     const float one_minus_t = 1 - t;
-    const float three_by_one_minus_t_squared = 3 * pow(one_minus_t, 2);
-    const float three_by_t_squared = 3 * pow(t,2);
+    const float three_by_one_minus_t_squared = 3 * powf(one_minus_t, 2);
+    const float three_by_t_squared = 3 * powf(t,2);
     const float six_by_1_minus_t_t = 6 * one_minus_t * t;
     return -three_by_one_minus_t_squared * c.a + three_by_one_minus_t_squared * c.c - six_by_1_minus_t_t * c.c + six_by_1_minus_t_t * c.d + three_by_t_squared * c.b - three_by_t_squared * c.d;
 }

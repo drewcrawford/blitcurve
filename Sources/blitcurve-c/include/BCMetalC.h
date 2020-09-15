@@ -43,10 +43,11 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define M_PI_2 M_PI_2_F
 
 #define fabsf fabs
+#define powf metal::pow
+#define signbit metal::signbit
 #define sin(X) metal::sin(X)
 #define cos(X) metal::cos(X)
 #define atan2(X,Y) metal::atan2(X,Y)
-#define pow(X,Y) metal::pow(X,Y)
 #define fabs(X) metal::fabs(X)
 #define roundf metal::round
 #define ceilf metal::ceil
@@ -62,7 +63,15 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define bc_make_4x4 metal::float4x4
 #define simd_mul(X,Y) X * Y
 #define simd_sub(X,Y) X - Y
-#define simd_reduce_add(V4) V4.x + V4.y + V4.z + V4.w
+__attribute__((overloadable))
+float simd_reduce_add(simd_float4 v) {
+    return v.x + v.y + v.z + v.w;
+}
+__attribute__((overloadable))
+float simd_reduce_add(simd_float2 v) {
+    return v.x + v.y;
+}
+
 #define simd_length simd::length
 #define simd_abs(X) simd::abs(X)
 #define simd_length_squared simd::length_squared
