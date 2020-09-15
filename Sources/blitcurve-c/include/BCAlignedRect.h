@@ -56,7 +56,7 @@ bool BCAlignedRectsCornerWithinDistance(BCAlignedRect a, BCAlignedRect b,bc_floa
 ///\abstract Gets the center of the box
 __attribute__((const))
 __attribute__((swift_name("getter:AlignedRect.center(self:)")))
-static inline bc_float2_t BCAlignedRectCenterPoint(BCAlignedRect a) {
+inline bc_float2_t BCAlignedRectCenterPoint(BCAlignedRect a) {
     simd_float2 sum = a.max - a.min;
     return sum / 2 + a.min;
 }
@@ -64,7 +64,7 @@ static inline bc_float2_t BCAlignedRectCenterPoint(BCAlignedRect a) {
 ///\abstract Determines whether the given point is on or inside the rect.
 __attribute__((const))
 __attribute__((swift_name("AlignedRect.isPointOnOrInside(self:_:)")))
-static inline bool BCAlignedRectIsPointOnOrInside(BCAlignedRect a, bc_float2_t point) {
+inline bool BCAlignedRectIsPointOnOrInside(BCAlignedRect a, bc_float2_t point) {
     return (a.min.x <= point.x && a.max.x >= point.x && a.min.y <= point.y && a.max.y >= point.y);
 }
 #endif

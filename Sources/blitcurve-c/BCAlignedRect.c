@@ -1,6 +1,9 @@
 // BCAlignedBox: Axis-aligned box
 // ©2020 DrewCrawfordApps LLC
 #import "BCAlignedRect.h"
+extern inline bc_float2_t BCAlignedRectCenterPoint(BCAlignedRect a);
+extern inline bool BCAlignedRectIsPointOnOrInside(BCAlignedRect a, bc_float2_t point);
+extern inline bc_float2_t BCCubicEvaluatePrime(BCCubic c, bc_float_t t);
 bool BCAlignedRectsCornerWithinDistance(BCAlignedRect a, BCAlignedRect b,bc_float_t distance) {
     /*we need to compare, potentially, every point in a with every point in b.
      

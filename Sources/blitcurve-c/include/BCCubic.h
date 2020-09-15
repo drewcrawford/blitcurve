@@ -35,7 +35,7 @@ typedef struct {
 ///\warning In the case that \code a =~= c \endcode, it may be difficult to use this sensibly
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.initialTangentLine(self:)")))
-static inline BCLine BCCubicInitialTangentLine(BCCubic c) {
+inline BCLine BCCubicInitialTangentLine(BCCubic c) {
     BCLine l;
     l.a = c.a;
     l.b = c.c;
@@ -46,7 +46,7 @@ static inline BCLine BCCubicInitialTangentLine(BCCubic c) {
 ///\warning In the case that \code d=~= b \endcode, it may be difficult to use this sensibly
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.finalTangentLine(self:)")))
-static inline BCLine BCCubicFinalTangentLine(BCCubic c) {
+inline BCLine BCCubicFinalTangentLine(BCCubic c) {
     BCLine l;
     l.a = c.d;
     l.b = c.b;
@@ -75,14 +75,14 @@ static inline bc_float_t BCCubicFinalTangent(BCCubic c) {
 ///\return A point on the cubic at the bezier equation for \c t
 __attribute__((const))
 __attribute__((swift_name("Cubic.evaluate(self:t:)")))
-static inline bc_float2_t BCCubicEvaluate(BCCubic c,bc_float_t t) {
+inline bc_float2_t BCCubicEvaluate(BCCubic c,bc_float_t t) {
     return c.a * powf(1-t,3) + c.c * 3 * powf(1-t, 2) * t + c.d * 3 * (1 - t) * powf(t, 2) + c.b * powf(t, 3);
 }
 __attribute__((const))
 __attribute__((swift_name("Cubic.evaluatePrime(self:t:)")))
 ///\abstract Evaluate the derivative of a BCCubic
 ///\return A point on the derivative of the given cubic at the given bezier parameter.
-static inline bc_float2_t BCCubicEvaluatePrime(BCCubic c, bc_float_t t) {
+inline bc_float2_t BCCubicEvaluatePrime(BCCubic c, bc_float_t t) {
     //D[a * (1-t)^3 + c * 3 * (1-t)^2 * t + d * 3 * (1 - t) * t^2 + b * t^3,t]
     //-3 a (1-t)^2+3 c (1-t)^2-6 c (1-t) t+6 d (1-t) t+3 b t^2-3 d t^2
     //-3 * c.a * pow(1-t,2) + 3 * c.c * pow(1-t,2) - 6 * c.c * (1-t) * t + 6 * c.d * (1 - t) * t + 3 * c.b * pow(t,2) - 3 * c.d * pow(t,2);
@@ -123,7 +123,7 @@ static inline bc_float_t BCCubicTangent(BCCubic c, bc_float_t t) {
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.asLine(self:)")))
 ///\abstract Get a line from the \c BCCubic
-static inline BCLine BCCubicAsLine(BCCubic c) {
+inline BCLine BCCubicAsLine(BCCubic c) {
     BCLine l;
     l.a = c.a;
     l.b = c.b;
@@ -143,19 +143,7 @@ __attribute__((swift_name("Cubic.normalize(self:approximateDistance:)")))
 ///1.  If the control/endpoints are already at least this distance, we will not alter them
 ///2.  If the control/endpoints are less than this distance, we will adjust the control points to a value approximately this distance, but it will not be exact, and the value we choose may be higher or lower.  For this reason, avoid values near the working precision, such as \c FLT_MIN, and avoid treating this as a minimum distance.
 ///\return A normalized curve, with at least the distance specified between related endpoints and control points.
-static inline void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
-    __BC_ASSERT(approximateDistance > 0);
-    if (simd_distance(c->c, c->a) < approximateDistance) {
-        const BCLine asLine = BCCubicAsLine(*c);
-        bc_float_t t = BCLineArclengthParameterization(asLine, approximateDistance);
-        c->c = BCLineEvaluate(asLine,t);
-    }
-    if (simd_distance(c->d, c->b) < approximateDistance) {
-        const BCLine asLine = BCCubicAsLine(*c);
-        bc_float_t t = 1 - BCLineArclengthParameterization(asLine, approximateDistance);
-        c->d = BCLineEvaluate(asLine,t);
-    }
-}
+void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance);
 
 
 __attribute__((const))

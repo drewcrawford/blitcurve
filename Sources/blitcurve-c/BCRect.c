@@ -2,6 +2,19 @@
 // ©2020 DrewCrawfordApps LLC
 
 #include "BCRect.h"
+bc_float2_t  BCRectMax(BCRect b) {
+    BC4Points points = BCRectGet4Points(b);
+    bc_float_t x_a = simd_reduce_max(points.a_b.even);
+    bc_float_t x_b = simd_reduce_max(points.c_d.even);
+    bc_float_t x_f = simd_max(x_a,x_b);
+
+    bc_float_t y_a = simd_reduce_max(points.a_b.odd);
+    bc_float_t y_b = simd_reduce_max(points.c_d.odd);
+    bc_float_t y_f = simd_max(y_a,y_b);
+
+    return simd_make_float2(x_f,y_f);
+}
+
 bool BCRectIsPointOnOrInside(BC3Points b, bc_float2_t point) {
     simd_float2 ab = b.a_b.hi - b.a_b.lo;
     simd_float2 am = point - b.a_b.lo;

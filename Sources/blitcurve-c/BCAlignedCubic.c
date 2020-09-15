@@ -91,7 +91,7 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
     const bc_float_t n1_2 = 2 * p10_p21_by_p16_p26.x + 2 * p10_p21_by_p16_p26.y;
     const bc_float_t n2_1 = (c.c.y - c.d.y) * p16_p26.x * 18;
     const bc_float_t n2_2 = (c.b_x + c3.x - 3 * c.d.x) * 6 * p16_p26.y;
-    bc_float2_t d = pow(simd_make_float2(p29,p29), simd_make_float2(5.0/2.0,3.0/2.0));
+    bc_float2_t d = simd_powf(simd_make_float2(p29,p29), simd_make_float2(5.0/2.0,3.0/2.0));
     d.x *= 2;
     const bc_float2_t n = simd_make_float2(n1_1 * n1_2,n2_1-n2_2);
     return simd_reduce_add(n/d);

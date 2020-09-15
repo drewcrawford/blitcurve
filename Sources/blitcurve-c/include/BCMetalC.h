@@ -43,6 +43,9 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define M_PI_2 M_PI_2_F
 
 #define fabsf fabs
+//powf is used for pure floats, and simd_powf for simd types
+//in metal these are identical, but not so in c
+#define simd_powf metal::pow
 #define powf metal::pow
 #define signbit metal::signbit
 #define sin(X) metal::sin(X)
@@ -64,11 +67,11 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define simd_mul(X,Y) X * Y
 #define simd_sub(X,Y) X - Y
 __attribute__((overloadable))
-float simd_reduce_add(simd_float4 v) {
+static inline float simd_reduce_add(simd_float4 v) {
     return v.x + v.y + v.z + v.w;
 }
 __attribute__((overloadable))
-float simd_reduce_add(simd_float2 v) {
+static inline float simd_reduce_add(simd_float2 v) {
     return v.x + v.y;
 }
 
@@ -91,6 +94,9 @@ float simd_reduce_add(simd_float2 v) {
 #define bc_make_2x4 simd_matrix
 #define bc_make_4x4 simd_matrix
 #define bc_make_2x2 simd_matrix
+
+//in C, we want pow for simd types, not powf
+#define simd_powf pow
 
 //address space qualifier
 #define __BC_DEVICE

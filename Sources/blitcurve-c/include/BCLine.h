@@ -43,7 +43,7 @@ __attribute__((const))
 __attribute__((swift_name("getter:Line.slope(self:)")))
 ///\abstract Gets the slope of the line.
 ///\warning Vertical lines are undefined
-static inline bc_float_t BCLineSlope(BCLine l) {
+inline bc_float_t BCLineSlope(BCLine l) {
     bc_float2_t diff = l.a - l.b;
     __BC_ASSERT(fabsf(diff.x) > 0);
     return diff.y / diff.x;
@@ -53,7 +53,7 @@ static inline bc_float_t BCLineSlope(BCLine l) {
 ///\warning Vertical lines are undefined
 __attribute__((const))
 __attribute__((swift_name("getter:Line.yIntercept(self:)")))
-static inline bc_float_t BCLineYIntercept(BCLine l) {
+inline bc_float_t BCLineYIntercept(BCLine l) {
     return l.a.y - BCLineSlope(l) * l.a.x;
 }
 
@@ -67,7 +67,7 @@ static inline bc_float_t BCLineLength(BCLine l) {
 ///Reverse start and end point
 __attribute__((const))
 __attribute__((swift_name("getter:Line.reversed(self:)")))
-static inline BCLine BCLineReversed(BCLine l) {
+inline BCLine BCLineReversed(BCLine l) {
     BCLine r;
     r.a = l.b;
     r.b = l.a;
