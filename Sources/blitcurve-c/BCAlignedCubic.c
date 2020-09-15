@@ -42,13 +42,16 @@ bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
     const bc_float4_t p2by = simd_make_float4(c.c,c.d) * p2;
     const bc_float4_t tby = simd_make_float4(c.c,c.d) * t;
     
-    const bc_float2_t n2pre_n1 = -12 * p2by.lo + 6 * p2by.hi + 6 * tby.lo - 12 * tby.hi * simd_make_float2(p10pre_p15.y,p10);
-    const bc_float_t n2 = n2pre_n1.x + 6 * c.b_x * t;
+    //const bc_float2_t
+    bc_float2_t n2_n1 = -12 * p2by.lo + 6 * p2by.hi + 6 * tby.lo - 12 * tby.hi;
+    
+    n2_n1.x += 6 * c.b_x * t;
+    n2_n1 *= simd_make_float2(p10pre_p15.y,p10);
     
     const bc_float_t d1 = p10 * p10 + p10pre_p15.y * p10pre_p15.y; //simd-length may be slow here
     const bc_float_t d2 = powf(d1, 3.0/2.0);
     
-    return (n2pre_n1.y - n2) / d2;
+    return (n2_n1.y - n2_n1.x) / d2;
 }
 
 bc_float_t BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t) {
