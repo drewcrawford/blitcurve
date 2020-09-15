@@ -5,6 +5,7 @@
 #define BCAlignedCubic_h
 #include "BCTypes.h"
 #include "BCCubic.h"
+#include "BCMacros.h"
 /**Cubics can be "aligned" by applying translations and rotations that put them into a canonical form.  While we lose relative position about the cubic,
 we retain information intrinsic to the cubic.  In addition, certain operations are simplified.
  
@@ -34,8 +35,11 @@ __attribute__((swift_name("AlignedCubic.kappa(self:t:)")))
 bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t)
 __attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error")));
 
-__attribute__((swift_name("AlignedCubic.kappaPrime(self:t:)")))
-bc_float_t BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
+#ifndef NDEBUG
+__attribute__((const))
+__attribute__((swift_name("AlignedCubic.__kappaPrime(self:t:)")))
+bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
+#endif
 #endif
 
 

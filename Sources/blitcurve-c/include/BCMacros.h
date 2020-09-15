@@ -16,7 +16,14 @@
 #else
 #define __BC_ASSERT(X) if (__builtin_expect(!(X),0)) {float device *f = 0; *f = 0;}
 #endif
-
 #endif //NDEBUG
+
+//__BC_MAYBESTATIC is static in release mode, or otherwise empty.
+//This allows us to expose code for tests
+#ifdef NDEBUG
+#define __BC_MAYBESTATIC static
+#else
+#define __BC_MAYBESTATIC
+#endif
 
 #endif //BCMacros_h

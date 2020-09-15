@@ -32,7 +32,8 @@ let package = Package(
         ),
         .testTarget(
             name: "blitcurveTests",
-            dependencies: ["blitcurve"]
+            dependencies: ["blitcurve"],
+            cSettings: [.define("NDEBUG",to: nil, .when(platforms: nil, configuration:.release))]
         )
     ]
 )

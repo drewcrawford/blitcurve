@@ -52,12 +52,23 @@ final class AlignedCubicTests: XCTestCase {
 
     }
     
-    func testKappaPrime() {
+    func testKappaPrime() throws {
+        //this test only works in debug mode
+        #if DEBUG
+        
         let c = Cubic(a: SIMD2<Float>(0,0), b: SIMD2<Float>(1000,1000), c: SIMD2<Float>(0,250), d: SIMD2<Float>(750, 0))
         let a = AlignedCubic(cubic: c)
-        XCTAssertEqual(a.kappaPrime(t: 0), -0.0826, accuracy: 0.1)
-        XCTAssertEqual(a.kappaPrime(t: 0.5), 0.003304, accuracy: 0.01)
-        XCTAssertEqual(a.kappaPrime(t: 1), -0.00211, accuracy: 0.01)        
+        XCTAssertEqual(a.__kappaPrime(t: 0), -0.0826, accuracy: 0.1)
+        XCTAssertEqual(a.__kappaPrime(t: 0.5), 0.003304, accuracy: 0.01)
+        XCTAssertEqual(a.__kappaPrime(t: 1), -0.00211, accuracy: 0.01)
+        // {ax->0,ay->0,by->0,cx->32.121765,cy->-14.771326, dx->26.025661, dy-> -70.33964, bx->106.62551, t->0.56989586}
+        let a2 = AlignedCubic(c: SIMD2<Float>(32.121765, -14.771326), d: SIMD2<Float>(26.025661, -70.33964), b_x: 106.62551)
+        XCTAssertEqual(a2.__kappaPrime(t: 0.56989586), -0.0296569, accuracy:0.00001)
+        XCTAssertEqual(a2.__kappaPrime(t: 0.56064975), 0.000101445,accuracy:0.00001)
+        #else
+        throw XCTSkip("kappaPrime is not supported in release builds")
+        #endif
+    }
     }
     static var allTests = [
         ("testMake", testMake),
