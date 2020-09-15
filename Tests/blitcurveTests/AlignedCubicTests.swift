@@ -27,10 +27,14 @@ final class AlignedCubicTests: XCTestCase {
         let small = Cubic(a: SIMD2<Float>(619.19244,913.3555), b: SIMD2<Float>(888.6296,1392.5944), c: SIMD2<Float>(709.89105,1074.6781), d: SIMD2<Float>(799.70337,1234.4243))
         let alignedSmall = AlignedCubic(cubic: small)
         XCTAssertLessThan(alignedSmall.kappa(t: 0.07617), 0.00001)
+        
+        let t = AlignedCubic(c: SIMD2<Float>(32.121765, -14.771326), d: SIMD2<Float>(26.025661, -70.33964), b_x: 106.62551)
+        XCTAssertEqual(t.kappa(t: 0.560689), 0.0449, accuracy: 0.01)
+        
     }
     func testKappaBench() throws {
         #if DEBUG
-        throw XCTSkip()
+        throw XCTSkip("Not running benchmark in a debug build")
         #else
         let small = Cubic(a: SIMD2<Float>(619.19244,913.3555), b: SIMD2<Float>(888.6296,1392.5944), c: SIMD2<Float>(709.89105,1074.6781), d: SIMD2<Float>(799.70337,1234.4243))
         let alignedSmall = AlignedCubic(cubic: small)
@@ -69,9 +73,31 @@ final class AlignedCubicTests: XCTestCase {
         throw XCTSkip("kappaPrime is not supported in release builds")
         #endif
     }
+    
+    func testMaxKappa() {
+        
+        let c2 = Cubic(a: SIMD2<Float>(0,0), b: SIMD2<Float>(37,100), c: SIMD2<Float>(25,25), d: SIMD2<Float>(75,0))
+        let a2 = AlignedCubic(cubic: c2)
+        let libmax = a2.maxKappaParameter(accuracy: 0.0001)
+        var t: Float? = nil
+        var f: Float = 0
+        for i in stride(from: 0 as Float, to: 1, by: 0.0001) {
+            let a = abs(a2.kappa(t: i))
+            if a > f { f = a; t = i }
+        }
+        XCTAssertEqual(libmax, t!,accuracy:0.0001)
+        
+        //try a line
+        let linear = Cubic(a: SIMD2<Float>(0,0), b: SIMD2<Float>(100,100), c: SIMD2<Float>(25,25), d: SIMD2<Float>(75,75))
+        let alignedLine = AlignedCubic(cubic: linear)
+        let kappaT = alignedLine.maxKappaParameter(accuracy: 0.01)
+        XCTAssert(kappaT >= 0 && kappaT <= 1)
+        
     }
     static var allTests = [
         ("testMake", testMake),
-        ("testKappaBench",testKappaBench)
+        ("testKappaBench",testKappaBench),
+        ("testKappaPrime",testKappaPrime),
+        ("testMaxKappa",testMaxKappa)
     ]
 }

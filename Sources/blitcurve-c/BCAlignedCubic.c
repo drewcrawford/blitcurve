@@ -96,3 +96,44 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
     const bc_float2_t n = simd_make_float2(n1_1 * n1_2,n2_1-n2_2);
     return simd_reduce_add(n/d);
 }
+
+static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upper, bc_float_t accuracy) {
+
+    while (upper - lower > accuracy) {
+        bc_float_t lowerPrime = __BCAlignedCubicKappaPrime(c, lower);
+        bc_float_t upperPrime = __BCAlignedCubicKappaPrime(c, upper);
+        if (signbit(lowerPrime) == signbit(upperPrime)) {
+            return MAXFLOAT;
+        }
+        const bc_float_t midpoint = (upper - lower) / 2 + lower;
+        const bc_float_t midPrime = __BCAlignedCubicKappaPrime(c, midpoint);
+        if (signbit(midPrime) == signbit(upperPrime)) {
+            upper = midpoint;
+        }
+        else {
+            lower = midpoint;
+        }
+    }
+    return lower;
+}
+
+bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy) {
+    float maxKappa = 0;
+    float param = MAXFLOAT;
+    for(unsigned char i_t = 0; i_t < 5; i_t++) {
+        bc_float_t l = i_t * 0.2;
+        bc_float_t r = (i_t + 1) * 0.2;
+        const bc_float_t itry = KappaSearch(c, l, r, accuracy);
+        if (itry != MAXFLOAT) {
+            const bc_float_t proposedKappa = fabs(BCAlignedCubicKappa(c, itry));
+            if (proposedKappa > maxKappa) {
+                maxKappa = proposedKappa;
+                param = itry;
+            }
+        }
+    }
+    if (param == MAXFLOAT) {
+        return 0;
+    }
+    return param;
+}

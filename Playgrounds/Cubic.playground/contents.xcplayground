@@ -6,5 +6,6 @@
         <page name='MissingPoints2'/>
         <page name='PointViews'/>
         <page name='MakeFromLine'/>
+        <page name='Kappa'/>
     </pages>
 </playground>

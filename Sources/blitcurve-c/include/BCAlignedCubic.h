@@ -40,6 +40,10 @@ __attribute__((const))
 __attribute__((swift_name("AlignedCubic.__kappaPrime(self:t:)")))
 bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
 #endif
+
+__attribute__((const))
+__attribute__((swift_name("AlignedCubic.maxKappaParameter(self:accuracy:)")))
+bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c, bc_float_t accuracy);
 #endif
 
 
