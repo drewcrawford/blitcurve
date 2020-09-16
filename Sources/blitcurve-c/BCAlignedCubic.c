@@ -4,7 +4,7 @@
 
 
 #include "BCAlignedCubic.h"
-extern inline bc_float_t BCAlignedCubicTurningRadius(BCAlignedCubic c, bc_float_t t);
+extern inline bc_float_t BCAlignedCubicCurveRadius(BCAlignedCubic c, bc_float_t t);
 
 BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
     //first we translate by the -a
@@ -57,6 +57,7 @@ bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
 }
 
 __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t) {
+    __BC_ASSERT(t >= 0 && t <= 1);
     const bc_float2_t c3 = c.c * 3;
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
@@ -100,7 +101,7 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
 }
 
 static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upper, bc_float_t accuracy) {
-
+    __BC_ASSERT(upper >= lower);
     while (upper - lower > accuracy) {
         bc_float_t lowerPrime = __BCAlignedCubicKappaPrime(c, lower);
         bc_float_t upperPrime = __BCAlignedCubicKappaPrime(c, upper);
