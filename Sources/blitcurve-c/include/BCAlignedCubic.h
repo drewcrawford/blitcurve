@@ -44,6 +44,13 @@ bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.maxKappaParameter(self:accuracy:)")))
 bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c, bc_float_t accuracy);
+
+__attribute__((const))
+__attribute__((swift_name("AlignedCubic.curveRadius(self:t:)")))
+inline bc_float_t BCAlignedCubicCurveRadius(BCAlignedCubic c, bc_float_t t) {
+    return 1.0 / BCAlignedCubicKappa(c, t);
+}
+
 #endif
 
 

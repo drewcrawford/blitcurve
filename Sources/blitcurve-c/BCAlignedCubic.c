@@ -4,6 +4,8 @@
 
 
 #include "BCAlignedCubic.h"
+extern inline bc_float_t BCAlignedCubicTurningRadius(BCAlignedCubic c, bc_float_t t);
+
 BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
     //first we translate by the -a
     //this will place a at 0,0
