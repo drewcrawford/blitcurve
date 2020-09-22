@@ -119,6 +119,27 @@ static inline bool BCCubicIsTechnicallyNormalized(BCCubic c) {
     return simd_distance(c.c, c.a) != 0 && simd_distance(c.b, c.d)  != 0;
 }
 
+__attribute__((const))
+__attribute__((swift_name("NormalizationDistanceForCubicCurvature(euclidianDistance:straightAngle:curvatureError:)")))
+/**
+ \abstract Finds the minimum normalization distance required to get "nice" curvature behavior for \c BCCubic or \c BCAlignedCubic.
+ \discussion Many bezier functions are undefined in the case the control points get near the endpoints, which is why we have \c BCCubicNormalize and related.  This UB is the case for the curvature (\c kappa and related) functions as well.  However, the curvature is unique because even in cases where there it seems like there's a reasonable distance between points (and so the resulting curvature is "well-defined"), the behavior of curvature can be "strange".  This usually presents with a very high curvature at the endpoints, which can be misleading if you are evaluating cubics near endpoints or finding maximum curvature along a cubic, or doing something that relies on that.
+ 
+ The solution to this is to increase the distance between control points and endpoints, beyond what might be a reasonable distance for "well-defined" behavior.  This function computes the distance required.  The upper-bound of this function is \c euclidianDistance/2, so that is an appropriate value for cases where this function is difficult.
+ 
+ A discussion of this problem with various plots of the "strange" behavior appears at https://sealedabstract.com/posts/bezier-curvature/
+ 
+ @param euclidianDistance positive distance between \c a and \c b.
+ @param straightAngle Positive angle that is "nearly straight", used to detect the undesired curvature.  Plausible values for this parameter include \c 2*PI/360f
+ @param curvatureError  maximum error (difference in unsigned curvature for a "nearly straight" cubic) we want.  I think this function is not well-behaved if you pass a value below \c 1*10^-14 or so, so if you intended to do that, just use \c euclidianDistance/2 rather than calling this function.
+ 
+ @returns a normalization distance, to find the required distance between endpoints to get "nice" curvature.
+ */
+bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDistance, bc_float_t straightAngle, bc_float_t curvatureError)
+__attribute__((diagnose_if(!(euclidianDistance>0), "Invalid euclidianDistance","error")))
+__attribute__((diagnose_if(!(straightAngle>0), "Invalid straightAngle","error")))
+__attribute__((diagnose_if(!(curvatureError>0), "Invalid curvatureError","error")));
+
 
 
 __attribute__((const))

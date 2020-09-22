@@ -153,6 +153,11 @@ final class CubicTests: XCTestCase {
         
     }
     
+    func testCurvatureError() {
+        let m = NormalizationDistanceForCubicCurvature(euclidianDistance: 20, straightAngle: 2 * .pi / 360, curvatureError: 0.02)
+        XCTAssertEqual(m,2.87,accuracy: 0.01)
+    }
+    
     static var allTests: [(String,(CubicTests) -> () -> ())] = {
         
         var tests = [
@@ -166,6 +171,7 @@ final class CubicTests: XCTestCase {
         ("testTangent",testTangent),
         ("testConnectingCubics",testConnectingCubics),
         ("testConnectingTangents",testConnectingTangents),
+        ("testCurvatureError",testCurvatureError),
 
         ]
         

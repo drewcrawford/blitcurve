@@ -100,3 +100,20 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
     }
 }
 
+
+bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDistance, bc_float_t straightAngle, bc_float_t curvatureError) {
+    __BC_ASSERT(euclidianDistance>0);
+    __BC_ASSERT(straightAngle>0);
+    __BC_ASSERT(curvatureError>0);
+    const bc_float_t r = euclidianDistance;
+    const bc_float_t k = curvatureError;
+    const bc_float_t p1 = sinf(straightAngle);
+    const bc_float_t p2 = cosf(straightAngle);
+    const bc_float_t p2_by_p1 = p2 * p1;
+    const bc_float_t t1 = -2 * p2_by_p1 / (3*curvatureError);
+    const bc_float2_t square_p2byp1_k = simd_powf(simd_make_float2(p2_by_p1, k),2);
+    const bc_float_t n = 3 * curvatureError * r * p1 + 2 * square_p2byp1_k.x;
+    const bc_float_t d = square_p2byp1_k.y;
+    const bc_float_t t2 = 1.0/3.0 * sqrtf(2) * sqrtf(n/d);
+    return t1 + t2;
+}
