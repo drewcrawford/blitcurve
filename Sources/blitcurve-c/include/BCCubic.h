@@ -152,8 +152,9 @@ __attribute__((swift_name("Cubic.normalize(self:approximateDistance:)")))
 ///We say a curve is \a technically normalized if there is some nonzero distance between all related endpoints and control points.  This generally provides a mathematical definition for operations on the curve.
 ///
 ///In practice, applications may want a curve to be \a generously normalized.  For example, a small distance between \c a and \c c may technically define \c initialTangent at \c t=0, but the value is not necessarily close to the tangent at \c t=0.01, so an application scanning the bezier parameters at "reasonable" intervals may see weird behavior.  For this reason an application may want to normalize more generously to provide a larger distance between endpoints and control points.
+///One particularly important case is the situation of calculating curvature.  See \c BCNormalizationDistanceForCubicCurvatureError for a function to calculate a normalization distance for this case.
 ///\param c The cubic to normalize.  We will normalize it in-place.
-///\param approximateDistance the desired distance between endpoints and control points.  Pass a positive nonzero value.  Note the follwoing cases:
+///\param approximateDistance the desired distance between endpoints and control points.  Pass a positive nonzero value.  Note the following cases:
 ///1.  If the control/endpoints are already at least this distance, we will not alter them
 ///2.  If the control/endpoints are less than this distance, we will adjust the control points to a value approximately this distance, but it will not be exact, and the value we choose may be higher or lower.  For this reason, avoid values near the working precision, such as \c FLT_MIN, and avoid treating this as a minimum distance.
 ///\return A normalized curve, with at least the distance specified between related endpoints and control points.
@@ -161,10 +162,13 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance);
 
 
 __attribute__((const))
-__attribute__((swift_name("Cubic.init(connecting:initialTangent:finalTangent:)")))
+__attribute__((swift_name("Cubic.init(connecting:tangents:distances:)")))
 ///Create a cubic that connects a line with initial and final tangents
+///\param connecting The line to connect with
+///\param tangents in (initial,final) orientation
+///\param distances normalization distances in (initial,final) orientation.
 ///\warning This may be UBi if connecting is 0-len
-static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_t initialTangent, bc_float_t finalTangent) {
+static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float2_t tangents, bc_float2_t distances) {
     __BC_ASSERT(BCLineLength(connecting) > 0);
     BCCubic c;
     c.a = connecting.a;
@@ -215,14 +219,14 @@ static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float_
      
         */
     //find the difference between angles in (i,f) format
-    bc_float2_t diff = simd_make_float2(initialTangent, finalTangent);
-    BCLine2 i_f = BCLine2MakeWithPointAndAngle(simd_make_float4(connecting.a,connecting.b),diff,simd_make_float2(1,1));
+    BCLine2 i_f = BCLine2MakeWithPointAndAngle(simd_make_float4(connecting.a,connecting.b),tangents,distances);
     c.c = i_f.b.xy;
     c.d = i_f.b.zw;
     return c;
 }
 
 ///Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
+///\discussion This will copy the tangent magnitudes of the initial/final cubics into the resulting cubic
 ///\warning This operation requires the curve to be technically normalized, see \c BCCubicNormalize
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:to:)")))
@@ -232,6 +236,9 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
     connecting.b = b.a;
     //UB checked inside BCCubicInitialTanget / BCCubicFinalTagent, respectively
     //need to reverse b's initial tangent
+    const bc_float2_t tangents = simd_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b) - M_PI);
+    const bc_float2_t lengths = simd_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
+    return BCCubicMakeConnectingTangents(connecting, tangents, lengths);
 }
 
 ///Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.

@@ -13,8 +13,8 @@ final class CubicTests: XCTestCase {
         let c = Cubic(a: SIMD2<Float>(0,0), b: SIMD2<Float>(1,1), c: SIMD2<Float>(2,2), d: SIMD2<Float>(3,3))
         let _ = c.initialTangentLine
         let _ = c.finalTangentLine
-        let _ = c.initialTangent
-        let _ = c.finalTangent
+        let _ = c.initialTangentAngle
+        let _ = c.finalTangentAngle
     }
     
     func testEvaluate() {
@@ -39,9 +39,9 @@ final class CubicTests: XCTestCase {
         let railLine = Line(a: SIMD2<Float>(x: 510.37002139454205, y: 343.83395079162915), b: SIMD2<Float>(x: 1712.387147298103, y: 298.4828489580134))
         let finalTangent = Line(a: SIMD2<Float>(x: 1712.387147298103, y: 298.4828489580134), b: SIMD2<Float>(x: 1808.2719716869988, y: 244.57458936905402)).tangent
         let initialTangent = Line(a: SIMD2<Float>(x: 376.872572406239, y: 106.38648819110057), b: SIMD2<Float>(x: 510.37002139454205, y: 343.83395079162915)).tangent
-        let cube = Cubic(connecting: railLine, initialTangent: initialTangent, finalTangent: finalTangent)
-        XCTAssertEqual(cube.initialTangent, initialTangent, accuracy: 0.1)
-        XCTAssertEqual(cube.finalTangent, finalTangent + .pi, accuracy: 0.1)
+        let cube = Cubic(connecting: railLine, tangents: SIMD2<Float>(initialTangent, finalTangent), distances: SIMD2<Float>(1,1))
+        XCTAssertEqual(cube.initialTangentAngle, initialTangent, accuracy: 0.1)
+        XCTAssertEqual(cube.finalTangentAngle, finalTangent + .pi, accuracy: 0.1)
     }
     
     func testConnectingCubics() {
