@@ -26,8 +26,8 @@ __attribute__((swift_name("Line2.init(point:angle:distance:)")))
 static inline BCLine2 BCLine2MakeWithPointAndAngle(bc_float4_t a, bc_float2_t angle, bc_float2_t distance) {
     BCLine2 l;
     l.a = a;
-    bc_float2_t cos = cos(angle);
-    bc_float2_t sin = sin(angle);
+    bc_float2_t cos = simd_cosf(angle);
+    bc_float2_t sin = simd_sinf(angle);
     l.b = simd_make_float4(cos.x,sin.x,cos.y,sin.y);
     l.b *= simd_make_float4(distance.x,distance.x,distance.y,distance.y);
     l.b += a;

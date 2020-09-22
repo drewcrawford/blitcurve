@@ -16,9 +16,9 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
     const float theta = -atan(t_b.y/t_b.x);
     //with that solved, we can apply the rotation to get b_x
     BCAlignedCubic r;
-    r.b_x = t_b.x * cos(theta) - t_b.y * sin(theta);
+    r.b_x = t_b.x * cosf(theta) - t_b.y * sinf(theta);
     //and then a standard rotation for c,d
-    simd_float2x2 magic = bc_make_2x2(simd_make_float2(cos(theta),sin(theta)), simd_make_float2(-sin(theta),cos(theta)));
+    simd_float2x2 magic = bc_make_2x2(simd_make_float2(cosf(theta),sinf(theta)), simd_make_float2(-sinf(theta),cosf(theta)));
     r.c = simd_mul(magic,t_c);
     r.d = simd_mul(magic,t_d);
     return r;
@@ -128,7 +128,7 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy)
         bc_float_t r = (i_t + 1) * 0.2;
         const bc_float_t itry = KappaSearch(c, l, r, accuracy);
         if (itry != MAXFLOAT) {
-            const bc_float_t proposedKappa = fabs(BCAlignedCubicKappa(c, itry));
+            const bc_float_t proposedKappa = fabsf(BCAlignedCubicKappa(c, itry));
             if (proposedKappa > maxKappa) {
                 maxKappa = proposedKappa;
                 param = itry;

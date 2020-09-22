@@ -15,7 +15,7 @@ __attribute__((const))
 __attribute__((swift_name("IsNearlyEqual(a:b:)")))
 ///Deteremines if the points are nearly equal
 static inline bool BCIsNearlyEqual(bc_float_t a, bc_float_t b) {
-    return (fabs(a - b) < 0.001);
+    return (fabsf(a - b) < 0.001);
 }
 
 __attribute__((const))

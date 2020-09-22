@@ -42,23 +42,26 @@ static inline float simd_reduce_max(simd::float4 x) {
 #define M_PI M_PI_F
 #define M_PI_2 M_PI_2_F
 
-#define fabsf fabs
+#define fabsf metal::fabs
+#define sinf metal::sin
+#define cosf metal::cos
+#define sqrtf(X) metal::sqrt((float) X)
 //powf is used for pure floats, and simd_powf for simd types
 //in metal these are identical, but not so in c
 #define simd_powf metal::pow
+#define simd_cosf metal::cos
+#define simd_sinf metal::sin
+
 #define powf metal::pow
 #define signbit metal::signbit
-#define sin(X) metal::sin(X)
-#define cos(X) metal::cos(X)
 #define atan2(X,Y) metal::atan2(X,Y)
-#define fabs(X) metal::fabs(X)
 #define roundf metal::round
 #define ceilf metal::ceil
 #define floorf metal::floor
 #define atan metal::atan
 
 //there is no simd_norm_inf in metal
-#define simd_norm_inf(N) metal::fmax(fabs(N.x),fabs(N.y))
+#define simd_norm_inf(N) metal::fmax(fabsf(N.x),fabsf(N.y))
 
 #define bc_make_4x2 metal::float4x2
 #define bc_make_2x2 metal::float2x2
@@ -83,6 +86,7 @@ static inline float simd_reduce_add(simd_float2 v) {
 #define simd_max simd::max
 #define simd_sign simd::sign
 
+
 #define __BC_DEVICE device
 
 #define BC_NO_VEC8 //simd8/16 are not available
@@ -97,6 +101,8 @@ static inline float simd_reduce_add(simd_float2 v) {
 
 //in C, we want pow for simd types, not powf
 #define simd_powf pow
+#define simd_cosf cos
+#define simd_sinf sin
 
 //address space qualifier
 #define __BC_DEVICE

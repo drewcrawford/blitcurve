@@ -34,7 +34,7 @@ bool BCRectIsPointOnOrInside(BC3Points b, bc_float2_t point) {
 
 __attribute__((const))
 static simd_float2x2 BCRotationMatrix(float angle) {
-    return bc_make_2x2(simd_make_float2(cos(angle),sin(angle)), simd_make_float2(-sin(angle),cos(angle)));
+    return bc_make_2x2(simd_make_float2(cosf(angle),sinf(angle)), simd_make_float2(-sinf(angle),cosf(angle)));
 }
 
 BC4Points BCRectGet4Points(BCRect r) {
