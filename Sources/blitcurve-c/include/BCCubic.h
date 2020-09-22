@@ -53,22 +53,36 @@ inline BCLine BCCubicFinalTangentLine(BCCubic c) {
     return l;
 }
 
-///\abstract Returns the angle of the intitalTangent.
+///\abstract Returns the angle of the \c intitalTangent.
 ///\warning This requires the cubic to be partially normalized between \c a/c, see \c BCCubicNormalize for details.
 __attribute__((const))
-__attribute__((swift_name("getter:Cubic.initialTangent(self:)")))
-static inline bc_float_t BCCubicInitialTangent(BCCubic c) {
+__attribute__((swift_name("getter:Cubic.initialTangentAngle(self:)")))
+static inline bc_float_t BCCubicInitialTangentAngle(BCCubic c) {
     //UB checked inside BCLineTangent (e.g. the intial line would be 0)
     return BCLineTangent(BCCubicInitialTangentLine(c));
 }
 
-///\abstract Returns the angle of the finalTangent.
+///\abstract Returns the  magnitude of the \c intitalTangent.
+__attribute__((const))
+__attribute__((swift_name("getter:Cubic.initialTangentMagnitude(self:)")))
+static inline bc_float_t BCCubicInitialTangentMagnitude(BCCubic c) {
+    return BCLineLength(BCCubicInitialTangentLine(c));
+}
+
+///\abstract Returns the angle of the \c finalTangent.
 ///\warning This requires the cubic to be partially normalized between \c b/d, see \c BCCubicNormalize for details.
 __attribute__((const))
-__attribute__((swift_name("getter:Cubic.finalTangent(self:)")))
-static inline bc_float_t BCCubicFinalTangent(BCCubic c) {
+__attribute__((swift_name("getter:Cubic.finalTangentAngle(self:)")))
+static inline bc_float_t BCCubicFinalTangentAngle(BCCubic c) {
     //UB checked inside BCLineTanget (e.g. the initial line would be 0)
     return BCLineTangent(BCCubicFinalTangentLine(c));
+}
+
+///\abstract Returns the  magnitude of the \c finalTangent.
+__attribute__((const))
+__attribute__((swift_name("getter:Cubic.finalTangentMagnitude(self:)")))
+static inline bc_float_t BCCubicFinalTangentMagnitude(BCCubic c) {
+    return BCLineLength(BCCubicFinalTangentLine(c));
 }
 
 ///\abstract Evaluate the cubic for the given bezier parameter
@@ -218,8 +232,6 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
     connecting.b = b.a;
     //UB checked inside BCCubicInitialTanget / BCCubicFinalTagent, respectively
     //need to reverse b's initial tangent
-    float reversed = BCCubicInitialTangent(b) - M_PI;
-    return BCCubicMakeConnectingTangents(connecting, BCCubicFinalTangent(a), reversed);
 }
 
 ///Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.

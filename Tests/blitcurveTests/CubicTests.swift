@@ -51,9 +51,9 @@ final class CubicTests: XCTestCase {
         
         XCTAssertEqual(aRail.b, c.a)
         XCTAssertEqual(nextRail.a, c.b)
-        XCTAssertEqual(c.initialTangent, aRail.finalTangent)
+        XCTAssertEqual(c.initialTangentAngle, aRail.finalTangentAngle)
         //final tangent is reversed nextRail.initialTangent
-        XCTAssertEqual(c.finalTangent, nextRail.initialTangent, accuracy: 0.1)
+        XCTAssertEqual(c.finalTangentAngle, nextRail.initialTangentAngle, accuracy: 0.1)
     }
     
     func testLength() {
