@@ -240,10 +240,24 @@ static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float2
      
         */
     //find the difference between angles in (i,f) format
+    tangents.y -= M_PI;
     BCLine2 i_f = BCLine2MakeWithPointAndAngle(simd_make_float4(connecting.a,connecting.b),tangents,distances);
     c.c = i_f.b.xy;
     c.d = i_f.b.zw;
     return c;
+}
+
+///Creates a cubic connecting two lines, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
+///\discussion This will choose the initial and final tangents with mangitudes \c r/2.  For more details on this choice, see https://sealedabstract.com/posts/bezier-curvature/
+///\warning This operation requires the lines to have non-zero distance
+__attribute__((const))
+__attribute__((swift_name("Cubic.init(connecting:to:)")))
+static inline BCCubic BCCubicMakeConnectingLines(BCLine a, BCLine b) {
+    BCLine connecting;
+    connecting.a = a.b;
+    connecting.b = b.a;
+    const bc_float_t distance = simd_distance(a.b,b.a)/2;
+    return BCCubicMakeConnectingTangents(connecting, simd_make_float2(BCLineTangent(a), BCLineTangent(b)),simd_make_float2(distance,distance));
 }
 
 ///Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
@@ -257,7 +271,7 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
     connecting.b = b.a;
     //UB checked inside BCCubicInitialTanget / BCCubicFinalTagent, respectively
     //need to reverse b's initial tangent
-    const bc_float2_t tangents = simd_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b) - M_PI);
+    const bc_float2_t tangents = simd_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b));
     const bc_float2_t lengths = simd_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
     return BCCubicMakeConnectingTangents(connecting, tangents, lengths);
 }
