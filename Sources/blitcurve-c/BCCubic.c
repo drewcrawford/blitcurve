@@ -117,3 +117,11 @@ bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDis
     const bc_float_t t2 = 1.0/3.0 * sqrtf(2) * sqrtf(n/d);
     return t1 + t2;
 }
+
+bool BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
+    const float distance = BCLineLength(BCCubicAsLine(cubic));
+    const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(distance, straightAngle, curvatureError);
+    if (simd_distance(cubic.a, cubic.c) < expectedDistance) { return false; }
+    if (simd_distance(cubic.b, cubic.d) < expectedDistance) { return false; }
+    return true;
+}
