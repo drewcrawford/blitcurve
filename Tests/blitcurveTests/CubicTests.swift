@@ -67,8 +67,20 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(c.initialTangentMagnitude, c.finalTangentMagnitude)
         XCTAssertEqual(c.initialTangentMagnitude, c.finalTangentMagnitude)
         XCTAssertEqual(c.initialTangentMagnitude, 7.07, accuracy: 0.01)
+    }
+    
+    func testConnectingCubicToPoint() {
+        let c = Cubic(a: .zero, b: SIMD2<Float>(10,10), c: SIMD2<Float>(0,3), d: SIMD2<Float>(0,7))
+        let c2 = Cubic(connecting: c, to: SIMD2<Float>(10,15), finalTangent: 0)
+        XCTAssertEqual(c2.a, c.b)
+        XCTAssertEqual(c2.b,SIMD2<Float>(10,15))
+        XCTAssertEqual(c2.initialTangentAngle, c.finalTangentAngle)
+        XCTAssertEqual(c2.initialTangentMagnitude, c.finalTangentMagnitude)
+        XCTAssertEqual(c2.finalTangentAngle,0)
+        XCTAssertEqual(c2.finalTangentMagnitude,2.5)
 
     }
+    
     
     func testLength() {
         let curve = Cubic(a: SIMD2<Float>(x: 120, y: 60), b: SIMD2<Float>(x: 220, y: 40), c: SIMD2<Float>(x: 35, y: 200), d: SIMD2<Float>(x: 220, y: 260))
@@ -178,6 +190,7 @@ final class CubicTests: XCTestCase {
         ("testTangents", testTangents),
         ("testEvaluate", testEvaluate),
         ("testNormalize", testEvaluate),
+        ("testConnectingCubicToPoint", testConnectingCubicToPoint),
         ("testLength",testLength),
         ("testAlignedRect",testAlignedRect),
         ("testSplit",testSplit),

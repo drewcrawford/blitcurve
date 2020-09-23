@@ -276,6 +276,19 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
     return BCCubicMakeConnectingTangents(connecting, tangents, lengths);
 }
 
+
+///Creates a cubic connecting a cubic to a point, with an initialTangent [finalTangent of the a] and the finalTangent provided.
+///\discussion This will copy the tangent magnitudes of the initial cubic into the resulting cubic.  The magnitude of the cubic's \c finalTangent is determined by the \c r/2 rule.
+///\warning This operation requires the curve to be partially normalized, see \c BCCubicNormalize.
+__attribute__((const))
+__attribute__((swift_name("Cubic.init(connecting:to:finalTangent:)")))
+static inline BCCubic BCCubicMakeConnectingCubicToPoint(BCCubic a, bc_float2_t b, bc_float_t finalTangent) {
+    BCLine connecting;
+    connecting.a = a.b;
+    connecting.b = b;
+    return BCCubicMakeConnectingTangents(connecting, simd_make_float2(BCCubicFinalTangentAngle(a), finalTangent), simd_make_float2(BCCubicFinalTangentMagnitude(a), BCLineLength(connecting)/2.0));
+}
+
 ///Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.
 ///\seealso \c BCCubicMakeConnectingTangents
 __attribute__((const))
