@@ -260,21 +260,30 @@ static inline BCCubic BCCubicMakeConnectingLines(BCLine a, BCLine b) {
     return BCCubicMakeConnectingTangents(connecting, simd_make_float2(BCLineTangent(a), BCLineTangent(b)),simd_make_float2(distance,distance));
 }
 
-///Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
-///\discussion This will copy the tangent magnitudes of the initial/final cubics into the resulting cubic
-///\warning This operation requires the curve to be technically normalized, see \c BCCubicNormalize
 __attribute__((const))
-__attribute__((swift_name("Cubic.init(connecting:to:)")))
-static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b) {
+__attribute__((swift_name("Cubic.init(connecting:to:tangentMagnitudes:)")))
+static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b,bc_float2_t tangentMagnitudes) {
     BCLine connecting;
     connecting.a = a.b;
     connecting.b = b.a;
     //UB checked inside BCCubicInitialTanget / BCCubicFinalTagent, respectively
     //need to reverse b's initial tangent
     const bc_float2_t tangents = simd_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b));
-    const bc_float2_t lengths = simd_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
-    return BCCubicMakeConnectingTangents(connecting, tangents, lengths);
+    return BCCubicMakeConnectingTangents(connecting, tangents, tangentMagnitudes);
 }
+
+///Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
+///\discussion This will copy the tangent magnitudes of the provided cubics cubics into the resulting cubic
+///\seealso BCCubicMakeconnectingCubics for a version with explicit tangent magnitudes
+///\warning This operation requires the curve to be technically normalized, see \c BCCubicNormalize
+__attribute__((const))
+__attribute__((swift_name("Cubic.init(connecting:to:)")))
+static inline BCCubic BCCubicMakeConnectingCubicsImplyingTangentMagnitudes(BCCubic a, BCCubic b) {
+    const bc_float2_t lengths = simd_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
+    return BCCubicMakeConnectingCubics(a, b, lengths);
+}
+
+
 
 
 ///Creates a cubic connecting a cubic to a point, with an initialTangent [finalTangent of the a] and the finalTangent provided.
