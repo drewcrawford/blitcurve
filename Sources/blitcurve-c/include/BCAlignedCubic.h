@@ -81,6 +81,22 @@ __attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error
     return 1.0 / BCAlignedCubicKappa(c, t);
 }
 
+/**Determines if the given cubic is normalized with a method appropriate for curvature calculations.
+ \discussion See the documentation for \c BCCubicNormalize and \c BCNormalizationDistanceForCubicCurvatureError
+ \seealso see \c BCCubicIsNormalizedForCurvature, a variant for the \c BCCubic case.
+ @param cubic a cubic to check
+ @param straightAngle Positive angle that is "nearly straight", used to detect the undesired curvature.  Plausible values for this parameter include \c 2*PI/360f
+ @param curvatureError  maximum error (difference in unsigned curvature for a "nearly straight" cubic) we want.  I think this function is not well-behaved if you pass a value below \c 1*10^-14 or so, so if you intended to do that, just use \c BCLineLength(BCCubicAsLine(cubic))/2 rather than calling this function.
+ @returns whether the cubic is normalized in a way appropriate for curvature calculations.
+ */
+__attribute__((const))
+__attribute__((swift_name("AlignedCubic.isNormalizedForCurvature(self:straightAngle:curvatureError:)")))
+bool BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError)
+__attribute__((diagnose_if(!(cubic.b_x>0), "Invalid distance","error")))
+__attribute__((diagnose_if(!(straightAngle>0), "Invalid straightAngle","error")))
+__attribute__((diagnose_if(!(curvatureError>0), "Invalid curvatureError","error")));
+
+
 #endif
 
 

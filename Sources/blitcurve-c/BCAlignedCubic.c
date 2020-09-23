@@ -140,3 +140,12 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy)
     }
     return param;
 }
+
+bool BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
+    const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(fabs(cubic.b_x), straightAngle, curvatureError);
+    if (simd_length(cubic.c) < expectedDistance) { return false; }
+    bc_float2_t d = cubic.d;
+    d.x -= cubic.b_x;
+    if (simd_length(d) < expectedDistance) { return false; }
+    return true;
+}

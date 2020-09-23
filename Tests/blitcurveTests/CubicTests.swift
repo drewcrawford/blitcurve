@@ -78,7 +78,6 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(c2.initialTangentMagnitude, c.finalTangentMagnitude)
         XCTAssertEqual(c2.finalTangentAngle,0)
         XCTAssertEqual(c2.finalTangentMagnitude,2.5)
-
     }
     
     
@@ -184,6 +183,18 @@ final class CubicTests: XCTestCase {
         XCTAssertEqual(m,2.87,accuracy: 0.01)
     }
     
+    func testAlignedForCurvature() {
+        let c = Cubic(a: .zero, b: SIMD2<Float>(20,0), c: SIMD2<Float>(5,0), d: SIMD2<Float>(17,0))
+        XCTAssert(c.isNormalizedForCurvature(straightAngle: 2 * .pi/360, curvatureError: 0.02))
+        let a = AlignedCubic(cubic: c)
+        XCTAssert(a.isNormalizedForCurvature(straightAngle: 2 * .pi/360, curvatureError: 0.02))
+        
+        let badCubic = Cubic(a: .zero, b: SIMD2<Float>(20,0), c: SIMD2<Float>(2,0), d: SIMD2<Float>(17,0))
+        XCTAssert(!badCubic.isNormalizedForCurvature(straightAngle: 2 * .pi/360, curvatureError: 0.02))
+        let badA = AlignedCubic(cubic: badCubic)
+        XCTAssert(!badA.isNormalizedForCurvature(straightAngle: 2 * .pi/360, curvatureError: 0.02))
+    }
+    
     static var allTests: [(String,(CubicTests) -> () -> ())] = {
         
         var tests = [
@@ -200,7 +211,7 @@ final class CubicTests: XCTestCase {
         ("testConnectingLines",testConnectingLines),
         ("testConnectingTangents",testConnectingTangents),
         ("testCurvatureError",testCurvatureError),
-
+        ("testAlignedForCurvature",testAlignedForCurvature),
         ]
         
         
