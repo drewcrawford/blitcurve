@@ -46,6 +46,8 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c);
 /**
  This calculates the kappa function (curvature).
  @discussion This returns the curvature of the curve at a specific bezier parameter.  The turning radius is \c 1/abs(kappa).
+ 
+ @warning This function is UB if the curve has 0-length or the cubic not technically normalized (see \c BCCubicIsTechnicallyNormalized)`  In addition, "good behavior" requires a higher-than-normal normalization distance, see \c BCAlignedCubicIsNormalizedForCurvature for details.
  @param t The bezier parameter on interval [0,1] at which to measure the curvature.
  */
 __attribute__((const))
@@ -63,6 +65,7 @@ bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
  @param c the cubic
  @param accuracy The maximum error allowed on \c t
  @performance This implements a binary search.
+ @warning This function is UB if the curve has 0-length or the cubic not technically normalized (see \c BCCubicIsTechnicallyNormalized)`  In addition, "good behavior" requires a higher-than-normal normalization distance, see \c BCAlignedCubicIsNormalizedForCurvature for details.
  */
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.maxKappaParameter(self:accuracy:)")))
@@ -71,6 +74,7 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c, bc_float_t accuracy
 /** This returns the curvature radius at a given bezier parameter.
  @see This is the inverse of BCAlignedCubicKappa.
  @param t The bezier parameter on interval [0,1] at which to measure the curvature.
+ @warning This function is UB if the curve has 0-length or the cubic not technically normalized (see \c BCCubicIsTechnicallyNormalized)`  In addition, "good behavior" requires a higher-than-normal normalization distance, see \c BCAlignedCubicIsNormalizedForCurvature for details.
  */
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.curveRadius(self:t:)")))

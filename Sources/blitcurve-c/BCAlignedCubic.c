@@ -27,6 +27,9 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
 
 bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
     __BC_ASSERT(t >=0 && t <= 1);
+    __BC_ASSERT(fabsf(c.b_x)>0);
+    __BC_ASSERT(fabsf(c.c.x) > 0 || fabsf(c.c.y) > 0);
+    __BC_ASSERT(fabsf(c.d.x - c.b_x) > 0 || fabsf(c.d.y) > 0);
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
     const bc_float_t p2_t = p2 * t;
@@ -142,7 +145,7 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy)
 }
 
 bool BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
-    const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(fabs(cubic.b_x), straightAngle, curvatureError);
+    const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(fabsf(cubic.b_x), straightAngle, curvatureError);
     if (simd_length(cubic.c) < expectedDistance) { return false; }
     bc_float2_t d = cubic.d;
     d.x -= cubic.b_x;
