@@ -292,7 +292,7 @@ static inline BCCubic BCCubicMakeConnectingCubicsWithTangentRule(BCCubic a, BCCu
         lengths = simd_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
         break;
         case BCTangentMagnitudeRuleHalfEuclidianDistance: {
-            const bc_float_t distance = simd_distance(a.b, b.a);
+            const bc_float_t distance = simd_distance(a.b, b.a) / 2;
             lengths = simd_make_float2(distance,distance);
                 break;
         }
