@@ -158,10 +158,11 @@ final class CubicTests: XCTestCase {
     
     func testTangent() {
         let a = SIMD2<Float>(x: 192, y: 341)
-        let nearA = SIMD2<Float>(x: 189, y: 336)
+        let nearA = SIMD2<Float>(x: 193.83, y: 344.26)
         var c = Cubic(a: a, b: SIMD2<Float>(x: 375, y: 667), c:nearA , d:nearA)
+        XCTAssert(c.isNearlyLinear(accuracy: 0.01))
         c.normalize(approximateDistance: 6)
-        XCTAssertEqual(c.tangentAt(t: 0.5), 1.0597466)
+        XCTAssertEqual(c.tangentAt(t: 0.5), 1.0592812)
         
         //here are some tangents we've found to be "bad" with other approaches
         let t1 = c.tangentAt(t: 0.10)

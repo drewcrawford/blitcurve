@@ -78,6 +78,8 @@ static inline bc_float_t BCCubicFinalTangentAngle(BCCubic c) {
     return BCLineTangent(BCCubicFinalTangentLine(c));
 }
 
+
+
 ///\abstract Returns the  magnitude of the \c finalTangent.
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.finalTangentMagnitude(self:)")))
@@ -142,16 +144,7 @@ __attribute__((diagnose_if(!(curvatureError>0), "Invalid curvatureError","error"
 
 
 
-__attribute__((const))
-__attribute__((swift_name("Cubic.tangentAt(self:t:)")))
-///\abstract Evaluates the tangent at the given point
-///\warning UB for non-normalized cubic
-static inline bc_float_t BCCubicTangent(BCCubic c, bc_float_t t) {
-    //check UB
-    __BC_ASSERT(BCCubicIsTechnicallyNormalized(c));
-    bc_float2_t prime = BCCubicEvaluatePrime(c, t);
-    return atan2(prime.y, prime.x);
-}
+
 
 
 
@@ -164,6 +157,29 @@ inline BCLine BCCubicAsLine(BCCubic c) {
     l.b = c.b;
     return l;
 }
+
+
+
+/**\abstract Returns whether the cubic is nearly a line (within some accuracy).
+ */
+__attribute__((const))
+__attribute__((swift_name("Cubic.isNearlyLinear(self:accuracy:)")))
+static inline bool BCCubicIsNearlyLinear(BCCubic self, bc_float_t accuracy) {
+    __BC_ASSERT(accuracy > 0);
+    const bc_float_t lineTangent = BCLineTangent(BCCubicAsLine(self));
+    return (fabsf(lineTangent - BCCubicInitialTangentAngle(self)) < accuracy && fabsf(lineTangent - BCCubicFinalTangentAngle(self)) < accuracy);
+}
+
+__attribute__((const))
+__attribute__((swift_name("Cubic.tangentAt(self:t:)")))
+///\abstract Evaluates the tangent at the given point
+///\warning UB for non-normalized cubic
+static inline bc_float_t BCCubicTangent(BCCubic c, bc_float_t t) {
+    __BC_ASSERT(BCCubicIsTechnicallyNormalized(c));
+    bc_float2_t prime = BCCubicEvaluatePrime(c, t);
+    return atan2(prime.y, prime.x);
+}
+
 __attribute__((swift_name("Cubic.normalize(self:approximateDistance:)")))
 ///\abstract Normalize the cubic
 ///\discussion When a control point is exactly (or in some contexts, merely 'near') an endpoint, it creates various problems.  For example, the definition of an initial tangent is the angle between \c a and \c c, but if \c a=c this angle is undefined.  We call such difficult curves  \a non-normalized.
