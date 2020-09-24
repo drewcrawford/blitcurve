@@ -31,8 +31,14 @@ final class CubicTests: XCTestCase {
     func testNormalize() {
         var curve = Cubic(a: .zero, b: SIMD2<Float>(x: 100, y: 100), c: .zero, d: SIMD2<Float>(x: 100, y: 100))
         curve.normalize(approximateDistance: 0.001)
-        XCTAssert(curve.a != curve.c)
-        XCTAssert(curve.b != curve.d)
+        XCTAssertNotEqual(curve.a, curve.c)
+        XCTAssertNotEqual(curve.b,curve.d)
+        
+        var curve2 = Cubic(a: .zero, b: SIMD2<Float>(100,0), c: SIMD2<Float>(10,0), d: SIMD2<Float>(90,0))
+        curve2.normalize(approximateDistance: 15)
+        XCTAssertEqual(curve2.c,SIMD2<Float>(15,0))
+        XCTAssertEqual(curve2.d, SIMD2<Float>(85,0), accuracy: 0.01)
+
     }
     
     func testConnectingTangents() {

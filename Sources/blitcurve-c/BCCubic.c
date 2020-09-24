@@ -88,15 +88,31 @@ bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t 
 }
 void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
     __BC_ASSERT(approximateDistance > 0);
-    if (simd_distance(c->c, c->a) < approximateDistance) {
-        const BCLine asLine = BCCubicAsLine(*c);
-        bc_float_t t = BCLineArclengthParameterization(asLine, approximateDistance);
-        c->c = BCLineEvaluate(asLine,t);
+    const bc_float_t cDistance = simd_distance(c->c, c->a);
+    if (cDistance < approximateDistance) {
+        bc_float_t angle;
+        if (cDistance > 0) { //if the line is technically normalized (partially for c) then we can use the tangent angle
+            angle = BCCubicInitialTangentAngle(*c);
+        }
+        else { //otherwise we need to use the line angle
+            const BCLine asLine = BCCubicAsLine(*c);
+            angle = BCLineTangent(asLine);
+        }
+        const BCLine tangent = BCLineMakeWithPointAndAngle(c->a, angle, approximateDistance);
+        c->c = tangent.b;
     }
-    if (simd_distance(c->d, c->b) < approximateDistance) {
-        const BCLine asLine = BCCubicAsLine(*c);
-        bc_float_t t = 1 - BCLineArclengthParameterization(asLine, approximateDistance);
-        c->d = BCLineEvaluate(asLine,t);
+    const bc_float_t dDistance = simd_distance(c->d, c->b);
+    if (dDistance < approximateDistance) {
+        bc_float_t angle;
+        if (dDistance > 0) { //if the line is technically normalized (partially for d) then we can use the tangent angle
+            angle = BCCubicFinalTangentAngle(*c);
+        }
+        else { //otherwise we need to use the line angle
+            const BCLine asLine = BCCubicAsLine(*c);
+            angle = BCLineTangent(asLine);
+        }
+        const BCLine tangent = BCLineMakeWithPointAndAngle(c->b,angle - M_PI, approximateDistance);
+        c->d = tangent.b;
     }
 }
 
