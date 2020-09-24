@@ -272,14 +272,31 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b,bc_float2
     return BCCubicMakeConnectingTangents(connecting, tangents, tangentMagnitudes);
 }
 
+///Specifies how tangent magnitudes are to be implied.  Can apply to both tangents or a single tangent, depending on context
+typedef enum {
+    ///Tangent magnitude should be copied from an input parameter
+    BCTangentMagnitudeRuleCopied __attribute__((swift_name("copied"))),
+    ///Tangent magnitude should be half the euclidian distance of the cubic, e.g. r/2
+    BCTangentMagnitudeRuleHalfEuclidianDistance __attribute__((swift_name("halfEuclidianDistance"))),
+} __attribute__((enum_extensibility(closed))) BCTangentMagnitudeRule;
+
 ///Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
-///\discussion This will copy the tangent magnitudes of the provided cubics cubics into the resulting cubic
 ///\seealso BCCubicMakeconnectingCubics for a version with explicit tangent magnitudes
 ///\warning This operation requires the curve to be technically normalized, see \c BCCubicNormalize
 __attribute__((const))
-__attribute__((swift_name("Cubic.init(connecting:to:)")))
-static inline BCCubic BCCubicMakeConnectingCubicsImplyingTangentMagnitudes(BCCubic a, BCCubic b) {
-    const bc_float2_t lengths = simd_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
+__attribute__((swift_name("Cubic.init(connecting:to:tangentRule:)")))
+static inline BCCubic BCCubicMakeConnectingCubicsWithTangentRule(BCCubic a, BCCubic b,BCTangentMagnitudeRule tangentRule) {
+    bc_float2_t lengths;
+    switch (tangentRule) {
+        case BCTangentMagnitudeRuleCopied:
+        lengths = simd_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
+        break;
+        case BCTangentMagnitudeRuleHalfEuclidianDistance: {
+            const bc_float_t distance = simd_distance(a.b, b.a);
+            lengths = simd_make_float2(distance,distance);
+                break;
+        }
+    }
     return BCCubicMakeConnectingCubics(a, b, lengths);
 }
 
@@ -288,14 +305,28 @@ static inline BCCubic BCCubicMakeConnectingCubicsImplyingTangentMagnitudes(BCCub
 
 ///Creates a cubic connecting a cubic to a point, with an initialTangent [finalTangent of the a] and the finalTangent provided.
 ///\discussion This will copy the tangent magnitudes of the initial cubic into the resulting cubic.  The magnitude of the cubic's \c finalTangent is determined by the \c r/2 rule.
+///\param a Initial cubic
+///\param b point to connect to
+///\param finalTangentAngle angle of the final tangent
+///\param initialTangentRule Rule to generate the initialTangent magnitude.  The \c finalTangentMagnitude will be \c BCTangentMagnitudeRuleHalfEuclidianDistance.
 ///\warning This operation requires the curve to be partially normalized, see \c BCCubicNormalize.
 __attribute__((const))
-__attribute__((swift_name("Cubic.init(connecting:to:finalTangent:)")))
-static inline BCCubic BCCubicMakeConnectingCubicToPoint(BCCubic a, bc_float2_t b, bc_float_t finalTangent) {
+__attribute__((swift_name("Cubic.init(connecting:to:finalTangent:initialTangentRule:)")))
+static inline BCCubic BCCubicMakeConnectingCubicToPoint(BCCubic a, bc_float2_t b, bc_float_t finalTangentAngle, BCTangentMagnitudeRule initialTangentRule) {
     BCLine connecting;
     connecting.a = a.b;
     connecting.b = b;
-    return BCCubicMakeConnectingTangents(connecting, simd_make_float2(BCCubicFinalTangentAngle(a), finalTangent), simd_make_float2(BCCubicFinalTangentMagnitude(a), BCLineLength(connecting)/2.0));
+    bc_float2_t lengths;
+    lengths.y = BCLineLength(connecting)/2;
+    switch (initialTangentRule) {
+    case BCTangentMagnitudeRuleCopied:
+        lengths.x = BCCubicFinalTangentMagnitude(a);
+        break;
+    case BCTangentMagnitudeRuleHalfEuclidianDistance:
+        lengths.x = lengths.y;
+        break;
+    }
+    return BCCubicMakeConnectingTangents(connecting, simd_make_float2(BCCubicFinalTangentAngle(a), finalTangentAngle), lengths);
 }
 
 ///Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.
@@ -306,8 +337,8 @@ static inline BCCubic BCCubicMakeWithLine(BCLine a) {
     BCCubic out;
     out.a = a.a;
     out.b = a.b;
-    out.c = BCLineEvaluate(a, 0.25);
-    out.d = BCLineEvaluate(a, 0.75);
+    out.c = BCLineEvaluate(a, 0.49);
+    out.d = BCLineEvaluate(a, 0.51);
     return out;
 }
 

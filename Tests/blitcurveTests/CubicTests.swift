@@ -47,7 +47,7 @@ final class CubicTests: XCTestCase {
     func testConnectingCubics() {
         let aRail = Cubic(a: SIMD2<Float>(2.6605175, 9.86255), b: SIMD2<Float>(0.21252254, 5.5065603), c: SIMD2<Float>(1.8522768, 8.424357), d: SIMD2<Float>(1.0362785, 6.9723616))
         let nextRail = Cubic(a: SIMD2<Float>(4.6373005, 3.1232715), b: SIMD2<Float>(7.0850296, 7.478789), c: SIMD2<Float>(5.4609714, 4.5889215), d: SIMD2<Float>(6.276881, 6.04076))
-        let c = Cubic(connecting: aRail, to: nextRail)
+        let c = Cubic(connecting: aRail, to: nextRail, tangentRule: .copied)
         
         XCTAssertEqual(aRail.b, c.a)
         XCTAssertEqual(nextRail.a, c.b)
@@ -71,7 +71,7 @@ final class CubicTests: XCTestCase {
     
     func testConnectingCubicToPoint() {
         let c = Cubic(a: .zero, b: SIMD2<Float>(10,10), c: SIMD2<Float>(0,3), d: SIMD2<Float>(0,7))
-        let c2 = Cubic(connecting: c, to: SIMD2<Float>(10,15), finalTangent: 0)
+        let c2 = Cubic(connecting: c, to: SIMD2<Float>(10,15), finalTangent: 0, initialTangentRule: .copied)
         XCTAssertEqual(c2.a, c.b)
         XCTAssertEqual(c2.b,SIMD2<Float>(10,15))
         XCTAssertEqual(c2.initialTangentAngle, c.finalTangentAngle)
