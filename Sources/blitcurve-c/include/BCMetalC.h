@@ -6,15 +6,15 @@
 
 #ifdef __METAL_VERSION__
 #include <metal_stdlib>
-//__attribute__((__overloadable__))
 static inline simd::float2 simd_make_float2(float a, float b) {
     return simd::float2(a,b);
 }
-////__attribute__((__overloadable__))
+static inline simd::float3 simd_make_float3(float a, float b, float c) {
+    return simd::float3(a,b,c);
+}
 static inline simd::float4 simd_make_float4(float x, float y, float z, float w) {
     return simd::float4(x,y,z,w);
 }
-//__attribute__((__overloadable__))
 static inline simd::float4 simd_make_float4(simd::float2 a, simd::float2 b) {
     return simd::float4(a,b);
 }
@@ -84,6 +84,7 @@ static inline float simd_reduce_add(simd_float2 v) {
 #define simd_distance simd::distance
 #define simd_dot simd::dot
 #define simd_max simd::max
+#define simd_min simd::min
 #define simd_sign simd::sign
 
 

@@ -15,4 +15,5 @@
 #include "BCTypes.h"
 #include "BCCubic2.h"
 #include "BCAlignedCubic.h"
+#include "BCCubicDrawing.h"
 #endif

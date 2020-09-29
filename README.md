@@ -24,6 +24,12 @@ Intersecting rects at 4 gigaintersections/sec:
 
 This demo is located [here](https://github.com/drewcrawford/blitcurve/Demos/RectIntersect).  For more details, see [this blogpost](https://sealedabstract.com/posts/rectangle-intersection/).
 
+## Cubic drawing
+24M paths per second
+
+![intersect](https://raw.githubusercontent.com/wiki/drewcrawford/blitcurve/gifs/drawcubic.gif)
+This demo is located [here](https://github.com/drewcrawford/blitcurve/Demos/LineShader)
+
 ## SwiftUI 
 
 Many types embed a `View` type which is a SwiftUI view.
@@ -41,46 +47,9 @@ struct Demo: View {
 ```
 
 
-For more, see the [Playgrounds](/Playgrounds) folder.
+For more examples, see the [Playgrounds](/Playgrounds) folder.
 
 
 ## Drawing curves
 
-Assuming some familiarity with metal, here is an example of how to draw an array of BCCubic.
-
-You may be familiar with [prior work on curve flattening](https://raphlinus.github.io/graphics/curves/2019/12/23/flatten-quadbez.html). We use the same general idea, however
-1.  In this example, we use a constant number of vertices per cubic, rather than determining per-curve.  In practice, I often want to relate this number to the transform.
-2.  We send the whole curve down to the GPU, and do the 'flattening' in a vertex shader.
-
-```swift
-func draw(in encoder: MTLRenderCommandEncoder, transform: float3x3) {
-    encoder.setRenderPipelineState(pipelineState)
-    
-    encoder.setVertexBytes(v: transform, index: 0)
-    let vertexesPerCubic: UInt8 = 15
-    encoder.setVertexBytes(v: vertexesPerCubic, index: 1)
-    encoder.setVertexBuffers([cubicBuffer], range: 2..<3)
-    encoder.drawPrimitives(type: .lineStrip, vertexStart: 0, vertexCount: Int(vertexesPerCubic), instanceCount: cubicBuffer.count)
-}
-```
-
-```metal
-#import <blitcurve.h>
-using namespace metal;
-typedef struct  {
-    float4 position [[position]];
-} VertexOutput;
-vertex VertexOutput VertexShader(ushort vertexID [[vertex_id]], ushort instanceID [[instance_id]], float3x3 constant &transform, uint8_t constant &vertexesPerCubic, BCCubic device *cubics) {
-    VertexOutput output;
-    BCCubic cubic = cubics[instanceID];
-    
-    output.position = simd_float4(0, 0, 1, 1);
-    output.position.xy = BCCubicEvaluate(cubic, BCVertexToBezierParameter(vertexID, vertexesPerCubic));
-    output.position.xyz = output.position.xyz * transform;
-    return output;
-   
-}
-fragment float4 VertexShader(VertexOutput f [[stage_in]]) {
-    return simd_float4(1,1,1,1);
-}
-```
+See the [LineShader](https://github.com/drewcrawford/blitcurve/Demos/LineShader) demo.

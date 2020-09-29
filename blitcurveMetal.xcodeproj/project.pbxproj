@@ -154,6 +154,7 @@
 				"$(SRCROOT)/Sources/blitcurve-c/BCMath.c",
 				"$(SRCROOT)/Sources/blitcurve-c/BCRect.c",
 				"$(SRCROOT)/Sources/blitcurve-c/BCAlignedCubic.c",
+				"$(SRCROOT)/Sources/blitcurve-c/BCCubicDrawing.c",
 			);
 			name = "Concat sources";
 			outputFileListPaths = (
@@ -201,6 +202,7 @@
 				"$(SRCROOT)/Sources/blitcurve-c/BCMath.c",
 				"$(SRCROOT)/Sources/blitcurve-c/BCRect.c",
 				"$(SRCROOT)/Sources/blitcurve-c/BCAlignedCubic.c",
+				"$(SRCROOT)/Sources/blitcurve-c/BCCubicDrawing.c",
 			);
 			name = "Concat sources";
 			outputFileListPaths = (
