@@ -34,10 +34,10 @@ static inline BCAlignedRect BCAlignedRectCreateFromCubic(BCCubic c, BCStrategy s
 
     switch (strategy) {
         case BCStrategyFastest: {
-            bc_float4_t x = simd_make_float4(c.a.x,c.b.x,c.c.x,c.d.x);
-            bc_float4_t y = simd_make_float4(c.a.y,c.b.y,c.c.y,c.d.y);
-            b.min = simd_make_float2(simd_reduce_min(x),simd_reduce_min(y));
-            b.max = simd_make_float2(simd_reduce_max(x),simd_reduce_max(y));
+            bc_float4_t x = bc_make_float4(c.a.x,c.b.x,c.c.x,c.d.x);
+            bc_float4_t y = bc_make_float4(c.a.y,c.b.y,c.c.y,c.d.y);
+            b.min = bc_make_float2(bc_reduce_min(x),bc_reduce_min(y));
+            b.max = bc_make_float2(bc_reduce_max(x),bc_reduce_max(y));
             return b;
         }
             
@@ -57,7 +57,7 @@ bool BCAlignedRectsCornerWithinDistance(BCAlignedRect a, BCAlignedRect b,bc_floa
 __attribute__((const))
 __attribute__((swift_name("getter:AlignedRect.center(self:)")))
 inline bc_float2_t BCAlignedRectCenterPoint(BCAlignedRect a) {
-    simd_float2 sum = a.max - a.min;
+    bc_float2_t sum = a.max - a.min;
     return sum / 2 + a.min;
 }
 

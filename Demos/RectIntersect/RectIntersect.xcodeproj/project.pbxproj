@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,7 +15,18 @@
 		3AF8E14F24D8881900A9C4E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AF8E14D24D8881900A9C4E0 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3A595B3C2522DE1200BB396F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A595B342522DE0A00BB396F /* blitcurveMetal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A41E8FE24C7B918004A8BCA;
+			remoteInfo = "blitcurveMetal (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		3A595B342522DE0A00BB396F /* blitcurveMetal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = blitcurveMetal.xcodeproj; path = ../../blitcurveMetal.xcodeproj; sourceTree = "<group>"; };
 		3AF8E13F24D8881900A9C4E0 /* RectIntersect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RectIntersect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AF8E14224D8881900A9C4E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AF8E14424D8881900A9C4E0 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -39,9 +50,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A595B352522DE0A00BB396F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3AF8E13624D8881900A9C4E0 = {
 			isa = PBXGroup;
 			children = (
+				3A595B342522DE0A00BB396F /* blitcurveMetal.xcodeproj */,
 				3AF8E14124D8881900A9C4E0 /* RectIntersect */,
 				3AF8E14024D8881900A9C4E0 /* Products */,
 			);
@@ -78,7 +97,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3AF8E15424D8881A00A9C4E0 /* Build configuration list for PBXNativeTarget "RectIntersect" */;
 			buildPhases = (
-				3AF8E15724D88EE600A9C4E0 /* ShellScript */,
 				3AF8E13B24D8881900A9C4E0 /* Sources */,
 				3AF8E13C24D8881900A9C4E0 /* Frameworks */,
 				3AF8E13D24D8881900A9C4E0 /* Resources */,
@@ -86,6 +104,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3A595B3D2522DE1200BB396F /* PBXTargetDependency */,
 			);
 			name = RectIntersect;
 			productName = RectIntersect;
@@ -117,6 +136,12 @@
 			mainGroup = 3AF8E13624D8881900A9C4E0;
 			productRefGroup = 3AF8E14024D8881900A9C4E0 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3A595B352522DE0A00BB396F /* Products */;
+					ProjectRef = 3A595B342522DE0A00BB396F /* blitcurveMetal.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				3AF8E13E24D8881900A9C4E0 /* RectIntersect */,
@@ -136,28 +161,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		3AF8E15724D88EE600A9C4E0 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${BLITCURVE_DIR}/inputfiles.txt",
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-				"${BLITCURVE_DIR}/outputfiles.txt",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -z ${BLITCURVE_DIR+x} ]; then \necho \"error: set BLITCURVE_DIR\"\nexit 1\nfi\n(\n    . \"${BLITCURVE_DIR}/makemetal.sh\"\n)\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		3AF8E13B24D8881900A9C4E0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -171,6 +174,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3A595B3D2522DE1200BB396F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "blitcurveMetal (macOS)";
+			targetProxy = 3A595B3C2522DE1200BB396F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		3AF8E14D24D8881900A9C4E0 /* Main.storyboard */ = {

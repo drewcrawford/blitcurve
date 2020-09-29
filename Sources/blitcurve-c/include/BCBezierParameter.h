@@ -4,6 +4,7 @@
 #define BCBezierParameter_h
 #include "BCTypes.h"
 #include "BCMacros.h"
+#include "BCMetalC.h"
 
 /**\abstract Converts between a vertex ID and a bezier parameter.
 \param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.  This must be \c <vertexesPerInstance.
@@ -136,11 +137,11 @@ __attribute__((diagnose_if(!(roundingMode <= BCLUTRoundingModeMost), "Invalid ro
     float indexf = (t - lowerT) * (lutCapacity - 1) * (1 / (upperT - lowerT));
     switch (roundingMode) {
         case BCLUTRoundingModeClosest:
-            return roundf(indexf);
+            return bc_round(indexf);
         case BCLUTRoundingModeMost:
-            return ceilf(indexf);
+            return bc_ceil(indexf);
         case BCLUTRoundingModeLeast:
-            return floorf(indexf);
+            return bc_floor(indexf);
     }
     __builtin_unreachable();
 }
@@ -167,11 +168,11 @@ __attribute__((diagnose_if(!(roundingMode <= BCLUTRoundingModeMost), "invalid ro
     float indexf = t * (lutCapacity - 1);
     switch (roundingMode) {
         case BCLUTRoundingModeClosest:
-            return roundf(indexf);
+            return bc_round(indexf);
         case BCLUTRoundingModeMost:
-            return ceilf(indexf);
+            return bc_ceil(indexf);
         case BCLUTRoundingModeLeast:
-            return floorf(indexf);
+            return bc_floor(indexf);
     }
     __builtin_unreachable();
 }

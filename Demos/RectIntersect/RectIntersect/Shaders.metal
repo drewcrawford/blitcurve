@@ -49,22 +49,22 @@ vertex Vertex vertexShader(ushort instanceID [[instance_id]], ushort vertexID [[
     Vertex v;
     
     if (instanceID >= RECT_COUNT) {
-        v.position = simd_make_float4(2,2,2,2);
+        v.position = float4(2,2,2,2);
     }
     BCRect rect = rects[instanceID];
     //this is not a particularly optimized implementation
     BC4Points points = BCRectGet4Points(rect);
     if (vertexID == 0 || vertexID == 4) {
-        v.position = simd_make_float4(points.a_b.lo, simd_make_float2(0,1));
+        v.position = float4(points.a_b.lo, float2(0,1));
     }
     else if (vertexID == 1) {
-        v.position = simd_make_float4(points.a_b.hi, simd_make_float2(0,1));
+        v.position = float4(points.a_b.hi, float2(0,1));
     }
     else if (vertexID == 2) {
-        v.position = simd_make_float4(points.c_d.lo, simd_make_float2(0,1));
+        v.position = float4(points.c_d.lo, float2(0,1));
     }
     else if (vertexID == 3) {
-        v.position = simd_make_float4(points.c_d.hi, simd_make_float2(0,1));
+        v.position = float4(points.c_d.hi, float2(0,1));
     }
     else {
         __builtin_unreachable();
@@ -76,9 +76,9 @@ vertex Vertex vertexShader(ushort instanceID [[instance_id]], ushort vertexID [[
 fragment float4 fragmentShader(Vertex in [[stage_in]])
 {
     if (in.intersection) {
-        return simd_make_float4(1, 0, 0, 1);
+        return float4(1, 0, 0, 1);
     }
     else {
-        return simd_make_float4(1, 1, 1, 1);
+        return float4(1, 1, 1, 1);
     }
 }

@@ -13,23 +13,23 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
     const bc_float2_t t_d  = c.d - c.a;
     const bc_float2_t t_b = c.b - c.a;
     //now we need to find a rotation angle to get by==0.
-    const float theta = -atan(t_b.y/t_b.x);
+    const float theta = -bc_atan(t_b.y/t_b.x);
     //with that solved, we can apply the rotation to get b_x
     BCAlignedCubic r;
-    r.b_x = t_b.x * cosf(theta) - t_b.y * sinf(theta);
+    r.b_x = t_b.x * bc_cos(theta) - t_b.y * bc_sin(theta);
     //and then a standard rotation for c,d
-    simd_float2x2 magic = bc_make_2x2(simd_make_float2(cosf(theta),sinf(theta)), simd_make_float2(-sinf(theta),cosf(theta)));
-    r.c = simd_mul(magic,t_c);
-    r.d = simd_mul(magic,t_d);
+    bc_float2x2_t magic = bc_make_2x2(bc_make_float2(bc_cos(theta),bc_sin(theta)), bc_make_float2(-bc_sin(theta),bc_cos(theta)));
+    r.c = bc_mul(magic,t_c);
+    r.d = bc_mul(magic,t_d);
     return r;
 }
 
 
 bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
     __BC_ASSERT(t >=0 && t <= 1);
-    __BC_ASSERT(fabsf(c.b_x)>0);
-    __BC_ASSERT(fabsf(c.c.x) > 0 || fabsf(c.c.y) > 0);
-    __BC_ASSERT(fabsf(c.d.x - c.b_x) > 0 || fabsf(c.d.y) > 0);
+    __BC_ASSERT(bc_abs(c.b_x)>0);
+    __BC_ASSERT(bc_abs(c.c.x) > 0 || bc_abs(c.c.y) > 0);
+    __BC_ASSERT(bc_abs(c.d.x - c.b_x) > 0 || bc_abs(c.d.y) > 0);
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
     const bc_float_t p2_t = p2 * t;
@@ -44,17 +44,17 @@ bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
     const bc_float2_t p10pre_p15 = p5_p11 + p6_p12 + p7_p13 + p9_p14;
     const bc_float_t p10 = p10pre_p15.x + p8;
     
-    const bc_float4_t p2by = simd_make_float4(c.c,c.d) * p2;
-    const bc_float4_t tby = simd_make_float4(c.c,c.d) * t;
+    const bc_float4_t p2by = bc_make_float4(c.c,c.d) * p2;
+    const bc_float4_t tby = bc_make_float4(c.c,c.d) * t;
     
     //const bc_float2_t
     bc_float2_t n2_n1 = -12 * p2by.lo + 6 * p2by.hi + 6 * tby.lo - 12 * tby.hi;
     
     n2_n1.x += 6 * c.b_x * t;
-    n2_n1 *= simd_make_float2(p10pre_p15.y,p10);
+    n2_n1 *= bc_make_float2(p10pre_p15.y,p10);
     
     const bc_float_t d1 = p10 * p10 + p10pre_p15.y * p10pre_p15.y; //simd-length may be slow here
-    const bc_float_t d2 = powf(d1, 3.0/2.0);
+    const bc_float_t d2 = bc_pow(d1, 3.0/2.0);
     
     return (n2_n1.y - n2_n1.x) / d2;
 }
@@ -64,9 +64,9 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
     const bc_float2_t c3 = c.c * 3;
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
-    const bc_float4_t cd_p2 = simd_make_float4(c.c,c.d) * p2;
+    const bc_float4_t cd_p2 = bc_make_float4(c.c,c.d) * p2;
     const bc_float4_t cd_p2_t = cd_p2 * t;
-    const bc_float2_t p3_p4 = simd_make_float2(t,p2) * simd_make_float2(t,p2);
+    const bc_float2_t p3_p4 = bc_make_float2(t,p2) * bc_make_float2(t,p2);
     const bc_float2_t p5_p17 = -12 * cd_p2.xy;
     const bc_float2_t p6_p18 = 6 * cd_p2.zw;
     const bc_float_t p7 = 6 * c.b_x * t;
@@ -82,7 +82,7 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
     bc_float2_t p16_p26 = p11_p22 + p12_p23 + p13_p24 + p15_p25;
     p16_p26.x += p14;
     const bc_float2_t p27_p28 = p16_p26 * p16_p26;
-    const bc_float_t p29 = simd_reduce_add(p27_p28);
+    const bc_float_t p29 = bc_reduce_add(p27_p28);
     
     /*
      x  y   z  w
@@ -91,16 +91,16 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
      -----------
      
      */
-    const bc_float4_t p10_p21_by_p16_p26 = simd_make_float4(p10_p21, p10_p21) *  simd_make_float4(p16_p26, simd_make_float2(p16_p26.y, p16_p26.x));
+    const bc_float4_t p10_p21_by_p16_p26 = bc_make_float4(p10_p21, p10_p21) *  bc_make_float4(p16_p26, bc_make_float2(p16_p26.y, p16_p26.x));
     
     const bc_float_t n1_1 = -3 * (p10_p21_by_p16_p26.w - p10_p21_by_p16_p26.z);
     const bc_float_t n1_2 = 2 * p10_p21_by_p16_p26.x + 2 * p10_p21_by_p16_p26.y;
     const bc_float_t n2_1 = (c.c.y - c.d.y) * p16_p26.x * 18;
     const bc_float_t n2_2 = (c.b_x + c3.x - 3 * c.d.x) * 6 * p16_p26.y;
-    bc_float2_t d = simd_powf(simd_make_float2(p29,p29), simd_make_float2(5.0/2.0,3.0/2.0));
+    bc_float2_t d = bc_pow(bc_make_float2(p29,p29), bc_make_float2(5.0/2.0,3.0/2.0));
     d.x *= 2;
-    const bc_float2_t n = simd_make_float2(n1_1 * n1_2,n2_1-n2_2);
-    return simd_reduce_add(n/d);
+    const bc_float2_t n = bc_make_float2(n1_1 * n1_2,n2_1-n2_2);
+    return bc_reduce_add(n/d);
 }
 
 static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upper, bc_float_t accuracy) {
@@ -108,12 +108,12 @@ static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upp
     while (upper - lower > accuracy) {
         bc_float_t lowerPrime = __BCAlignedCubicKappaPrime(c, lower);
         bc_float_t upperPrime = __BCAlignedCubicKappaPrime(c, upper);
-        if (signbit(lowerPrime) == signbit(upperPrime)) {
+        if (bc_signbit(lowerPrime) == bc_signbit(upperPrime)) {
             return MAXFLOAT;
         }
         const bc_float_t midpoint = (upper - lower) / 2 + lower;
         const bc_float_t midPrime = __BCAlignedCubicKappaPrime(c, midpoint);
-        if (signbit(midPrime) == signbit(upperPrime)) {
+        if (bc_signbit(midPrime) == bc_signbit(upperPrime)) {
             upper = midpoint;
         }
         else {
@@ -131,7 +131,7 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy)
         bc_float_t r = (i_t + 1) * 0.2;
         const bc_float_t itry = KappaSearch(c, l, r, accuracy);
         if (itry != MAXFLOAT) {
-            const bc_float_t proposedKappa = fabsf(BCAlignedCubicKappa(c, itry));
+            const bc_float_t proposedKappa = bc_abs(BCAlignedCubicKappa(c, itry));
             if (proposedKappa > maxKappa) {
                 maxKappa = proposedKappa;
                 param = itry;
@@ -145,10 +145,10 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy)
 }
 
 bool BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
-    const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(fabsf(cubic.b_x), straightAngle, curvatureError);
-    if (simd_length(cubic.c) < expectedDistance) { return false; }
+    const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(bc_abs(cubic.b_x), straightAngle, curvatureError);
+    if (bc_length(cubic.c) < expectedDistance) { return false; }
     bc_float2_t d = cubic.d;
     d.x -= cubic.b_x;
-    if (simd_length(d) < expectedDistance) { return false; }
+    if (bc_length(d) < expectedDistance) { return false; }
     return true;
 }

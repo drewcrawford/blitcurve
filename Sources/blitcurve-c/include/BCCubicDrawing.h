@@ -20,7 +20,7 @@
  */
 __attribute__((const))
 __attribute__((overloadable))
-simd_float3 BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, simd_float3x3 transform, bc_float_t minimum, bc_float_t maximum);
+bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform, bc_float_t minimum, bc_float_t maximum);
 
 /**
 \abstract Creates a 3D vertex suitable for drawing a portion of a cubic, making sure the portion has a minimum size.
@@ -35,7 +35,7 @@ simd_float3 BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesP
  */
 __attribute__((const))
 __attribute__((overloadable))
-simd_float3 BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, simd_float3x3 transform, bc_float_t minimum, bc_float_t maximum, bc_float_t minimumDeltaT);
+bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform, bc_float_t minimum, bc_float_t maximum, bc_float_t minimumDeltaT);
 
 /**
 \abstract Creates a 3D vertex suitable for drawing an entire cubic.
@@ -47,7 +47,7 @@ simd_float3 BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesP
  */
 __attribute__((const))
 __attribute__((overloadable))
-inline simd_float3 BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, simd_float3x3 transform) {
+inline bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform) {
     return BCCubicVertexMake(cubic,vertexID, vertexesPerCubic, transform, 0,1);
 }
 

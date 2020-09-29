@@ -92,7 +92,7 @@ static inline bc_float_t BCCubicFinalTangentMagnitude(BCCubic c) {
 __attribute__((const))
 __attribute__((swift_name("Cubic.evaluate(self:t:)")))
 inline bc_float2_t BCCubicEvaluate(BCCubic c,bc_float_t t) {
-    return c.a * powf(1-t,3) + c.c * 3 * powf(1-t, 2) * t + c.d * 3 * (1 - t) * powf(t, 2) + c.b * powf(t, 3);
+    return c.a * bc_pow(1-t,3) + c.c * 3 * bc_pow(1-t, 2) * t + c.d * 3 * (1 - t) * bc_pow(t, 2) + c.b * bc_pow(t, 3);
 }
 __attribute__((const))
 __attribute__((swift_name("Cubic.evaluatePrime(self:t:)")))
@@ -103,8 +103,8 @@ inline bc_float2_t BCCubicEvaluatePrime(BCCubic c, bc_float_t t) {
     //-3 a (1-t)^2+3 c (1-t)^2-6 c (1-t) t+6 d (1-t) t+3 b t^2-3 d t^2
     //-3 * c.a * pow(1-t,2) + 3 * c.c * pow(1-t,2) - 6 * c.c * (1-t) * t + 6 * c.d * (1 - t) * t + 3 * c.b * pow(t,2) - 3 * c.d * pow(t,2);
     const float one_minus_t = 1 - t;
-    const float three_by_one_minus_t_squared = 3 * powf(one_minus_t, 2);
-    const float three_by_t_squared = 3 * powf(t,2);
+    const float three_by_one_minus_t_squared = 3 * bc_pow(one_minus_t, 2);
+    const float three_by_t_squared = 3 * bc_pow(t,2);
     const float six_by_1_minus_t_t = 6 * one_minus_t * t;
     return -three_by_one_minus_t_squared * c.a + three_by_one_minus_t_squared * c.c - six_by_1_minus_t_t * c.c + six_by_1_minus_t_t * c.d + three_by_t_squared * c.b - three_by_t_squared * c.d;
 }
@@ -118,7 +118,7 @@ __attribute__((swift_name("Cubic.isTechnicallyNormalized(self:)")))
 ///this does not make sense.
 ///In that situation, you can \c __BC_ASSERT(BCCubicIsNormalized(cubic)) instead.
 static inline bool BCCubicIsTechnicallyNormalized(BCCubic c) {
-    return simd_distance(c.c, c.a) != 0 && simd_distance(c.b, c.d)  != 0;
+    return bc_distance(c.c, c.a) != 0 && bc_distance(c.b, c.d)  != 0;
 }
 
 __attribute__((const))
@@ -167,7 +167,7 @@ __attribute__((swift_name("Cubic.isNearlyLinear(self:accuracy:)")))
 static inline bool BCCubicIsNearlyLinear(BCCubic self, bc_float_t accuracy) {
     __BC_ASSERT(accuracy > 0);
     const bc_float_t lineTangent = BCLineTangent(BCCubicAsLine(self));
-    return (fabsf(lineTangent - BCCubicInitialTangentAngle(self)) < accuracy && fabsf(lineTangent - BCCubicFinalTangentAngle(self)) < accuracy);
+    return (bc_abs(lineTangent - BCCubicInitialTangentAngle(self)) < accuracy && bc_abs(lineTangent - BCCubicFinalTangentAngle(self)) < accuracy);
 }
 
 __attribute__((const))
@@ -177,7 +177,7 @@ __attribute__((swift_name("Cubic.tangentAt(self:t:)")))
 static inline bc_float_t BCCubicTangent(BCCubic c, bc_float_t t) {
     __BC_ASSERT(BCCubicIsTechnicallyNormalized(c));
     bc_float2_t prime = BCCubicEvaluatePrime(c, t);
-    return atan2(prime.y, prime.x);
+    return bc_atan2(prime.y, prime.x);
 }
 
 __attribute__((swift_name("Cubic.normalize(self:approximateDistance:)")))
@@ -256,8 +256,8 @@ static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float2
      
         */
     //find the difference between angles in (i,f) format
-    tangents.y -= M_PI;
-    BCLine2 i_f = BCLine2MakeWithPointAndAngle(simd_make_float4(connecting.a,connecting.b),tangents,distances);
+    tangents.y -= BC_M_PI_F;
+    BCLine2 i_f = BCLine2MakeWithPointAndAngle(bc_make_float4(connecting.a,connecting.b),tangents,distances);
     c.c = i_f.b.xy;
     c.d = i_f.b.zw;
     return c;
@@ -272,8 +272,8 @@ static inline BCCubic BCCubicMakeConnectingLines(BCLine a, BCLine b) {
     BCLine connecting;
     connecting.a = a.b;
     connecting.b = b.a;
-    const bc_float_t distance = simd_distance(a.b,b.a)/2;
-    return BCCubicMakeConnectingTangents(connecting, simd_make_float2(BCLineTangent(a), BCLineTangent(b)),simd_make_float2(distance,distance));
+    const bc_float_t distance = bc_distance(a.b,b.a)/2;
+    return BCCubicMakeConnectingTangents(connecting, bc_make_float2(BCLineTangent(a), BCLineTangent(b)),bc_make_float2(distance,distance));
 }
 
 __attribute__((const))
@@ -284,7 +284,7 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b,bc_float2
     connecting.b = b.a;
     //UB checked inside BCCubicInitialTanget / BCCubicFinalTagent, respectively
     //need to reverse b's initial tangent
-    const bc_float2_t tangents = simd_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b));
+    const bc_float2_t tangents = bc_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b));
     return BCCubicMakeConnectingTangents(connecting, tangents, tangentMagnitudes);
 }
 
@@ -305,11 +305,11 @@ static inline BCCubic BCCubicMakeConnectingCubicsWithTangentRule(BCCubic a, BCCu
     bc_float2_t lengths;
     switch (tangentRule) {
         case BCTangentMagnitudeRuleCopied:
-        lengths = simd_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
+        lengths = bc_make_float2(BCCubicInitialTangentMagnitude(a), BCCubicInitialTangentMagnitude(b));
         break;
         case BCTangentMagnitudeRuleHalfEuclidianDistance: {
-            const bc_float_t distance = simd_distance(a.b, b.a) / 2;
-            lengths = simd_make_float2(distance,distance);
+            const bc_float_t distance = bc_distance(a.b, b.a) / 2;
+            lengths = bc_make_float2(distance,distance);
                 break;
         }
     }
@@ -342,7 +342,7 @@ static inline BCCubic BCCubicMakeConnectingCubicToPoint(BCCubic a, bc_float2_t b
         lengths.x = lengths.y;
         break;
     }
-    return BCCubicMakeConnectingTangents(connecting, simd_make_float2(BCCubicFinalTangentAngle(a), finalTangentAngle), lengths);
+    return BCCubicMakeConnectingTangents(connecting, bc_make_float2(BCCubicFinalTangentAngle(a), finalTangentAngle), lengths);
 }
 
 ///Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.

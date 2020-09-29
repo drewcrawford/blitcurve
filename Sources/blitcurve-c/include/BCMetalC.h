@@ -1,91 +1,89 @@
-// BCMetalC.h: C-style syntax for metal
+// BCMetalC.h: Compatibility layer for C/Metal portability
 // ©2020 DrewCrawfordApps LLC
 
 #ifndef BCMetalC_h
 #define BCMetalC_h
+#include "BCTypes.h"
 
 #ifdef __METAL_VERSION__
 #include <metal_stdlib>
-static inline simd::float2 simd_make_float2(float a, float b) {
+inline bc_float2_t bc_make_float2(float a, float b) {
     return simd::float2(a,b);
 }
-static inline simd::float3 simd_make_float3(float a, float b, float c) {
+inline bc_float3_t bc_make_float3(float a, float b, float c) {
     return simd::float3(a,b,c);
 }
-static inline simd::float4 simd_make_float4(float x, float y, float z, float w) {
+inline bc_float4_t bc_make_float4(float x, float y, float z, float w) {
     return simd::float4(x,y,z,w);
 }
-static inline simd::float4 simd_make_float4(simd::float2 a, simd::float2 b) {
+inline bc_float4_t bc_make_float4(simd::float2 a, simd::float2 b) {
     return simd::float4(a,b);
 }
-static inline float simd_reduce_min(simd::float2 x) {
+inline bc_float_t bc_reduce_min(bc_float2_t x) {
     return metal::min(x.x,x.y);
 }
-static inline float simd_reduce_min(simd::float4 x) {
+inline bc_float_t bc_reduce_min(bc_float4_t x) {
     return metal::min(metal::min(metal::min(x.x,x.y),x.w),x.z);
 }
 
-static inline float simd_reduce_max(simd::float2 x) {
+inline bc_float_t bc_reduce_max(bc_float2_t x) {
     return metal::max(x.x,x.y);
 }
 
-static inline float simd_reduce_max(simd::float4 x) {
+inline bc_float_t bc_reduce_max(simd::float4 x) {
     return metal::max(metal::max(metal::max(x.x,x.y),x.w),x.z);
 }
 
 
-#define simd_fast_length(X) metal::fast::length(X)
-#define simd_mix(X,Y,Z) simd::mix(X,Y,Z)
+#define bc_fast_length metal::fast::length
+#define bc_mix simd::mix
 
 
 
-#define M_PI M_PI_F
-#define M_PI_2 M_PI_2_F
+#define BC_M_PI_F M_PI_F
+#define BC_M_PI_2_F M_PI_2_F
 
-#define fabsf metal::fabs
-#define sinf metal::sin
-#define cosf metal::cos
-#define sqrtf(X) metal::sqrt((float) X)
-//powf is used for pure floats, and simd_powf for simd types
-//in metal these are identical, but not so in c
-#define simd_powf metal::pow
-#define simd_cosf metal::cos
-#define simd_sinf metal::sin
+#define bc_fabsf metal::fabs
+#define bc_sinf metal::sin
+#define bc_cosf metal::cos
+#define bc_sqrt(X) metal::sqrt(X)
+#define bc_pow metal::pow
+#define bc_cos metal::cos
+#define bc_sin metal::sin
 
-#define powf metal::pow
-#define signbit metal::signbit
-#define atan2(X,Y) metal::atan2(X,Y)
-#define roundf metal::round
-#define ceilf metal::ceil
-#define floorf metal::floor
-#define atan metal::atan
+#define bc_powf metal::pow
+#define bc_signbit metal::signbit
+#define bc_atan2 metal::atan2
+#define bc_round metal::round
+#define bc_ceil metal::ceil
+#define bc_floor metal::floor
+#define bc_atan metal::atan
 
-//there is no simd_norm_inf in metal
-#define simd_norm_inf(N) metal::fmax(fabsf(N.x),fabsf(N.y))
+#define bc_norm_inf(N) metal::fmax(metal::abs(N.x),metal::abs(N.y))
 
 #define bc_make_4x2 metal::float4x2
 #define bc_make_2x2 metal::float2x2
 #define bc_make_2x4 metal::float2x4
 #define bc_make_4x4 metal::float4x4
-#define simd_mul(X,Y) X * Y
-#define simd_sub(X,Y) X - Y
+#define bc_mul(X,Y) X * Y
+#define bc_sub(X,Y) X - Y
 __attribute__((overloadable))
-static inline float simd_reduce_add(simd_float4 v) {
+inline float bc_reduce_add(simd_float4 v) {
     return v.x + v.y + v.z + v.w;
 }
 __attribute__((overloadable))
-static inline float simd_reduce_add(simd_float2 v) {
+inline float bc_reduce_add(simd_float2 v) {
     return v.x + v.y;
 }
 
-#define simd_length simd::length
-#define simd_abs(X) simd::abs(X)
-#define simd_length_squared simd::length_squared
-#define simd_distance simd::distance
-#define simd_dot simd::dot
-#define simd_max simd::max
-#define simd_min simd::min
-#define simd_sign simd::sign
+#define bc_length simd::length
+#define bc_abs simd::abs
+#define bc_length_squared simd::length_squared
+#define bc_distance simd::distance
+#define bc_dot simd::dot
+#define bc_max simd::max
+#define bc_min simd::min
+#define bc_sign simd::sign
 
 
 #define __BC_DEVICE device
@@ -95,15 +93,64 @@ static inline float simd_reduce_add(simd_float2 v) {
 
 #else //defines we need in C
 
+
 #define bc_make_4x2 simd_matrix
 #define bc_make_2x4 simd_matrix
 #define bc_make_4x4 simd_matrix
 #define bc_make_2x2 simd_matrix
 
-//in C, we want pow for simd types, not powf
-#define simd_powf pow
-#define simd_cosf cos
-#define simd_sinf sin
+#define BC_M_PI_F M_PI
+
+
+
+__attribute__((overloadable))
+inline bc_float_t bc_pow(float a, float b) { return powf(a,b); }
+static inline bc_float2_t bc_pow(bc_float2_t a, bc_float2_t b) { return pow(a,b); }
+__attribute__((overloadable))
+inline bc_float_t bc_cos(float a) { return cosf(a); }
+static inline bc_float2_t bc_cos(bc_float2_t a) { return cos(a); }
+__attribute__((overloadable))
+inline bc_float_t bc_sin(float a) { return sinf(a); }
+static inline bc_float2_t bc_sin(bc_float2_t a) { return sin(a); }
+__attribute__((overloadable))
+inline bc_float_t bc_abs(float a) { return fabsf(a);}
+__attribute__((overloadable))
+static inline bc_float2_t bc_abs(bc_float2_t a) { return simd_abs(a);}
+
+#define bc_reduce_max simd_reduce_max
+#define bc_max fmax
+#define bc_min fmin
+#define bc_dot simd_dot
+#define bc_norm_inf simd_norm_inf
+#define bc_fast_length simd_fast_length
+#define bc_atan2 atan2f
+#define bc_mix simd_mix
+#define bc_distance simd_distance
+#define bc_length simd_length
+#define bc_round roundf
+#define bc_ceil ceilf
+#define bc_floor floorf
+#define bc_mul simd_mul
+#define bc_sub simd_sub
+#define bc_reduce_add simd_reduce_add
+#define bc_reduce_min simd_reduce_min
+#define bc_length_squared simd_length_squared
+#define bc_sqrt sqrtf
+#define bc_atan atan
+#define bc_signbit signbit
+
+
+
+
+__attribute__((overloadable))
+static inline bc_float4_t bc_make_float4(float x, float y, float z, float w) {
+    return simd_make_float4(x,y,z,w);
+}
+static inline bc_float4_t bc_make_float4(bc_float2_t a, bc_float2_t b) {
+    return simd_make_float4(a,b);
+}
+#define bc_make_float2 simd_make_float2
+#define bc_make_float3 simd_make_float3
 
 //address space qualifier
 #define __BC_DEVICE

@@ -22,7 +22,7 @@ vertex Vertex vertexFunction(ushort vertexID [[vertex_id]], const uint instanceI
     BCCubic cubic = cubics[instanceID];
     
     float3 o = BCCubicVertexMake(cubic, vertexID, VertexesPerCubic, simd_float3x3(simd_float3(1,0,0),simd_float3(0,1,0),simd_float3(0,0,1)));
-    output.position = simd_make_float4(o.x,o.y,o.z,1);
+    output.position = bc_make_float4(o.x,o.y,o.z,1);
     output.color = colors[instanceID];
     return output;
    

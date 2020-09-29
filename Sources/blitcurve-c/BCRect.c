@@ -4,27 +4,27 @@
 #include "BCRect.h"
 bc_float2_t  BCRectMax(BCRect b) {
     BC4Points points = BCRectGet4Points(b);
-    bc_float_t x_a = simd_reduce_max(points.a_b.even);
-    bc_float_t x_b = simd_reduce_max(points.c_d.even);
-    bc_float_t x_f = simd_max(x_a,x_b);
+    bc_float_t x_a = bc_reduce_max(points.a_b.even);
+    bc_float_t x_b = bc_reduce_max(points.c_d.even);
+    bc_float_t x_f = bc_max(x_a,x_b);
 
-    bc_float_t y_a = simd_reduce_max(points.a_b.odd);
-    bc_float_t y_b = simd_reduce_max(points.c_d.odd);
-    bc_float_t y_f = simd_max(y_a,y_b);
+    bc_float_t y_a = bc_reduce_max(points.a_b.odd);
+    bc_float_t y_b = bc_reduce_max(points.c_d.odd);
+    bc_float_t y_f = bc_max(y_a,y_b);
 
-    return simd_make_float2(x_f,y_f);
+    return bc_make_float2(x_f,y_f);
 }
 
 bool BCRectIsPointOnOrInside(BC3Points b, bc_float2_t point) {
-    simd_float2 ab = b.a_b.hi - b.a_b.lo;
-    simd_float2 am = point - b.a_b.lo;
-    simd_float2 bc = b.c - b.a_b.hi;
-    simd_float2 bm = point - b.a_b.hi;
+    bc_float2_t ab = b.a_b.hi - b.a_b.lo;
+    bc_float2_t am = point - b.a_b.lo;
+    bc_float2_t bc = b.c - b.a_b.hi;
+    bc_float2_t bm = point - b.a_b.hi;
 
-    float abam = simd_dot(ab, am);
-    float abab = simd_dot(ab, ab);
-    float bcbm = simd_dot(bc, bm);
-    float bcbc = simd_dot(bc, bc);
+    float abam = bc_dot(ab, am);
+    float abab = bc_dot(ab, ab);
+    float bcbm = bc_dot(bc, bm);
+    float bcbc = bc_dot(bc, bc);
 
     if (0 <= abam && abam <= abab && 0 <= bcbm && bcbm <= bcbc) {
         return true;
@@ -33,23 +33,23 @@ bool BCRectIsPointOnOrInside(BC3Points b, bc_float2_t point) {
 }
 
 __attribute__((const))
-static simd_float2x2 BCRotationMatrix(float angle) {
-    return bc_make_2x2(simd_make_float2(cosf(angle),sinf(angle)), simd_make_float2(-sinf(angle),cosf(angle)));
+static bc_float2x2_t BCRotationMatrix(float angle) {
+    return bc_make_2x2(bc_make_float2(bc_cos(angle),bc_sin(angle)), bc_make_float2(-bc_sin(angle),bc_cos(angle)));
 }
 
 BC4Points BCRectGet4Points(BCRect r) {
     bc_float2_t halflengths = r.lengths / 2;
     //unclear to me why, but we need to flip y and x
-    bc_float2_t halflengths_t = simd_make_float2(halflengths.y,halflengths.x);
-    bc_float2_t _a = simd_make_float2(halflengths_t.x, -halflengths_t.y);
-    bc_float2_t _b = simd_make_float2(halflengths_t.x,halflengths_t.y);
-    bc_float2_t _c = simd_make_float2(-halflengths_t.x,halflengths_t.y);
-    bc_float2_t _d = simd_make_float2(-halflengths_t.x, -halflengths_t.y);
-    simd_float2x2 magic = BCRotationMatrix(r.angle);
-    bc_float4_t a_b = simd_make_float4(simd_mul(magic,_a),simd_mul(magic, _b));
-    bc_float4_t c_d = simd_make_float4(simd_mul(magic, _c),simd_mul(magic, _d));
-    a_b += simd_make_float4(r.center,r.center);
-    c_d += simd_make_float4(r.center,r.center);
+    bc_float2_t halflengths_t = bc_make_float2(halflengths.y,halflengths.x);
+    bc_float2_t _a = bc_make_float2(halflengths_t.x, -halflengths_t.y);
+    bc_float2_t _b = bc_make_float2(halflengths_t.x,halflengths_t.y);
+    bc_float2_t _c = bc_make_float2(-halflengths_t.x,halflengths_t.y);
+    bc_float2_t _d = bc_make_float2(-halflengths_t.x, -halflengths_t.y);
+    bc_float2x2_t magic = BCRotationMatrix(r.angle);
+    bc_float4_t a_b = bc_make_float4(bc_mul(magic,_a),bc_mul(magic, _b));
+    bc_float4_t c_d = bc_make_float4(bc_mul(magic, _c),bc_mul(magic, _d));
+    a_b += bc_make_float4(r.center,r.center);
+    c_d += bc_make_float4(r.center,r.center);
     BC4Points out;
     out.a_b = a_b;
     out.c_d = c_d;
@@ -59,14 +59,14 @@ BC4Points BCRectGet4Points(BCRect r) {
 BC3Points BCRectGet3Points(BCRect r) {
     bc_float2_t halflengths = r.lengths / 2;
     //unclear to me why, but we need to flip y and x
-    bc_float2_t halflengths_t = simd_make_float2(halflengths.y,halflengths.x);
-    bc_float2_t _a = simd_make_float2(halflengths_t.x, -halflengths_t.y);
-    bc_float2_t _b = simd_make_float2(halflengths_t.x,halflengths_t.y);
-    bc_float2_t _c = simd_make_float2(-halflengths_t.x,halflengths_t.y);
-    simd_float2x2 magic = BCRotationMatrix(r.angle);
-    bc_float4_t a_b = simd_make_float4(simd_mul(magic, _a),simd_mul(magic, _b));
-    bc_float2_t c = simd_mul(magic, _c);
-    a_b += simd_make_float4(r.center,r.center);
+    bc_float2_t halflengths_t = bc_make_float2(halflengths.y,halflengths.x);
+    bc_float2_t _a = bc_make_float2(halflengths_t.x, -halflengths_t.y);
+    bc_float2_t _b = bc_make_float2(halflengths_t.x,halflengths_t.y);
+    bc_float2_t _c = bc_make_float2(-halflengths_t.x,halflengths_t.y);
+    bc_float2x2_t magic = BCRotationMatrix(r.angle);
+    bc_float4_t a_b = bc_make_float4(bc_mul(magic, _a),bc_mul(magic, _b));
+    bc_float2_t c = bc_mul(magic, _c);
+    a_b += bc_make_float4(r.center,r.center);
     c += r.center;
     BC3Points out;
     out.a_b = a_b;
@@ -145,13 +145,13 @@ Above, the line r1.ab and r2.dc separate.  Alternatively, in some cases only one
     bc_float2_t halflengths = fixed.lengths / 2;
     movable.angle -= fixed.angle;
     movable.center -= fixed.center;
-    movable.center = simd_mul(BCRotationMatrix(-fixed.angle), movable.center);
+    movable.center = bc_mul(BCRotationMatrix(-fixed.angle), movable.center);
     
     BC4Points testPoints = BCRectGet4Points(movable);
     //swap all the x/y coordinates into a simd4
     //this is mostly to assist the compiler in vectorizing if it would like
-    bc_float4_t xPoints = simd_make_float4(testPoints.a_b.even, testPoints.c_d.even);
-    bc_float4_t yPoints = simd_make_float4(testPoints.a_b.odd, testPoints.c_d.odd);
+    bc_float4_t xPoints = bc_make_float4(testPoints.a_b.even, testPoints.c_d.even);
+    bc_float4_t yPoints = bc_make_float4(testPoints.a_b.odd, testPoints.c_d.odd);
     if (xPoints.x <= -halflengths.y && xPoints.y <= -halflengths.y && xPoints.z <= -halflengths.y && xPoints.w <= -halflengths.y ) {
         return false; //no intersection
     }

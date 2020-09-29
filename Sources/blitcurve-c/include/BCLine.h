@@ -29,10 +29,10 @@ __attribute__((swift_name("Line.init(point:angle:distance:)")))
 ///\param a start point of the line
 ///\param angle angle from the start point
 ///\param distance distance from the start point
-static inline BCLine BCLineMakeWithPointAndAngle(simd_float2 a, float angle, float distance) {
+static inline BCLine BCLineMakeWithPointAndAngle(bc_float2_t a, float angle, float distance) {
     BCLine l;
     l.a = a;
-    l.b = simd_make_float2(cosf(angle), sinf(angle));
+    l.b = bc_make_float2(bc_cos(angle), bc_sin(angle));
     l.b *= distance;
     l.b += a;
     return l;
@@ -45,7 +45,7 @@ __attribute__((swift_name("getter:Line.slope(self:)")))
 ///\warning Vertical lines are undefined
 inline bc_float_t BCLineSlope(BCLine l) {
     bc_float2_t diff = l.a - l.b;
-    __BC_ASSERT(fabsf(diff.x) > 0);
+    __BC_ASSERT(bc_abs(diff.x) > 0);
     return diff.y / diff.x;
 }
 
@@ -61,7 +61,7 @@ inline bc_float_t BCLineYIntercept(BCLine l) {
 __attribute__((const))
 __attribute__((swift_name("getter:Line.length(self:)")))
 static inline bc_float_t BCLineLength(BCLine l) {
-    return simd_fast_length(l.a - l.b);
+    return bc_fast_length(l.a - l.b);
 }
 
 ///Reverse start and end point
@@ -82,7 +82,7 @@ __attribute__((swift_name("getter:Line.tangent(self:)")))
 static inline bc_float_t BCLineTangent(BCLine l) {
     __BC_ASSERT(BCLineLength(l) > 0);
         bc_float2_t diff = l.b - l.a;
-    return atan2(diff.y, diff.x);
+    return bc_atan2(diff.y, diff.x);
 }
 
 
@@ -92,7 +92,7 @@ __attribute__((const))
 __attribute__((swift_name("Line.evaluate(self:t:)")))
 static inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
     __BC_ASSERT(t >= 0.0 && t <= 1.0);
-    return simd_mix(l.a,l.b,simd_make_float2(t,t));
+    return bc_mix(l.a,l.b,bc_make_float2(t,t));
 }
 
 ///Performs an arclength parameterization.  This finds a bezier parameter \c t (in range 0,1) that is a length specified from \c line.a.

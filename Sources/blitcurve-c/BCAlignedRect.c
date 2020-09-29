@@ -1,9 +1,8 @@
-// BCAlignedBox: Axis-aligned box
+// BCAlignedRect: Axis-aligned rect
 // ©2020 DrewCrawfordApps LLC
 #import "BCAlignedRect.h"
 extern inline bc_float2_t BCAlignedRectCenterPoint(BCAlignedRect a);
 extern inline bool BCAlignedRectIsPointOnOrInside(BCAlignedRect a, bc_float2_t point);
-extern inline bc_float2_t BCCubicEvaluatePrime(BCCubic c, bc_float_t t);
 bool BCAlignedRectsCornerWithinDistance(BCAlignedRect a, BCAlignedRect b,bc_float_t distance) {
     /*we need to compare, potentially, every point in a with every point in b.
      
@@ -24,47 +23,47 @@ bool BCAlignedRectsCornerWithinDistance(BCAlignedRect a, BCAlignedRect b,bc_floa
                                                        
                                               
      */
-    simd_float4x4 mtxA = bc_make_4x4(simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
-                                  simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
-                                  simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
-                                  simd_make_float4(a.min.x,a.min.y,a.max.x,a.min.y)
+    bc_float4x4_t mtxA = bc_make_4x4(bc_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
+                                  bc_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
+                                  bc_make_float4(a.min.x,a.min.y,a.max.x,a.min.y),
+                                  bc_make_float4(a.min.x,a.min.y,a.max.x,a.min.y)
                                   
                                   );
     
-    simd_float4x4 mtxB = bc_make_4x4(simd_make_float4(b.min.x,b.min.y,b.min.x,b.min.y),
-                                     simd_make_float4(b.max.x,b.min.y,b.max.x,b.min.y),
-                                     simd_make_float4(b.min.x,b.max.y,b.min.x,b.max.y),
-                                     simd_make_float4(b.max.x,b.max.y,b.max.x,b.max.y)
+    bc_float4x4_t mtxB = bc_make_4x4(bc_make_float4(b.min.x,b.min.y,b.min.x,b.min.y),
+                                     bc_make_float4(b.max.x,b.min.y,b.max.x,b.min.y),
+                                     bc_make_float4(b.min.x,b.max.y,b.min.x,b.max.y),
+                                     bc_make_float4(b.max.x,b.max.y,b.max.x,b.max.y)
                                      );
     
-    simd_float4x4 mtxC = simd_sub(mtxA,mtxB);
+    bc_float4x4_t mtxC = bc_sub(mtxA,mtxB);
     //I don't think it would be faster to vectorize this with simd_any
     //vs avoiding calculating the distance to begin with
     
     //on x64 anyway, simd_length_squared is a bit faster than simd_length
     bc_float_t distance_squared = distance * distance;
-    if (simd_length_squared(mtxC.columns[0].lo) < distance_squared) {
+    if (bc_length_squared(mtxC.columns[0].lo) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxC.columns[0].hi) < distance_squared) {
+    if (bc_length_squared(mtxC.columns[0].hi) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxC.columns[1].lo) < distance_squared) {
+    if (bc_length_squared(mtxC.columns[1].lo) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxC.columns[1].hi) < distance_squared) {
+    if (bc_length_squared(mtxC.columns[1].hi) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxC.columns[2].lo) < distance_squared) {
+    if (bc_length_squared(mtxC.columns[2].lo) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxC.columns[2].hi) < distance_squared) {
+    if (bc_length_squared(mtxC.columns[2].hi) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxC.columns[3].lo) < distance_squared) {
+    if (bc_length_squared(mtxC.columns[3].lo) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxC.columns[3].hi) < distance_squared) {
+    if (bc_length_squared(mtxC.columns[3].hi) < distance_squared) {
         return true;
     }
     
@@ -82,37 +81,37 @@ bool BCAlignedRectsCornerWithinDistance(BCAlignedRect a, BCAlignedRect b,bc_floa
                                                        
      
      */
-    simd_float4x4 mtxD = bc_make_4x4(simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
-                                   simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
-                                   simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
-                                   simd_make_float4(a.min.x,a.max.y,a.max.x,a.max.y));
+    bc_float4x4_t mtxD = bc_make_4x4(bc_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
+                                   bc_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
+                                   bc_make_float4(a.min.x,a.max.y,a.max.x,a.max.y),
+                                   bc_make_float4(a.min.x,a.max.y,a.max.x,a.max.y));
 
-    simd_float4x4 mtxE = simd_sub(mtxD, mtxB);
+    bc_float4x4_t mtxE = bc_sub(mtxD, mtxB);
     
     //now a similar situation on mtxE
     
-    if (simd_length_squared(mtxE.columns[0].lo) < distance_squared) {
+    if (bc_length_squared(mtxE.columns[0].lo) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxE.columns[0].hi) < distance_squared) {
+    if (bc_length_squared(mtxE.columns[0].hi) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxE.columns[1].lo) < distance_squared) {
+    if (bc_length_squared(mtxE.columns[1].lo) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxE.columns[1].hi) < distance_squared) {
+    if (bc_length_squared(mtxE.columns[1].hi) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxE.columns[2].lo) < distance_squared) {
+    if (bc_length_squared(mtxE.columns[2].lo) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxE.columns[2].hi) < distance_squared) {
+    if (bc_length_squared(mtxE.columns[2].hi) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxE.columns[3].lo) < distance_squared) {
+    if (bc_length_squared(mtxE.columns[3].lo) < distance_squared) {
         return true;
     }
-    if (simd_length_squared(mtxE.columns[3].hi) < distance_squared) {
+    if (bc_length_squared(mtxE.columns[3].hi) < distance_squared) {
         return true;
     }
     return false;
