@@ -32,3 +32,12 @@ bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesP
     }
     return BCCubicVertexMake(cubic, vertexID, vertexesPerCubic, transform, minimum, maximum);
 }
+
+bc_float4_t BCCubicVertexMakeClampedParameterization(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform, bc_float_t startPosition, bc_float_t endPosition, bc_float_t threshold,bc_float_t minimumDelta) {
+    bc_float_t minLinearPosition = bc_max(0.0,startPosition);
+    bc_float_t maxLinearPosition = bc_min(BCCubicLength(cubic),endPosition);
+    
+    bc_float_t minT = BCCubicArclengthParameterization(cubic, minLinearPosition,threshold);
+    bc_float_t maxT = BCCubicArclengthParameterization(cubic, maxLinearPosition, threshold);
+    return BCCubicVertexMakeClip(cubic, vertexID, vertexesPerCubic, transform, minT, maxT, minimumDelta);
+}
