@@ -70,6 +70,7 @@ BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
 }
 
 bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t length, bc_float_t lowerBound, bc_float_t upperBound, bc_float_t threshold) {
+    __BC_ASSERT(length >= 0 && length <= BCCubicLength(cubic));
     while (true) {
         bc_float2_t upperEvaluate = BCCubicEvaluate(cubic, upperBound);
         bc_float2_t lowerEvaluate = BCCubicEvaluate(cubic, lowerBound);
