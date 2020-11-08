@@ -77,6 +77,7 @@ inline float bc_reduce_add(simd_float2 v) {
 }
 
 #define bc_length simd::length
+#define bc_precise_length simd::precise::length
 #define bc_abs simd::abs
 #define bc_length_squared simd::length_squared
 #define bc_distance simd::distance
@@ -84,6 +85,7 @@ inline float bc_reduce_add(simd_float2 v) {
 #define bc_max simd::max
 #define bc_min simd::min
 #define bc_sign simd::sign
+#define bc_clamp simd::clamp
 
 
 #define __BC_DEVICE device
@@ -127,6 +129,7 @@ static inline bc_float2_t bc_abs(bc_float2_t a) { return simd_abs(a);}
 #define bc_mix simd_mix
 #define bc_distance simd_distance
 #define bc_length simd_length
+#define bc_precise_length simd_precise_length
 #define bc_round roundf
 #define bc_ceil ceilf
 #define bc_floor floorf
@@ -138,6 +141,7 @@ static inline bc_float2_t bc_abs(bc_float2_t a) { return simd_abs(a);}
 #define bc_sqrt sqrtf
 #define bc_atan atan
 #define bc_signbit signbit
+#define bc_clamp simd_clamp
 
 
 
