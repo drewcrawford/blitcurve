@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildRule section */
@@ -144,18 +144,9 @@
 			files = (
 			);
 			inputFileListPaths = (
+				"$(SRCROOT)/blitcurveMetal.xcfileslist",
 			);
 			inputPaths = (
-				"$(SRCROOT)/Sources/blitcurve-c/BCAlignedRect.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCBezierParameter.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCCubic.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCLine.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCLine2.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCMath.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCRect.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCAlignedCubic.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCCubicDrawing.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCMetalC.c",
 			);
 			name = "Concat sources";
 			outputFileListPaths = (
@@ -165,7 +156,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "COUNTER=0\nrm -f \"${SCRIPT_OUTPUT_FILE_0}\"\nwhile [ $COUNTER -lt ${SCRIPT_INPUT_FILE_COUNT} ]; do\n    tmp=\"SCRIPT_INPUT_FILE_$COUNTER\"\n    FILE=${!tmp}\n\n    cat \"$FILE\" >> \"${SCRIPT_OUTPUT_FILE_0}\"\n\n    let COUNTER=COUNTER+1\ndone\n";
+			shellScript = "set -e\nrm -f \"${SCRIPT_OUTPUT_FILE_0}\"\nwhile read file; do\n    if [[ \"$file\" == \"*.h\" ]]; then #ignore header files, they're just here for dependency analysis\n    continue\n    fi\n    EXPANDED=`eval echo \"$file\"`\n    cat \"$EXPANDED\" >> \"${SCRIPT_OUTPUT_FILE_0}\"\ndone <\"${SRCROOT}/blitcurveMetal.xcfileslist\"\n";
 		};
 		3A17DE8124C67A7C00412CC1 /* Link library */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -193,18 +184,9 @@
 			files = (
 			);
 			inputFileListPaths = (
+				"$(SRCROOT)/blitcurveMetal.xcfileslist",
 			);
 			inputPaths = (
-				"$(SRCROOT)/Sources/blitcurve-c/BCAlignedRect.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCBezierParameter.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCCubic.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCLine.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCLine2.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCMath.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCRect.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCAlignedCubic.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCCubicDrawing.c",
-				"$(SRCROOT)/Sources/blitcurve-c/BCMetalC.c",
 			);
 			name = "Concat sources";
 			outputFileListPaths = (
@@ -214,7 +196,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "COUNTER=0\nrm -f \"${SCRIPT_OUTPUT_FILE_0}\"\nwhile [ $COUNTER -lt ${SCRIPT_INPUT_FILE_COUNT} ]; do\n    tmp=\"SCRIPT_INPUT_FILE_$COUNTER\"\n    FILE=${!tmp}\n\n    cat \"$FILE\" >> \"${SCRIPT_OUTPUT_FILE_0}\"\n\n    let COUNTER=COUNTER+1\ndone\n";
+			shellScript = "set -e\nrm -f \"${SCRIPT_OUTPUT_FILE_0}\"\nwhile read file; do\n    if [[ \"$file\" == \"*.h\" ]]; then #ignore header files, they're just here for dependency analysis\n    continue\n    fi\n    EXPANDED=`eval echo \"$file\"`\n    cat \"$EXPANDED\" >> \"${SCRIPT_OUTPUT_FILE_0}\"\ndone <\"${SRCROOT}/blitcurveMetal.xcfileslist\"\n";
 		};
 		3A41E90724C7B99B004A8BCA /* link */ = {
 			isa = PBXShellScriptBuildPhase;
