@@ -14,7 +14,8 @@
 #include <assert.h>
 #define __BC_ASSERT(X) assert(X)
 #else
-#define __BC_ASSERT(X) if (__builtin_expect(!(X),0)) {float device *f = 0; *f = 0;}
+//note that on AMD, we require __builtin_trap following our assert pattern.  This seems to work around FB8897889.
+#define __BC_ASSERT(X) if (__builtin_expect(!(X),0)) {float device *f = 0; *f = 0; __builtin_trap();}
 #endif
 #endif //NDEBUG
 
