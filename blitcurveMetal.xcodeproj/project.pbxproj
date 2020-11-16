@@ -136,7 +136,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ $MTL_ENABLE_DEBUG_INFO = \"INCLUDE_SOURCE\" ]; then\nMOREARGS=\"-gline-tables-only -MO\"\nelse\nMOREARGS=\"\"\nfi\n\nmetal -c -target air64-apple-ios14.0 $MOREARGS -MO -I${MTL_HEADER_SEARCH_PATHS} -F${HEADER_SEARCH_PATHS} -isysroot \"${SDKROOT}\" -ffast-math  -o \"${TARGET_TEMP_DIR}/Metal/blitcurve.air\"  -MMD  \"${DERIVED_SOURCES_DIR}/blitcurve.metal\"\n";
+			shellScript = "if [ $MTL_ENABLE_DEBUG_INFO = \"INCLUDE_SOURCE\" ]; then\nMOREARGS=\"-gline-tables-only -MO\"\nelse\nMOREARGS=\"\"\nfi\n\nif [ ! -z \"$MTL_PREPROCESSOR_DEFINITIONS\" ]; then\nMOREARGS=\"${MOREARGS} -D${MTL_PREPROCESSOR_DEFINITIONS}\"\nfi\n\necho \"compiling with args $MOREARGS\"\n\nmetal -c -target air64-apple-ios14.0 $MOREARGS -MO -I${MTL_HEADER_SEARCH_PATHS} -F${HEADER_SEARCH_PATHS} -isysroot \"${SDKROOT}\" -ffast-math  -o \"${TARGET_TEMP_DIR}/Metal/blitcurve.air\"  -MMD  \"${DERIVED_SOURCES_DIR}/blitcurve.metal\"\n";
 		};
 		3A17DE7C24C676F900412CC1 /* Concat sources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -249,6 +249,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				"MTL_PREPROCESSOR_DEFINITIONS[sdk=iphonesimulator*]" = "FB8897889=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
