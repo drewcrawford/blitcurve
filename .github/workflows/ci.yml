@@ -63,9 +63,10 @@ jobs:
       - name: test
         run: |
              cd ExtraTests/MetalTest
-             xcodebuild -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData -scheme "MetalTest (macOS)" | xcpretty && exit ${PIPESTATUS[0]}
+             
+             xcodebuild build-for-testing -scheme "MetalTest (macOS)" -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData  | xcpretty && exit ${PIPESTATUS[0]}
              # need to use simulator here to avoid CS issues
-             xcodebuild -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData -scheme "MetalTest (iOS)" -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
+             xcodebuild -scheme "MetalTest (iOS)" -IgnoreFileSystemDeviceInodeChanges=YES -derivedDataPath localDerivedData  -sdk iphonesimulator | xcpretty && exit ${PIPESTATUS[0]}
       - name: dd-tar
         run: mkdir -p dd-tar-cache && tar cfPp dd-tar-cache/dd.tar --format posix ExtraTests/MetalTest/localDerivedData
   dep-check: 

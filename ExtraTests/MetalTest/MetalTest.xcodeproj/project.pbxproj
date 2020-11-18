@@ -3,12 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3A013EAA249ED4C200DAAEC8 /* MetalTest.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */; };
 		3A52F44D24C8DCDF00391C2A /* MetalTest.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */; };
+		3A6437482565A8E700FFC1DF /* Test__macOS_.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6437472565A8E700FFC1DF /* Test__macOS_.swift */; };
+		3A6437502565A96B00FFC1DF /* MetalTest.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */; };
+		3A64375A2565AA1600FFC1DF /* blitcurve in Frameworks */ = {isa = PBXBuildFile; productRef = 3A6437592565AA1600FFC1DF /* blitcurve */; };
+		3A64375F2565B07A00FFC1DF /* Opaque.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A64375E2565B07A00FFC1DF /* Opaque.metal */; };
+		3A6437602565B07A00FFC1DF /* Opaque.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A64375E2565B07A00FFC1DF /* Opaque.metal */; };
+		3A6437612565B07A00FFC1DF /* Opaque.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A64375E2565B07A00FFC1DF /* Opaque.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,23 +32,52 @@
 			remoteGlobalIDString = 3A41E8FE24C7B918004A8BCA;
 			remoteInfo = "blitcurveMetal (macOS)";
 		};
+		3A6437652565BF7A00FFC1DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A01730C24EA09D600403E8A /* blitcurveMetal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A41E8FE24C7B918004A8BCA;
+			remoteInfo = "blitcurveMetal (macOS)";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MetalTest.metal; sourceTree = "<group>"; };
 		3A01730C24EA09D600403E8A /* blitcurveMetal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = blitcurveMetal.xcodeproj; path = ../../blitcurveMetal.xcodeproj; sourceTree = "<group>"; };
 		3A41E8F424C7B744004A8BCA /* blitcurve */ = {isa = PBXFileReference; lastKnownFileType = folder; name = blitcurve; path = ..; sourceTree = "<group>"; };
+		3A6437442565A8E700FFC1DF /* Test (macOS).xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Test (macOS).xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A6437472565A8E700FFC1DF /* Test__macOS_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test__macOS_.swift; sourceTree = "<group>"; };
+		3A6437492565A8E700FFC1DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A6437542565AA0900FFC1DF /* blitcurve */ = {isa = PBXFileReference; lastKnownFileType = folder; name = blitcurve; path = ../..; sourceTree = "<group>"; };
+		3A64375E2565B07A00FFC1DF /* Opaque.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Opaque.metal; sourceTree = "<group>"; };
+		3A64376D2565C34800FFC1DF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		3A64376E2565C36C00FFC1DF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3A85744F24C8AEAE004D0B91 /* MetalTest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MetalTest.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3A6437412565A8E700FFC1DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A64375A2565AA1600FFC1DF /* blitcurve in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		3A013EA1249ED4C200DAAEC8 = {
 			isa = PBXGroup;
 			children = (
+				3A6437542565AA0900FFC1DF /* blitcurve */,
 				3A01730C24EA09D600403E8A /* blitcurveMetal.xcodeproj */,
 				3A85744F24C8AEAE004D0B91 /* MetalTest.xcodeproj */,
 				3A013EA8249ED4C200DAAEC8 /* MetalTest */,
 				3A41E8F424C7B744004A8BCA /* blitcurve */,
+				3A6437462565A8E700FFC1DF /* Test (macOS) */,
+				3A6437452565A8E700FFC1DF /* Products */,
+				3A6437582565AA1600FFC1DF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -50,6 +85,8 @@
 			isa = PBXGroup;
 			children = (
 				3A013EA9249ED4C200DAAEC8 /* MetalTest.metal */,
+				3A64375E2565B07A00FFC1DF /* Opaque.metal */,
+				3A64376D2565C34800FFC1DF /* README.md */,
 			);
 			path = MetalTest;
 			sourceTree = "<group>";
@@ -59,6 +96,31 @@
 			children = (
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		3A6437452565A8E700FFC1DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3A6437442565A8E700FFC1DF /* Test (macOS).xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3A6437462565A8E700FFC1DF /* Test (macOS) */ = {
+			isa = PBXGroup;
+			children = (
+				3A6437472565A8E700FFC1DF /* Test__macOS_.swift */,
+				3A6437492565A8E700FFC1DF /* Info.plist */,
+				3A64376E2565C36C00FFC1DF /* README.md */,
+			);
+			path = "Test (macOS)";
+			sourceTree = "<group>";
+		};
+		3A6437582565AA1600FFC1DF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		3A85745024C8AEAE004D0B91 /* Products */ = {
@@ -99,12 +161,34 @@
 			productName = "MetalTest-ios";
 			productType = "com.apple.product-type.metal-library";
 		};
+		3A6437432565A8E700FFC1DF /* Test (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A64374C2565A8E700FFC1DF /* Build configuration list for PBXNativeTarget "Test (macOS)" */;
+			buildPhases = (
+				3A6437402565A8E700FFC1DF /* Sources */,
+				3A6437412565A8E700FFC1DF /* Frameworks */,
+				3A6437422565A8E700FFC1DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3A6437662565BF7A00FFC1DF /* PBXTargetDependency */,
+			);
+			name = "Test (macOS)";
+			packageProductDependencies = (
+				3A6437592565AA1600FFC1DF /* blitcurve */,
+			);
+			productName = "Test (macOS)";
+			productReference = 3A6437442565A8E700FFC1DF /* Test (macOS).xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		3A013EA2249ED4C200DAAEC8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1220;
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "DrewCrawfordApps LLC";
 				TargetAttributes = {
@@ -113,6 +197,9 @@
 					};
 					3A52F44624C8DCD800391C2A = {
 						CreatedOnToolsVersion = 12.0;
+					};
+					3A6437432565A8E700FFC1DF = {
+						CreatedOnToolsVersion = 12.2;
 					};
 				};
 			};
@@ -125,6 +212,7 @@
 				Base,
 			);
 			mainGroup = 3A013EA1249ED4C200DAAEC8;
+			productRefGroup = 3A6437452565A8E700FFC1DF /* Products */;
 			projectDirPath = "";
 			projectReferences = (
 				{
@@ -140,15 +228,27 @@
 			targets = (
 				3A013EA7249ED4C200DAAEC8 /* MetalTest (macOS) */,
 				3A52F44624C8DCD800391C2A /* MetalTest (iOS) */,
+				3A6437432565A8E700FFC1DF /* Test (macOS) */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3A6437422565A8E700FFC1DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3A013EA6249ED4C200DAAEC8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A64375F2565B07A00FFC1DF /* Opaque.metal in Sources */,
 				3A013EAA249ED4C200DAAEC8 /* MetalTest.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -157,7 +257,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A6437602565B07A00FFC1DF /* Opaque.metal in Sources */,
 				3A52F44D24C8DCDF00391C2A /* MetalTest.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A6437402565A8E700FFC1DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A6437482565A8E700FFC1DF /* Test__macOS_.swift in Sources */,
+				3A6437502565A96B00FFC1DF /* MetalTest.metal in Sources */,
+				3A6437612565B07A00FFC1DF /* Opaque.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +284,11 @@
 			isa = PBXTargetDependency;
 			name = "blitcurveMetal (macOS)";
 			targetProxy = 3A01731324EA0AF300403E8A /* PBXContainerItemProxy */;
+		};
+		3A6437662565BF7A00FFC1DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "blitcurveMetal (macOS)";
+			targetProxy = 3A6437652565BF7A00FFC1DF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -296,6 +412,85 @@
 			};
 			name = Release;
 		};
+		3A64374A2565A8E700FFC1DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Test (macOS)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dca.Test--macOS-";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3A64374B2565A8E700FFC1DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Test (macOS)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dca.Test--macOS-";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -326,7 +521,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		3A64374C2565A8E700FFC1DF /* Build configuration list for PBXNativeTarget "Test (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A64374A2565A8E700FFC1DF /* Debug */,
+				3A64374B2565A8E700FFC1DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3A6437592565AA1600FFC1DF /* blitcurve */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = blitcurve;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3A013EA2249ED4C200DAAEC8 /* Project object */;
 }

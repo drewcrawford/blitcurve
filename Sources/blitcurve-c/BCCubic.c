@@ -23,11 +23,11 @@ bc_float_t BCCubicLength(BCCubic c) {
 BCCubic BCCubicLeftSplit(BCCubic c, bc_float_t t) {
     BCCubic out;
     const bc_float_t t_minus_1 = t - 1;
-    const bc_float_t t_minus_1_squared = bc_pow(t_minus_1,2);
-    const bc_float2_t t_squared_d = bc_pow(t,2) * c.d;
+    const bc_float_t t_minus_1_squared = __bc_square(t_minus_1);
+    const bc_float2_t t_squared_d = __bc_square(t) * c.d;
     const bc_float2_t t_c = t * c.c;
     out.a = c.a;
-    out.b = bc_pow(t,3) * c.b - 3 * t_squared_d * t_minus_1 + 3 * t_minus_1_squared * t_c - bc_pow(t_minus_1,3) * c.a;
+    out.b = __bc_cube(t) * c.b - 3 * t_squared_d * t_minus_1 + 3 * t_minus_1_squared * t_c - __bc_cube(t_minus_1) * c.a;
     out.c = t_c - t_minus_1 * c.a;
     out.d = t_squared_d - 2 * t_minus_1 * t_c + t_minus_1_squared * c.a;
     return out;
@@ -35,10 +35,10 @@ BCCubic BCCubicLeftSplit(BCCubic c, bc_float_t t) {
 
 BCCubic BCCubicRightSplit(BCCubic c, bc_float_t t) {
     BCCubic out;
-    const bc_float_t t_squared = bc_pow(t,2);
+    const bc_float_t t_squared = __bc_square(t);
     const bc_float2_t t_minus_1_d = (t-1) * c.d;
-    const bc_float2_t t_minus_1_squared_c = bc_pow(t - 1,2) * c.c;
-    out.a = bc_pow(t,3) * c.b - 3 * t_squared * t_minus_1_d  + 3 * t * t_minus_1_squared_c - bc_pow(t - 1,3) * c.a;
+    const bc_float2_t t_minus_1_squared_c = __bc_square(t - 1) * c.c;
+    out.a = __bc_cube(t) * c.b - 3 * t_squared * t_minus_1_d  + 3 * t * t_minus_1_squared_c - __bc_cube(t - 1) * c.a;
     out.b = c.b;
     out.c = t_squared * c.b - 2 * t * t_minus_1_d + t_minus_1_squared_c;
     out.d = t * c.b - t_minus_1_d;
@@ -49,15 +49,15 @@ BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
     const bc_float_t t_minus_1 = t - 1;
     const bc_float2_t t_minus_1_d = t_minus_1 * c.d;
     const bc_float2_t t_c = t * c.c;
-    const bc_float_t t_minus_1_squared = bc_pow(t_minus_1, 2);
+    const bc_float_t t_minus_1_squared = __bc_square(t_minus_1);
     const bc_float2_t t_minus_1_squared_c = c.c * t_minus_1_squared;
     const bc_float_t t_2 = 2 * t;
     
-    const float t_squared = bc_pow(t,2);
+    const float t_squared = __bc_square(t);
     
     BCCubic2 out;
     out.a.xy = c.a;
-    out.a.zw = bc_pow(t,3) * c.b - 3 * t_squared * t_minus_1_d + 3 * t * t_minus_1_squared_c - bc_pow(t_minus_1,3) * c.a;
+    out.a.zw = __bc_cube(t) * c.b - 3 * t_squared * t_minus_1_d + 3 * t * t_minus_1_squared_c - __bc_cube(t_minus_1) * c.a;
     out.b.xy = out.a.zw;
     out.b.zw = c.b;
     
@@ -129,7 +129,7 @@ bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDis
     const bc_float_t p2 = bc_cos(straightAngle);
     const bc_float_t p2_by_p1 = p2 * p1;
     const bc_float_t t1 = -2 * p2_by_p1 / (3*curvatureError);
-    const bc_float2_t square_p2byp1_k = bc_pow(bc_make_float2(p2_by_p1, k),2);
+    const bc_float2_t square_p2byp1_k = __bc_square(bc_make_float2(p2_by_p1, k));
     const bc_float_t n = 3 * curvatureError * r * p1 + 2 * square_p2byp1_k.x;
     const bc_float_t d = square_p2byp1_k.y;
     const bc_float_t t2 = 1.0/3.0 * bc_sqrt(2.0f) * bc_sqrt(n/d);

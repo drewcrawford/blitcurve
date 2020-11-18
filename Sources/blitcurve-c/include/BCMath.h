@@ -26,4 +26,19 @@ static inline bool BCIsNearlyEqual2(bc_float2_t a, bc_float2_t b) {
     
     return bc_norm_inf(diff) < 0.001;
 }
+
+static inline float __bc_cube(float a) {
+    //metal::pow ought to be avoided, FB8904929
+    return a * a * a;
+}
+__attribute__((overloadable))
+static inline float __bc_square(float a) {
+    //metal::pow ought to be avoided, FB8904929
+    return a * a;
+}
+
+static inline bc_float2_t __bc_square(bc_float2_t a) {
+    //metal::pow ought to be avoided, FB8904929
+    return a * a;
+}
 #endif
