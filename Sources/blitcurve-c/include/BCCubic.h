@@ -358,9 +358,10 @@ static inline BCCubic BCCubicMakeWithLine(BCLine a) {
     return out;
 }
 
-///\abstract Calculates the arclength.
-///\note This is a fast numerical and vectorized approximation for the arc length.
-///\performance O(1)
+/**\abstract Calculates the arclength.
+This is a fast numerical and vectorized approximation for the arc length.  On some platforms this may produce different results.
+\performance O(1)
+*/
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.length(self:)")))
 bc_float_t BCCubicLength(BCCubic c);
@@ -412,6 +413,7 @@ __attribute__((swift_name("Cubic.isNormalizedForCurvature(self:straightAngle:cur
 bool BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError)
 __attribute__((diagnose_if(!(straightAngle>0), "Invalid straightAngle","error")))
 __attribute__((diagnose_if(!(curvatureError>0), "Invalid curvatureError","error")));
+
 
 #endif
 

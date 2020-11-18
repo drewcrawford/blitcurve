@@ -102,12 +102,54 @@ class BoxTests: XCTestCase {
         
         
     }
+    func testContainsPoint() {
+        //should intersect from (x:9.5,y:7.5) to (x:10.5, y:12.5)
+        let r = Rect(center: SIMD2<Float>(10,10), lengths: SIMD2<Float>(5,1), angle: 0)
+
+        XCTAssert(r.contains(SIMD2<Float>(10,10)))
+        XCTAssert(r.contains(SIMD2<Float>(9.6,7.6)))
+        XCTAssert(r.contains(SIMD2<Float>(9.6,12.4)))
+        XCTAssert(r.contains(SIMD2<Float>(10.4,7.6)))
+        XCTAssert(r.contains(SIMD2<Float>(10.4,12.4)))
+
+        //x out of range
+        XCTAssertFalse(r.contains(SIMD2<Float>(9.4,7.6)))
+        XCTAssertFalse(r.contains(SIMD2<Float>(9.4,12.4)))
+        XCTAssertFalse(r.contains(SIMD2<Float>(10.6,7.6)))
+        XCTAssertFalse(r.contains(SIMD2<Float>(10.6,12.4)))
+
+        //y out of range
+        XCTAssertFalse(r.contains(SIMD2<Float>(9.6,7.4)))
+        XCTAssertFalse(r.contains(SIMD2<Float>(9.6,12.6)))
+        XCTAssertFalse(r.contains(SIMD2<Float>(10.4,7.4)))
+        XCTAssertFalse(r.contains(SIMD2<Float>(10.4,12.6)))
+
+        /*rotation test.  If we rotate slightly -, rect should go counterclockwise and capture this
+ ◀─────────
+
+  ┌──────┐
+  │      │
+  │      │
+  │      │
+  │      │
+  │      │
+  │      │
+  │      │
+  │  ────▶
+  │      │
+  │      │
+  │      │
+  │      │
+  │      │
+  │      │  x
+  │      │
+  └──────┘
+  ───────▶
+ */
+        let rotated = Rect(center: r.center, lengths: r.lengths, angle: -0.1)
+        XCTAssert(rotated.contains(SIMD2<Float>(10.6,12.3)))
+        
+    }
     
 
-    static var allTests = [
-        ("testPointInside",testPointInside),
-        ("testPoints",testPoints),
-        ("testPointsWithRotation",testPointsWithRotation),
-        ("testIntersection",testIntersection),
-    ]
 }

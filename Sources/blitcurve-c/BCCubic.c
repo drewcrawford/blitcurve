@@ -11,12 +11,12 @@ extern inline BCLine BCCubicAsLine(BCCubic c) ;
 
 bc_float_t BCCubicLength(BCCubic c) {
     const bc_float2_t v0 = bc_abs(c.c-c.a);
-    const bc_float2_t v1 = bc_abs(-0.558983582205757*c.a + 0.325650248872424*c.c + 0.208983582205757*c.d + 0.024349751127576*c.b);
-    const bc_float2_t v2 = bc_abs(c.b-c.a+c.d-c.c)*0.26666666666666666;
-    const bc_float2_t v3 = bc_abs(-0.024349751127576*c.a - 0.208983582205757*c.c - 0.325650248872424*c.d + 0.558983582205757*c.b);
+    const bc_float2_t v1 = bc_abs(-0.558983582205757f*c.a + 0.325650248872424f*c.c + 0.208983582205757f*c.d + 0.024349751127576*c.b);
+    const bc_float2_t v2 = bc_abs(c.b-c.a+c.d-c.c)*0.26666666666666666f;
+    const bc_float2_t v3 = bc_abs(-0.024349751127576f*c.a - 0.208983582205757f*c.c - 0.325650248872424f*c.d + 0.558983582205757f*c.b);
     const bc_float2_t v4 = bc_abs(c.b-c.d);
 
-    const bc_float2_t result = 0.15*(v0+v4) + v1 + v2 + v3;
+    const bc_float2_t result = 0.15f*(v0+v4) + v1 + v2 + v3;
     return bc_length(result);
 }
 
@@ -69,8 +69,13 @@ BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
     return out;
 }
 
-bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t length, bc_float_t lowerBound, bc_float_t upperBound, bc_float_t threshold) {
-    __BC_ASSERT(length >= 0 && length <= BCCubicLength(cubic));
+bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t arclength, bc_float_t lowerBound, bc_float_t upperBound, bc_float_t threshold) {
+    __BC_ASSERT(arclength >= 0);
+    const float cubicLength = BCCubicLength(cubic);
+    if (arclength >= cubicLength) {
+        __BC_ASSERT(arclength <= cubicLength * 1.01); //asked for a suspiciously out-of-range paramterization
+        return upperBound;
+    }
     while (true) {
         bc_float2_t upperEvaluate = BCCubicEvaluate(cubic, upperBound);
         bc_float2_t lowerEvaluate = BCCubicEvaluate(cubic, lowerBound);
@@ -80,7 +85,7 @@ bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t 
         bc_float_t partition = (upperBound - lowerBound) / 2 + lowerBound;
         BCCubic d = BCCubicLeftSplit(cubic, partition);
 
-        if (BCCubicLength(d) > length) { //choose left
+        if (BCCubicLength(d) > arclength) { //choose left
             upperBound = partition;
         }
         else { //choose right

@@ -87,4 +87,8 @@ __attribute__((const))
 __attribute__((swift_name("BCRect.intersects(self:_:)")))
 ///\abstract Calculates whether 2 \c BCRect intersect
 bool BCRectIntersects(BCRect e, BCRect f);
+
+__attribute__((const))
+__attribute__((swift_name("BCRect.contains(self:_:)")))
+bool BCRectContainsPoint(BCRect a, bc_float2_t point);
 #endif

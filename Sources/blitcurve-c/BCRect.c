@@ -170,3 +170,22 @@ Above, the line r1.ab and r2.dc separate.  Alternatively, in some cases only one
 bool BCRectIntersects(BCRect e, BCRect f) {
     return BCRectHalfIntersects(e, f) && BCRectHalfIntersects(f, e);
 }
+
+bool BCRectContainsPoint(BCRect a, bc_float2_t point) {
+    //similar to implementation of BCRectHalfIntersects, we assume a is located at .zero and we project point
+    //into a space that agrees with this assumption
+    BCLine toPoint;
+    toPoint.a = a.center;
+    toPoint.b = point;
+    if (a.center.x == point.x && a.center.y == point.y) { return true; } //can't calculate tangent in this situation.
+    const float newAngle = BCLineTangent(toPoint) - a.angle;
+    
+    const BCLine newPointLine = BCLineMakeWithPointAndAngle(bc_make_float2(0,0), newAngle, BCLineLength(toPoint));
+    const bc_float2_t newPoint = newPointLine.b;
+    const bc_float2_t halflengths = a.lengths / 2;
+    //note that these are the opposite dimensions as you might expect
+    if (newPoint.x > -halflengths.y && newPoint.x < halflengths.y && newPoint.y > -halflengths.x && newPoint.y < halflengths.x) {
+        return true;
+    }
+    return false;
+}

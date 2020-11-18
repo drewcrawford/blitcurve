@@ -90,7 +90,6 @@ final class CubicTests: XCTestCase {
     func testLength() {
         let curve = Cubic(a: SIMD2<Float>(x: 120, y: 60), b: SIMD2<Float>(x: 220, y: 40), c: SIMD2<Float>(x: 35, y: 200), d: SIMD2<Float>(x: 220, y: 260))
         XCTAssertEqual(curve.length, 272.87, accuracy: 20)
-        
     }
     
     func testAlignedRect() {
@@ -160,6 +159,9 @@ final class CubicTests: XCTestCase {
         let cubic = Cubic(a: .zero, b: SIMD2<Float>(x: 100, y: 0), c: SIMD2<Float>(x: 66.6667, y: 0), d: SIMD2<Float>(x: 100, y: 0))
         let parameterization = cubic.parameterization(arclength: 50, threshold: 0.01)
         XCTAssertEqual(parameterization, 0.289, accuracy: 0.01)
+        
+        //due to mt2-99, we want to be allowed to parameterize slightly out of range
+        XCTAssertEqual(cubic.parameterization(arclength: cubic.length+0.5, threshold: 0.000000001), 1)
     }
     
     func testTangent() {

@@ -97,7 +97,6 @@ class Renderer: NSObject, MTKViewDelegate {
 
     func draw(in view: MTKView) {
         /// Per frame updates hare
-
         
         if let commandBuffer = commandQueue.makeCommandBuffer() {
             
