@@ -2,27 +2,20 @@
 
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # check swift tests
   swift-test:
-    # The type of runner that the job will run on
     runs-on: macos-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     - name: xcode-select
-      run: sudo xcode-select -s /Applications/Xcode_12_beta.app
+      run: sudo xcode-select -s /Applications/Xcode_12.2.app
     - name: test
       run: swift test
     - name: test (bench)
@@ -59,7 +52,7 @@ jobs:
           git submodule foreach 'rev=HEAD; for f in $(git ls-tree -r -t --full-name --name-only "$rev") ; do     touch -t $(git log --pretty=format:%cd --date=format:%Y%m%d%H%M.%S -1 "$rev" -- "$f") "$f"; done'
           rev=HEAD; for f in $(git ls-tree -r -t --full-name --name-only "$rev") ; do     touch -t $(git log --pretty=format:%cd --date=format:%Y%m%d%H%M.%S -1 "$rev" -- "$f") "$f"; done
       - name: xcode-select
-        run: sudo xcode-select -s /Applications/Xcode_12_beta.app
+        run: sudo xcode-select -s /Applications/Xcode_12.2.app
       - name: test
         run: |
              cd ExtraTests/MetalTest
@@ -98,7 +91,7 @@ jobs:
         git submodule foreach 'rev=HEAD; for f in $(git ls-tree -r -t --full-name --name-only "$rev") ; do     touch -t $(git log --pretty=format:%cd --date=format:%Y%m%d%H%M.%S -1 "$rev" -- "$f") "$f"; done'
         rev=HEAD; for f in $(git ls-tree -r -t --full-name --name-only "$rev") ; do     touch -t $(git log --pretty=format:%cd --date=format:%Y%m%d%H%M.%S -1 "$rev" -- "$f") "$f"; done
     - name: xcode-select
-      run: sudo xcode-select -s /Applications/Xcode_12_beta.app
+      run: sudo xcode-select -s /Applications/Xcode_12.2.app
     - name: test
       run: |
            cd ExtraTests/DepCheck
