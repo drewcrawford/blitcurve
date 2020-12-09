@@ -204,31 +204,14 @@ final class CubicTests: XCTestCase {
         XCTAssert(!badA.isNormalizedForCurvature(straightAngle: 2 * .pi/360, curvatureError: 0.02))
     }
     
-    static var allTests: [(String,(CubicTests) -> () -> ())] = {
+    func testDescription() {
+        let c = Cubic(a: BCFloat2(0,1), b: BCFloat2(2,3), c: BCFloat2(4,5), d: BCFloat2(6,7))
+        let canonicalForm = c.description
         
-        var tests = [
-        ("testTangents", testTangents),
-        ("testEvaluate", testEvaluate),
-        ("testNormalize", testEvaluate),
-        ("testConnectingCubicToPoint", testConnectingCubicToPoint),
-        ("testLength",testLength),
-        ("testAlignedRect",testAlignedRect),
-        ("testSplit",testSplit),
-        ("testParameterization",testParametrization),
-        ("testTangent",testTangent),
-        ("testConnectingCubics",testConnectingCubics),
-        ("testConnectingLines",testConnectingLines),
-        ("testConnectingTangents",testConnectingTangents),
-        ("testCurvatureError",testCurvatureError),
-        ("testAlignedForCurvature",testAlignedForCurvature),
-        ]
-        
-        
-        #if DEBUG
-        #else
-        tests.append(("testLengthPerformance",testLengthPerformance))
-
-        #endif
-        return tests
-    }()
+        //string should be the same as the constructor call below
+        XCTAssertEqual(canonicalForm, "Cubic(a: BCFloat2(x: 0.0, y: 1.0), b: BCFloat2(x: 2.0, y: 3.0), c: BCFloat2(x: 4.0, y: 5.0), d: BCFloat2(x: 6.0, y: 7.0))")
+        let c2 =                       Cubic(a: BCFloat2(x: 0.0, y: 1.0), b: BCFloat2(x: 2.0, y: 3.0), c: BCFloat2(x: 4.0, y: 5.0), d: BCFloat2(x: 6.0, y: 7.0))
+        XCTAssertEqual(c, c2)
+    }
+    
 }
