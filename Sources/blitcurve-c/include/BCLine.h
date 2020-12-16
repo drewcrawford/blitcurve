@@ -43,7 +43,7 @@ static inline BCLine BCLineMakeWithPointAndAngle(bc_float2_t a, float angle, flo
 __attribute__((const))
 __attribute__((swift_name("getter:Line.slope(self:)")))
 /**\abstract Gets the slope of the line.
-\throws Vertical lines trap with assert.  rvalue is \c BC_FLOAT_LARGE.
+\throws Vertical lines trap.  rvalue is \c BC_FLOAT_LARGE.
  */
 inline bc_float_t BCLineSlope(BCLine l) {
     bc_float2_t diff = l.a - l.b;
@@ -58,7 +58,9 @@ __attribute__((const))
 __attribute__((swift_name("getter:Line.yIntercept(self:)")))
 inline bc_float_t BCLineYIntercept(BCLine l) {
     __BC_PRECONDITION(bc_abs(l.a.x-l.b.x) > 0, BC_FLOAT_LARGE);
-    return l.a.y - BCLineSlope(l) * l.a.x;
+    const float slope = BCLineSlope(l);
+    __BC_PRECONDITION_CONVERT(slope == BC_FLOAT_LARGE,BC_FLOAT_LARGE);
+    return l.a.y - slope * l.a.x;
 }
 
 ///Distance of the line
@@ -80,7 +82,7 @@ inline BCLine BCLineReversed(BCLine l) {
 
 
 /**Tangent along the line.
-\warning throws if the line has \c 0 length.  rvalue is \c BC_FLOAT_LARGE.
+\throws if the line has \c 0 length.  rvalue is \c BC_FLOAT_LARGE.
  */
 __attribute__((const))
 __attribute__((swift_name("getter:Line.tangent(self:)")))

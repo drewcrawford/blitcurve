@@ -10,7 +10,7 @@
 /**\abstract Converts between a vertex ID and a bezier parameter.
 \param vertexID The vertex id, e.g. a shader parameter.  We provide overloadable variants for \c uint16_t and \c uint32_t.  This must be \c <vertexesPerInstance.
  \param vertexesPerInstance The number of vertexes to draw for each instance.  This must be \c >1
- \throws Checks arguments with assert, if invalid will return (-1-BCError).
+ \throws Checks arguments, if invalid will return (-1-BCError).
 @see BCLUTParameterForIndex for non-graphical use
  */
 __attribute__((const))
@@ -32,7 +32,7 @@ __attribute__((diagnose_if(!(vertexesPerInstance > 1), "vertexesPerInstance out 
 \param vertexesPerInstance The number of vertexes to draw for each instance.
 \param lowerT The return value will be \c >= this number
 \param upperT The return value will be \c <= this number.
- \throws Checks arguments with assert, if invalid will return (-1-BCError).
+ \throws Checks arguments, if invalid will return (-1-BCError).
  @see \c BCLUTParameterForIndex for non-graphical use
  */
 __attribute__((const))

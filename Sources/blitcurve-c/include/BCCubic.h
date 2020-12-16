@@ -10,6 +10,7 @@
 #include "BCMath.h"
 #include "BCLine2.h"
 #include "BCCubic2.h"
+#include "BCTrap.h"
 
 #ifndef __METAL_VERSION__
 #include <stdbool.h>
@@ -63,12 +64,14 @@ inline BCLine BCCubicFinalTangentLine(BCCubic c) {
     return l;
 }
 
-///\abstract Returns the angle of the \c intitalTangent.
-///\warning This requires the cubic to be partially normalized between \c a/c, see \c BCCubicNormalize for details.
+/**\abstract Returns the angle of the \c intitalTangent.
+\throws This requires the cubic to be partially normalized between \c a/c, see \c BCCubicNormalize for details.  Checks parameters, rvalue is \c BC_FLOAT_LARGE.
+ 
+*/
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.initialTangentAngle(self:)")))
 static inline bc_float_t BCCubicInitialTangentAngle(BCCubic c) {
-    //UB checked inside BCLineTangent (e.g. the intial line would be 0)
+    //BCLineTangent and we share same rvalue, so we just pass through
     return BCLineTangent(BCCubicInitialTangentLine(c));
 }
 
@@ -79,12 +82,13 @@ static inline bc_float_t BCCubicInitialTangentMagnitude(BCCubic c) {
     return BCLineLength(BCCubicInitialTangentLine(c));
 }
 
-///\abstract Returns the angle of the \c finalTangent.
-///\warning This requires the cubic to be partially normalized between \c b/d, see \c BCCubicNormalize for details.
+/**\abstract Returns the angle of the \c finalTangent.
+\throws This requires the cubic to be partially normalized between \c a/c, see \c BCCubicNormalize for details.  Checks parameters, rvalue is \c BC_FLOAT_LARGE.
+ */
 __attribute__((const))
 __attribute__((swift_name("getter:Cubic.finalTangentAngle(self:)")))
 static inline bc_float_t BCCubicFinalTangentAngle(BCCubic c) {
-    //UB checked inside BCLineTanget (e.g. the initial line would be 0)
+    //BCLineTangent and we share same rvalue, so we just pass through
     return BCLineTangent(BCCubicFinalTangentLine(c));
 }
 
@@ -178,7 +182,7 @@ static inline char BCCubicIsNearlyLinear(BCCubic self, bc_float_t accuracy) {
     __BC_ASSERT(accuracy > 0,(-1-BCErrorArg1));
     
     const bc_float_t lineTangent = BCLineTangent(BCCubicAsLine(self));
-    __BC_ASSERT_CONVERT(lineTangent,BC_FLOAT_LARGE,(-1-BCErrorArg0));
+    __BC_PRECONDITION_CONVERT(lineTangent==BC_FLOAT_LARGE,(-1-BCErrorArg0));
     return (bc_abs(lineTangent - BCCubicInitialTangentAngle(self)) < accuracy && bc_abs(lineTangent - BCCubicFinalTangentAngle(self)) < accuracy);
 }
 
@@ -282,9 +286,10 @@ static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float2
     return c;
 }
 
-///Creates a cubic connecting two lines, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
-///\discussion This will choose the initial and final tangents with mangitudes \c r/2.  For more details on this choice, see https://sealedabstract.com/posts/bezier-curvature/
-///\warning This operation requires the lines to have non-zero distance
+/**Creates a cubic connecting two lines, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
+\discussion This will choose the initial and final tangents with mangitudes \c r/2.  For more details on this choice, see https://sealedabstract.com/posts/bezier-curvature/
+\throws Requires lines to have non-zero distance, rvalue is \c BCErrorCubic.
+ */
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:to:)")))
 static inline BCCubic BCCubicMakeConnectingLines(BCLine a, BCLine b) {
@@ -292,7 +297,12 @@ static inline BCCubic BCCubicMakeConnectingLines(BCLine a, BCLine b) {
     connecting.a = a.b;
     connecting.b = b.a;
     const bc_float_t distance = bc_distance(a.b,b.a)/2;
-    return BCCubicMakeConnectingTangents(connecting, bc_make_float2(BCLineTangent(a), BCLineTangent(b)),bc_make_float2(distance,distance));
+    
+    const bc_float_t tangentA = BCLineTangent(a);
+    __BC_PRECONDITION_CONVERT(tangentA==BC_FLOAT_LARGE,BCErrorCubicMake(BCErrorArg0));
+    const bc_float_t tangentB = BCLineTangent(b);
+    __BC_PRECONDITION_CONVERT(tangentB==BC_FLOAT_LARGE,BCErrorCubicMake(BCErrorArg1));
+    return BCCubicMakeConnectingTangents(connecting, bc_make_float2(tangentA, tangentB),bc_make_float2(distance,distance));
 }
 
 __attribute__((const))
@@ -301,7 +311,7 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b,bc_float2
     BCLine connecting;
     connecting.a = a.b;
     connecting.b = b.a;
-    //UB checked inside BCCubicInitialTanget / BCCubicFinalTagent, respectively
+    //UB checked inside BCCubicInitialTangent / BCCubicFinalTangent, respectively
     //need to reverse b's initial tangent
     const bc_float2_t tangents = bc_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b));
     return BCCubicMakeConnectingTangents(connecting, tangents, tangentMagnitudes);

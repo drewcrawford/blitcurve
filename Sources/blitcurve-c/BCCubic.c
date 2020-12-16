@@ -103,6 +103,7 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
         else { //otherwise we need to use the line angle
             const BCLine asLine = BCCubicAsLine(*c);
             angle = BCLineTangent(asLine);
+            __BC_PRECONDITION_CUSTOM(angle!=BC_FLOAT_LARGE,*c = BCErrorCubicMake(BCErrorArg0); return);
         }
         const BCLine tangent = BCLineMakeWithPointAndAngle(c->a, angle, approximateDistance);
         c->c = tangent.b;
@@ -116,6 +117,8 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
         else { //otherwise we need to use the line angle
             const BCLine asLine = BCCubicAsLine(*c);
             angle = BCLineTangent(asLine);
+            __BC_PRECONDITION_CUSTOM(angle!=BC_FLOAT_LARGE,*c = BCErrorCubicMake(BCErrorArg0); return);
+
         }
         const BCLine tangent = BCLineMakeWithPointAndAngle(c->b,angle - BC_M_PI_F, approximateDistance);
         c->d = tangent.b;
