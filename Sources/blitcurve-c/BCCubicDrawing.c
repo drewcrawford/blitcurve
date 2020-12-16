@@ -9,7 +9,6 @@
 __attribute__((overloadable))
 extern inline bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform);
 
-
 __attribute__((const))
 __attribute__((overloadable))
 bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform, bc_float_t minimum, bc_float_t maximum) {
@@ -26,11 +25,12 @@ bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesP
 __attribute__((const))
 __attribute__((overloadable))
 bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform, bc_float_t minimum, bc_float_t maximum, bc_float_t minimumDeltaT) {
-    __BC_PRECONDITION(minimum <= maximum,BCErrorArgRelationship);
+    __BC_PRECONDITION(minimum <= maximum,BCVertex3ErrorMake(BCErrorArgRelationship));
     if (maximum - minimum < minimumDeltaT) {
         minimum = bc_max(0.0f,minimum - minimumDeltaT);
         maximum = bc_min(1.0f,maximum + minimumDeltaT);
     }
+    //rvalue should be compatible; passthrough
     return BCCubicVertexMake(cubic, vertexID, vertexesPerCubic, transform, minimum, maximum);
 }
 
@@ -40,5 +40,6 @@ bc_float4_t BCCubicVertexMakeClampedParameterization(BCCubic cubic, uint8_t vert
     
     bc_float_t minT = BCCubicArclengthParameterization(cubic, minLinearPosition,threshold);
     bc_float_t maxT = BCCubicArclengthParameterization(cubic, maxLinearPosition, threshold);
+    //rvalue is compatible here, so we should be able to passthrough
     return BCCubicVertexMakeClip(cubic, vertexID, vertexesPerCubic, transform, minT, maxT, minimumDelta);
 }
