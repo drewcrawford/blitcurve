@@ -99,6 +99,7 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
         bc_float_t angle;
         if (cDistance > 0) { //if the line is technically normalized (partially for c) then we can use the tangent angle
             angle = BCCubicInitialTangentAngle(*c);
+            __BC_PRECONDITION_CUSTOM(angle!=BC_FLOAT_LARGE, *c = BCErrorCubicMake(BCErrorArg0); return);
         }
         else { //otherwise we need to use the line angle
             const BCLine asLine = BCCubicAsLine(*c);
@@ -113,6 +114,7 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
         bc_float_t angle;
         if (dDistance > 0) { //if the line is technically normalized (partially for d) then we can use the tangent angle
             angle = BCCubicFinalTangentAngle(*c);
+            __BC_PRECONDITION_CUSTOM(angle!=BC_FLOAT_LARGE,*c = BCErrorCubicMake(BCErrorArg0); return);
         }
         else { //otherwise we need to use the line angle
             const BCLine asLine = BCCubicAsLine(*c);

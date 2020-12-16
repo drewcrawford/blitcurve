@@ -183,7 +183,11 @@ static inline char BCCubicIsNearlyLinear(BCCubic self, bc_float_t accuracy) {
     
     const bc_float_t lineTangent = BCLineTangent(BCCubicAsLine(self));
     __BC_PRECONDITION_CONVERT(lineTangent==BC_FLOAT_LARGE,(-1-BCErrorArg0));
-    return (bc_abs(lineTangent - BCCubicInitialTangentAngle(self)) < accuracy && bc_abs(lineTangent - BCCubicFinalTangentAngle(self)) < accuracy);
+    const float initialAngle = BCCubicInitialTangentAngle(self);
+    __BC_PRECONDITION_CONVERT(initialAngle==BC_FLOAT_LARGE, (-1-BCErrorArg0));
+    const float finalAngle = BCCubicFinalTangentAngle(self);
+    __BC_PRECONDITION_CONVERT(finalAngle==BC_FLOAT_LARGE, (-1-BCErrorArg0));
+    return (bc_abs(lineTangent - initialAngle) < accuracy && bc_abs(lineTangent - finalAngle) < accuracy);
 }
 
 __attribute__((const))
@@ -317,7 +321,11 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b,bc_float2
     connecting.b = b.a;
     //UB checked inside BCCubicInitialTangent / BCCubicFinalTangent, respectively
     //need to reverse b's initial tangent
-    const bc_float2_t tangents = bc_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b));
+    const bc_float_t initialAngle = BCCubicInitialTangentAngle(b);
+    __BC_PRECONDITION_CONVERT(initialAngle==BC_FLOAT_LARGE, BCErrorCubicMake(BCErrorArg1));
+    const bc_float_t finalAngle = BCCubicFinalTangentAngle(a);
+    __BC_PRECONDITION_CONVERT(finalAngle==BC_FLOAT_LARGE, BCErrorCubicMake(BCErrorArg0));
+    const bc_float2_t tangents = bc_make_float2(finalAngle, initialAngle);
     //since BCCubicMakeConnectingTangents also uses rvalue BCErrorCubic, pass it through
     return BCCubicMakeConnectingTangents(connecting, tangents, tangentMagnitudes);
 }
@@ -378,7 +386,9 @@ static inline BCCubic BCCubicMakeConnectingCubicToPoint(BCCubic a, bc_float2_t b
         break;
     }
     //since BCCubicMakeConnectingTangents also uses BCCubicError, pass it through.
-    return BCCubicMakeConnectingTangents(connecting, bc_make_float2(BCCubicFinalTangentAngle(a), finalTangentAngle), lengths);
+    const bc_float_t aAngle = BCCubicFinalTangentAngle(a);
+    __BC_PRECONDITION_CONVERT(aAngle==BC_FLOAT_LARGE, BCErrorCubicMake(BCErrorArg0));
+    return BCCubicMakeConnectingTangents(connecting, bc_make_float2(aAngle, finalTangentAngle), lengths);
 }
 
 /**Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.
