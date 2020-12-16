@@ -434,11 +434,14 @@ __attribute__((const))
 __attribute__((swift_name("Cubic.parameterization(self:arclength:lowerBound:upperBound:threshold:)")))
 bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t length, bc_float_t lowerBound, bc_float_t upperBound, bc_float_t threshold);
 
-///Performs an arclength parameterization.  This finds a bezier parameter \c t (in range 0,1) that is a length specified from \c cubic.a.
-///\performance We use an iterative approach.  Passing a higher value for \c threshold will let us stop earlier.
+/**Performs an arclength parameterization.  This finds a bezier parameter \c t (in range 0,1) that is a length specified from \c cubic.a.
+\performance We use an iterative approach.  Passing a higher value for \c threshold will let us stop earlier.
+ \throws Checks arguments, rvalue is \c (-1-BCError)
+ */
 __attribute__((const))
 __attribute__((swift_name("Cubic.parameterization(self:arclength:threshold:)")))
 static inline bc_float_t BCCubicArclengthParameterization(BCCubic cubic, bc_float_t length, bc_float_t threshold) {
+    //since we use the same rvalue scheme, we can pass through
     return BCCubicArclengthParameterizationWithBounds(cubic, length, 0, 1, threshold);
 }
 
