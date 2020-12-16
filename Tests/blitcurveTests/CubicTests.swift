@@ -168,7 +168,7 @@ final class CubicTests: XCTestCase {
         let a = SIMD2<Float>(x: 192, y: 341)
         let nearA = SIMD2<Float>(x: 193.83, y: 344.26)
         var c = Cubic(a: a, b: SIMD2<Float>(x: 375, y: 667), c:nearA , d:nearA)
-        XCTAssert(c.isNearlyLinear(accuracy: 0.01))
+        XCTAssert(c.isNearlyLinear(accuracy: 0.01) != 0)
         c.normalize(approximateDistance: 6)
         XCTAssertEqual(c.tangentAt(t: 0.5), 1.0592812)
         

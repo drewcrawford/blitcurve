@@ -6,6 +6,14 @@
 
 #include "BCCubic.h"
 
+/**Creates an "error vertex".  The first 2 components are \c BC_FLOAT_LARGE and the last is \c BCError.*/
+static inline bc_float3_t BCVertex3ErrorMake(BCError e) {
+    bc_float3_t b;
+    b.x = BC_FLOAT_LARGE;
+    b.y = BC_FLOAT_LARGE;
+    b.z = e;
+    return b;
+}
 
 
 /**
@@ -18,6 +26,7 @@
  \param minimum the minimum \c t to be generated.  In this way, vertexes can be generated for portions of a bezier curve without splitting.
  \param maximum the maximum \c t to be generated.  In this way, vertexes can be generated for portions of a bezier curve without splitting.
  \returns a 3d coordinate for the vertex
+ \throws Checks arguments with assert.  rvalue is \c BCVertex3ErrorMake
  */
 __attribute__((const))
 __attribute__((overloadable))
@@ -53,6 +62,7 @@ static inline bc_float4_t BCCubicVertexMakeClip(BCCubic cubic, uint8_t vertexID,
  \param minimum the minimum \c t to be generated.  In this way, vertexes can be generated for portions of a bezier curve without splitting.
  \param maximum the maximum \c t to be generated.  In this way, vertexes can be generated for portions of a bezier curve without splitting.
  \param minimumDeltaT the minimum range to be drawn.  If \c maximum-minimum is less than this, the range will be adjusted.
+ \throws Checks arguments with assert.  rvalue is \c BCVertex3ErrorMake
  */
 __attribute__((const))
 __attribute__((overloadable))

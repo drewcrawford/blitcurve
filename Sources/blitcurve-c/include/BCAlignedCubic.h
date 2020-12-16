@@ -48,16 +48,21 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c);
  @discussion This returns the curvature of the curve at a specific bezier parameter.  The turning radius is \c 1/abs(kappa).
  
  @warning This function is UB if the curve has 0-length or the cubic not technically normalized (see \c BCCubicIsTechnicallyNormalized)`  In addition, "good behavior" requires a higher-than-normal normalization distance, see \c BCAlignedCubicIsNormalizedForCurvature for details.
+
  @param t The bezier parameter on interval [0,1] at which to measure the curvature.
+ @throws Checks arguments, rvalue is \c BC_FLOAT_LARGE.
  */
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.kappa(self:t:)")))
-bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t)
-__attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error")));
+bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t);
 
 #ifndef NDEBUG
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.__kappaPrime(self:t:)")))
+/**
+ Private function.
+ @discussion uses \c BUGIF to check arguments, rvalue is \c BC_FLOAT_LARGE.
+ */
 bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
 #endif
 
@@ -74,15 +79,19 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c, bc_float_t accuracy
 /** This returns the curvature radius at a given bezier parameter.
  @see This is the inverse of BCAlignedCubicKappa.
  @param t The bezier parameter on interval [0,1] at which to measure the curvature.
- @warning This function is UB if the curve has 0-length or the cubic not technically normalized (see \c BCCubicIsTechnicallyNormalized)`  In addition, "good behavior" requires a higher-than-normal normalization distance, see \c BCAlignedCubicIsNormalizedForCurvature for details.
+ @warning This function is UB if the curve has 0-length or the cubic not technically normalized (see \c BCCubicIsTechnicallyNormalized)`  In addition, "good behavior" requires a higher-than-normal normalization
+distance, see \c BCAlignedCubicIsNormalizedForCurvature for details.
+ @throws Asserts to check arguments, rvalue is \c BC_FLOAT_LARGE.  Some suspicious behavior may return as this constant as well.
  */
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.curveRadius(self:t:)")))
 inline bc_float_t BCAlignedCubicCurveRadius(BCAlignedCubic c, bc_float_t t)
 __attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error")))
 {
-    __BC_ASSERT(t>=0 && t <=1);
-    return 1.0 / BCAlignedCubicKappa(c, t);
+    __BC_ASSERT2(t>=0 && t <=1,BC_FLOAT_LARGE);
+    const float kappa = BCAlignedCubicKappa(c, t);
+    __BC_BUGASSERT(kappa!=0, BC_FLOAT_LARGE);
+    return 1.0 / kappa;
 }
 
 /**Determines if the given cubic is normalized with a method appropriate for curvature calculations.

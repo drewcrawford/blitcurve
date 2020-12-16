@@ -70,10 +70,9 @@ BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
 }
 
 bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t arclength, bc_float_t lowerBound, bc_float_t upperBound, bc_float_t threshold) {
-    __BC_ASSERT(arclength >= 0);
+    __BC_ASSERT2(arclength >= 0,BCErrorArg1);
     const float cubicLength = BCCubicLength(cubic);
     if (arclength >= cubicLength) {
-        __BC_ASSERT(arclength <= cubicLength * 1.01); //asked for a suspiciously out-of-range paramterization
         return upperBound;
     }
     while (true) {
@@ -94,7 +93,7 @@ bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t 
     }
 }
 void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
-    __BC_ASSERT(approximateDistance > 0);
+    __BC_ASSERT2_CUSTOM(approximateDistance > 0, *c = BCErrorCubicMake(BCErrorArg1); return);
     const bc_float_t cDistance = bc_distance(c->c, c->a);
     if (cDistance < approximateDistance) {
         bc_float_t angle;
@@ -125,9 +124,9 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
 
 
 bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDistance, bc_float_t straightAngle, bc_float_t curvatureError) {
-    __BC_ASSERT(euclidianDistance>0);
-    __BC_ASSERT(straightAngle>0);
-    __BC_ASSERT(curvatureError>0);
+    __BC_ASSERT2(euclidianDistance>0,(-1-BCErrorArg0));
+    __BC_ASSERT2(straightAngle>0,(-1-BCErrorArg1));
+    __BC_ASSERT2(curvatureError>0,(-1-BCErrorArg2));
     const bc_float_t r = euclidianDistance;
     const bc_float_t k = curvatureError;
     const bc_float_t p1 = bc_sin(straightAngle);

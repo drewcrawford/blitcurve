@@ -31,6 +31,16 @@ typedef struct {
     bc_float2_t d;
 } BCCubic;
 
+///Creates an "error cubic" to describe a \c BCError as a \c BCCubic return value.
+static inline BCCubic BCErrorCubicMake(BCError error) {
+    BCCubic r;
+    r.a = bc_make_float2(BC_FLOAT_LARGE,BC_FLOAT_LARGE);
+    r.b = bc_make_float2(BC_FLOAT_LARGE,BC_FLOAT_LARGE);
+    r.c = bc_make_float2(BC_FLOAT_LARGE,BC_FLOAT_LARGE);
+    r.d = bc_make_float2(error,error);
+    return r;
+}
+
 ///\abstract Returns the line from a to c.
 ///\warning In the case that \code a =~= c \endcode, it may be difficult to use this sensibly
 __attribute__((const))
@@ -116,7 +126,7 @@ __attribute__((swift_name("Cubic.isTechnicallyNormalized(self:)")))
 ///
 ///\note In general, it's preferable to call an underlying function to perform a \a partial normalization check.  However, in some cases
 ///this does not make sense.
-///In that situation, you can \c __BC_ASSERT(BCCubicIsNormalized(cubic)) instead.
+///In that situation, you can \c assert_expression(BCCubicIsNormalized(cubic)) instead.
 static inline bool BCCubicIsTechnicallyNormalized(BCCubic c) {
     return bc_distance(c.c, c.a) != 0 && bc_distance(c.b, c.d)  != 0;
 }
@@ -136,11 +146,9 @@ __attribute__((swift_name("NormalizationDistanceForCubicCurvature(euclidianDista
  @param curvatureError  maximum error (difference in unsigned curvature for a "nearly straight" cubic) we want.  I think this function is not well-behaved if you pass a value below \c 1*10^-14 or so, so if you intended to do that, just use \c euclidianDistance/2 rather than calling this function.
  
  @returns a normalization distance, to find the required distance between endpoints to get "nice" curvature.
+ @throws (-1-BCError) to report errors in arguments.
  */
-bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDistance, bc_float_t straightAngle, bc_float_t curvatureError)
-__attribute__((diagnose_if(!(euclidianDistance>0), "Invalid euclidianDistance","error")))
-__attribute__((diagnose_if(!(straightAngle>0), "Invalid straightAngle","error")))
-__attribute__((diagnose_if(!(curvatureError>0), "Invalid curvatureError","error")));
+bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDistance, bc_float_t straightAngle, bc_float_t curvatureError);
 
 
 
@@ -161,52 +169,63 @@ inline BCLine BCCubicAsLine(BCCubic c) {
 
 
 /**\abstract Returns whether the cubic is nearly a line (within some accuracy).
+ \returns 0 if not a line, 1 if a line.  See also throws documentation.
+ \throws Asserts to check arguments, rvalue is \c (-1-BCError)
  */
 __attribute__((const))
 __attribute__((swift_name("Cubic.isNearlyLinear(self:accuracy:)")))
-static inline bool BCCubicIsNearlyLinear(BCCubic self, bc_float_t accuracy) {
-    __BC_ASSERT(accuracy > 0);
+static inline char BCCubicIsNearlyLinear(BCCubic self, bc_float_t accuracy) {
+    __BC_ASSERT2(accuracy > 0,(-1-BCErrorArg1));
+    
     const bc_float_t lineTangent = BCLineTangent(BCCubicAsLine(self));
+    __BC_ASSERT_CONVERT(lineTangent,BC_FLOAT_LARGE,(-1-BCErrorArg0));
     return (bc_abs(lineTangent - BCCubicInitialTangentAngle(self)) < accuracy && bc_abs(lineTangent - BCCubicFinalTangentAngle(self)) < accuracy);
 }
 
 __attribute__((const))
 __attribute__((swift_name("Cubic.tangentAt(self:t:)")))
-///\abstract Evaluates the tangent at the given point
-///\warning UB for non-normalized cubic
+/**
+ \abstract Evaluates the tangent at the given point
+\throws Asserts the cubic is normalized.  rvalue is \c BC_FLOAT_LARGE.
+ */
 static inline bc_float_t BCCubicTangent(BCCubic c, bc_float_t t) {
-    __BC_ASSERT(BCCubicIsTechnicallyNormalized(c));
+    __BC_ASSERT2(BCCubicIsTechnicallyNormalized(c), BC_FLOAT_LARGE);
     bc_float2_t prime = BCCubicEvaluatePrime(c, t);
     return bc_atan2(prime.y, prime.x);
 }
 
 __attribute__((swift_name("Cubic.normalize(self:approximateDistance:)")))
-///\abstract Normalize the cubic
-///\discussion When a control point is exactly (or in some contexts, merely 'near') an endpoint, it creates various problems.  For example, the definition of an initial tangent is the angle between \c a and \c c, but if \c a=c this angle is undefined.  We call such difficult curves  \a non-normalized.
-///
-///We say a curve is \a partially normalized to refer to normalization between some subset of endpoints and control points that are required to mathematically define a particular operation.  For example, as discussed \c intialTangent requires a \a partial \a normalization for \c a and \c c.
-///
-///We say a curve is \a technically normalized if there is some nonzero distance between all related endpoints and control points.  This generally provides a mathematical definition for operations on the curve.
-///
-///In practice, applications may want a curve to be \a generously normalized.  For example, a small distance between \c a and \c c may technically define \c initialTangent at \c t=0, but the value is not necessarily close to the tangent at \c t=0.01, so an application scanning the bezier parameters at "reasonable" intervals may see weird behavior.  For this reason an application may want to normalize more generously to provide a larger distance between endpoints and control points.
-///One particularly important case is the situation of calculating curvature.  See \c BCNormalizationDistanceForCubicCurvatureError for a function to calculate a normalization distance for this case.
-///\param c The cubic to normalize.  We will normalize it in-place.
-///\param approximateDistance the desired distance between endpoints and control points.  Pass a positive nonzero value.  Note the following cases:
-///1.  If the control/endpoints are already at least this distance, we will not alter them
-///2.  If the control/endpoints are less than this distance, we will adjust the control points to a value approximately this distance, but it will not be exact, and the value we choose may be higher or lower.  For this reason, avoid values near the working precision, such as \c FLT_MIN, and avoid treating this as a minimum distance.
-///\return A normalized curve, with at least the distance specified between related endpoints and control points.
+/**\abstract Normalize the cubic
+\discussion When a control point is exactly (or in some contexts, merely 'near') an endpoint, it creates various problems.  For example, the definition of an initial tangent is the angle between \c a and \c c, but if \c a=c this angle is undefined.  We call such difficult curves  \a non-normalized.
+
+We say a curve is \a partially normalized to refer to normalization between some subset of endpoints and control points that are required to mathematically define a particular operation.  For example, as discussed \c intialTangent requires a \a partial \a normalization for \c a and \c c.
+
+We say a curve is \a technically normalized if there is some nonzero distance between all related endpoints and control points.  This generally provides a mathematical definition for operations on the curve.
+
+In practice, applications may want a curve to be \a generously normalized.  For example, a small distance between \c a and \c c may technically define \c initialTangent at \c t=0, but the value is not necessarily close to the tangent at \c t=0.01, so an application scanning the bezier parameters at "reasonable" intervals may see weird behavior.  For this reason an application may want to normalize more generously to provide a larger distance between endpoints and control points.
+One particularly important case is the situation of calculating curvature.  See \c BCNormalizationDistanceForCubicCurvatureError for a function to calculate a normalization distance for this case.
+\param c The cubic to normalize.  We will normalize it in-place.
+\param approximateDistance the desired distance between endpoints and control points.  Pass a positive nonzero value.  Note the following cases:
+1.  If the control/endpoints are already at least this distance, we will not alter them
+2.  If the control/endpoints are less than this distance, we will adjust the control points to a value approximately this distance, but it will not be exact, and the value we choose may be higher or lower.  For this reason, avoid values near the working precision, such as \c FLT_MIN, and avoid treating this as a minimum distance.
+\return A normalized curve, with at least the distance specified between related endpoints and control points.
+ \throws Will set the cubic to \c BCCubicError.
+ */
 void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance);
 
 
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:tangents:distances:)")))
-///Create a cubic that connects a line with initial and final tangents
-///\param connecting The line to connect with
-///\param tangents in (initial,final) orientation
-///\param distances normalization distances in (initial,final) orientation.
-///\warning This may be UBi if connecting is 0-len
+/**Create a cubic that connects a line with initial and final tangents
+\param connecting The line to connect with
+\param tangents in (initial,final) orientation
+\param distances normalization distances in (initial,final) orientation.
+\throws Asserts to check arguments.  rvalue is \c BCErrorCubicMake(BCError).
+ 
+ */
 static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float2_t tangents, bc_float2_t distances) {
-    __BC_ASSERT(BCLineLength(connecting) > 0);
+    const BCCubic errorCubic = {BC_FLOAT_LARGE,BC_FLOAT_LARGE,BC_FLOAT_LARGE,BCErrorArg0};
+    __BC_ASSERT2(BCLineLength(connecting) > 0, BCErrorCubicMake(BCErrorArg0));
     BCCubic c;
     c.a = connecting.a;
     c.b = connecting.b;
@@ -385,8 +404,11 @@ __attribute__((const))
 __attribute__((swift_name("Cubic.rightSplit(self:t:)")))
 BCCubic BCCubicRightSplit(BCCubic c, bc_float_t t);
 
-///Performs an arclength parameterization.  This finds a bezier parameter \c t (in range 0,1) that is a length specified from \c cubic.a.
-///\performance We use an iterative approach.  Passing a higher value for \c threshold will let us stop earlier.
+/**
+ Performs an arclength parameterization.  This finds a bezier parameter \c t (in range 0,1) that is a length specified from \c cubic.a.
+\performance We use an iterative approach.  Passing a higher value for \c threshold will let us stop earlier.
+ \throws Checks arguments with assert.  rvalue is \c (-1-BCError).
+ */
 __attribute__((const))
 __attribute__((swift_name("Cubic.parameterization(self:arclength:lowerBound:upperBound:threshold:)")))
 bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t length, bc_float_t lowerBound, bc_float_t upperBound, bc_float_t threshold);

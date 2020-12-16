@@ -26,10 +26,10 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
 
 
 bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
-    __BC_ASSERT(t >=0 && t <= 1);
-    __BC_ASSERT(bc_abs(c.b_x)>0);
-    __BC_ASSERT(bc_abs(c.c.x) > 0 || bc_abs(c.c.y) > 0);
-    __BC_ASSERT(bc_abs(c.d.x - c.b_x) > 0 || bc_abs(c.d.y) > 0);
+    __BC_ASSERT2(t >= 0 && t <= 1, BC_FLOAT_LARGE);
+    __BC_ASSERT2(bc_abs(c.b_x)>0,BC_FLOAT_LARGE);
+    __BC_ASSERT2(bc_abs(c.c.x) > 0 || bc_abs(c.c.y) > 0, BC_FLOAT_LARGE);
+    __BC_ASSERT2(bc_abs(c.d.x - c.b_x) > 0 || bc_abs(c.d.y) > 0,BC_FLOAT_LARGE);
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
     const bc_float_t p2_t = p2 * t;
@@ -60,7 +60,7 @@ bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
 }
 
 __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t) {
-    __BC_ASSERT(t >= 0 && t <= 1);
+    __BC_BUGASSERT(t >= 0 && t <= 1,BC_FLOAT_LARGE);
     const bc_float2_t c3 = c.c * 3;
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
@@ -100,16 +100,17 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
     bc_float2_t d = bc_pow(bc_make_float2(p29,p29), bc_make_float2(5.0/2.0,3.0/2.0));
     d.x *= 2;
     const bc_float2_t n = bc_make_float2(n1_1 * n1_2,n2_1-n2_2);
+    __BC_BUGASSERT(d.x!=0&&d.y!=0,BC_FLOAT_LARGE);
     return bc_reduce_add(n/d);
 }
 
 static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upper, bc_float_t accuracy) {
-    __BC_ASSERT(upper >= lower);
+    __BC_ASSERT2(upper >= lower,BC_FLOAT_LARGE_NEGATIVE);
     while (upper - lower > accuracy) {
         bc_float_t lowerPrime = __BCAlignedCubicKappaPrime(c, lower);
         bc_float_t upperPrime = __BCAlignedCubicKappaPrime(c, upper);
         if (bc_signbit(lowerPrime) == bc_signbit(upperPrime)) {
-            return MAXFLOAT;
+            return BC_FLOAT_LARGE;
         }
         const bc_float_t midpoint = (upper - lower) / 2 + lower;
         const bc_float_t midPrime = __BCAlignedCubicKappaPrime(c, midpoint);
@@ -125,12 +126,12 @@ static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upp
 
 bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy) {
     float maxKappa = 0;
-    float param = MAXFLOAT;
+    float param = BC_FLOAT_LARGE;
     for(unsigned char i_t = 0; i_t < 5; i_t++) {
         bc_float_t l = i_t * 0.2;
         bc_float_t r = (i_t + 1) * 0.2;
         const bc_float_t itry = KappaSearch(c, l, r, accuracy);
-        if (itry != MAXFLOAT) {
+        if (itry != BC_FLOAT_LARGE) {
             const bc_float_t proposedKappa = bc_abs(BCAlignedCubicKappa(c, itry));
             if (proposedKappa > maxKappa) {
                 maxKappa = proposedKappa;
@@ -138,7 +139,7 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy)
             }
         }
     }
-    if (param == MAXFLOAT) {
+    if (param == BC_FLOAT_LARGE) {
         return 0;
     }
     return param;
