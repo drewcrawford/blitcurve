@@ -34,12 +34,14 @@ bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesP
     return BCCubicVertexMake(cubic, vertexID, vertexesPerCubic, transform, minimum, maximum);
 }
 
-bc_float4_t BCCubicVertexMakeClampedParameterization(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform, bc_float_t startPosition, bc_float_t endPosition, bc_float_t threshold,bc_float_t minimumDelta) {
-    bc_float_t minLinearPosition = bc_max(0.0,startPosition);
-    bc_float_t maxLinearPosition = bc_min(BCCubicLength(cubic),endPosition);
+bc_float4_t BCCubicVertexMakeClampedParameterization(BCCubic cubic, uint8_t vertexID, uint8_t vertexesPerCubic, bc_float3x3_t transform, bc_float_t startPosition, const bc_float_t endPosition, bc_float_t threshold,bc_float_t minimumDelta) {
+    const bc_float_t minLinearPosition = bc_max(0.0,startPosition);
+    const bc_float_t maxLinearPosition = bc_min(BCCubicLength(cubic),endPosition);
     
-    bc_float_t minT = BCCubicArclengthParameterization(cubic, minLinearPosition,threshold);
-    bc_float_t maxT = BCCubicArclengthParameterization(cubic, maxLinearPosition, threshold);
+    const bc_float_t minT = BCCubicArclengthParameterization(cubic, minLinearPosition,threshold);
+    __BC_BUGASSERT_CONVERT(minT>=0,BCVertex4ErrorMake(BCErrorLogic));
+    const bc_float_t maxT = BCCubicArclengthParameterization(cubic, maxLinearPosition, threshold);
+    __BC_BUGASSERT_CONVERT(maxT>=0,BCVertex4ErrorMake(BCErrorLogic));
     //rvalue is compatible here, so we should be able to passthrough
     return BCCubicVertexMakeClip(cubic, vertexID, vertexesPerCubic, transform, minT, maxT, minimumDelta);
 }

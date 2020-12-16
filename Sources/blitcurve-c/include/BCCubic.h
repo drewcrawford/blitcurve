@@ -338,9 +338,10 @@ typedef enum {
     BCTangentMagnitudeRuleHalfEuclidianDistance __attribute__((swift_name("halfEuclidianDistance"))),
 } __attribute__((enum_extensibility(closed))) BCTangentMagnitudeRule;
 
-///Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
-///\seealso BCCubicMakeconnectingCubics for a version with explicit tangent magnitudes
-///\warning This operation requires the curve to be technically normalized, see \c BCCubicNormalize
+/**Creates a cubic connecting two cubics, with an initialTangent [finalTangent of the a] and finalTangent [reversed initialTangent of B]
+\seealso BCCubicMakeconnectingCubics for a version with explicit tangent magnitudes
+\throws if not normalized, rvalue is \c BCErrorCubic
+ */
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:to:tangentRule:)")))
 static inline BCCubic BCCubicMakeConnectingCubicsWithTangentRule(BCCubic a, BCCubic b,BCTangentMagnitudeRule tangentRule) {
@@ -355,6 +356,7 @@ static inline BCCubic BCCubicMakeConnectingCubicsWithTangentRule(BCCubic a, BCCu
                 break;
         }
     }
+    //rvalue is compatible here
     return BCCubicMakeConnectingCubics(a, b, lengths);
 }
 

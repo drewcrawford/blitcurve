@@ -15,6 +15,16 @@ static inline bc_float3_t BCVertex3ErrorMake(BCError e) {
     return b;
 }
 
+/**Creatse a "compatible" vertex with \c BCVertex3ErrorMake. */
+static inline bc_float4_t BCVertex4ErrorMake(BCError e) {
+    bc_float4_t b;
+    b.x = BC_FLOAT_LARGE;
+    b.y = BC_FLOAT_LARGE;
+    b.z = e;
+    b.w = 1;
+    return b;
+}
+
 
 /**
 \abstract Creates a 3D vertex suitable for drawing a portion of a cubic.
