@@ -232,7 +232,6 @@ __attribute__((swift_name("Cubic.init(connecting:tangents:distances:)")))
  
  */
 static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float2_t tangents, bc_float2_t distances) {
-    const BCCubic errorCubic = {BC_FLOAT_LARGE,BC_FLOAT_LARGE,BC_FLOAT_LARGE,BCErrorArg0};
     __BC_PRECONDITION(BCLineLength(connecting) > 0, BCErrorCubicMake(BCErrorArg0));
     BCCubic c;
     c.a = connecting.a;

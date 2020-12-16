@@ -15,7 +15,7 @@ bc_float3_t BCCubicVertexMake(BCCubic cubic, uint8_t vertexID, uint8_t vertexesP
     __BC_PRECONDITION(minimum < maximum,BCVertex3ErrorMake(BCErrorArgRelationship));
     __BC_RANGEASSERT(vertexID < vertexesPerCubic, BCVertex3ErrorMake(BCErrorArgRelationship));
     const bc_float_t parameter = BCVertexToBezierParameter(vertexID, vertexesPerCubic, minimum, maximum);
-    __BC_PRECONDITION_CONVERT(parameter < 0, BCVertex3ErrorMake(-1 * ((int)parameter + 1)));
+    __BC_PRECONDITION_CONVERT(parameter < 0, BCVertex3ErrorMake((BCError)(-1 * ((int)parameter + 1))));
     bc_float3_t output = bc_make_float3(0,0,1);
     output.xy = BCCubicEvaluate(cubic, parameter);
     output.xyz = bc_mul(output.xyz, transform);

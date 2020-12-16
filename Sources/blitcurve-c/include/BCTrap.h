@@ -32,6 +32,7 @@
 
 #ifndef __METAL_VERSION__
 #include <stdio.h>
+#include <stdlib.h> //gets exit
 #endif
 
 //__BC_CPU_TRAP will unconditionally trap on CPU.  No-op on GPU.
