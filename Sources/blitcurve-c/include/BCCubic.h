@@ -302,11 +302,15 @@ static inline BCCubic BCCubicMakeConnectingLines(BCLine a, BCLine b) {
     __BC_PRECONDITION_CONVERT(tangentA==BC_FLOAT_LARGE,BCErrorCubicMake(BCErrorArg0));
     const bc_float_t tangentB = BCLineTangent(b);
     __BC_PRECONDITION_CONVERT(tangentB==BC_FLOAT_LARGE,BCErrorCubicMake(BCErrorArg1));
+    //since BCCubicMakeConnectingTangents also uses rvalue BCErrorCubic, pass it through
     return BCCubicMakeConnectingTangents(connecting, bc_make_float2(tangentA, tangentB),bc_make_float2(distance,distance));
 }
 
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:to:tangentMagnitudes:)")))
+/**
+ \throws rvalue is \c BCErrorCubic.
+ */
 static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b,bc_float2_t tangentMagnitudes) {
     BCLine connecting;
     connecting.a = a.b;
@@ -314,6 +318,7 @@ static inline BCCubic BCCubicMakeConnectingCubics(BCCubic a, BCCubic b,bc_float2
     //UB checked inside BCCubicInitialTangent / BCCubicFinalTangent, respectively
     //need to reverse b's initial tangent
     const bc_float2_t tangents = bc_make_float2(BCCubicFinalTangentAngle(a), BCCubicInitialTangentAngle(b));
+    //since BCCubicMakeConnectingTangents also uses rvalue BCErrorCubic, pass it through
     return BCCubicMakeConnectingTangents(connecting, tangents, tangentMagnitudes);
 }
 
@@ -348,13 +353,14 @@ static inline BCCubic BCCubicMakeConnectingCubicsWithTangentRule(BCCubic a, BCCu
 
 
 
-///Creates a cubic connecting a cubic to a point, with an initialTangent [finalTangent of the a] and the finalTangent provided.
-///\discussion This will copy the tangent magnitudes of the initial cubic into the resulting cubic.  The magnitude of the cubic's \c finalTangent is determined by the \c r/2 rule.
-///\param a Initial cubic
-///\param b point to connect to
-///\param finalTangentAngle angle of the final tangent
-///\param initialTangentRule Rule to generate the initialTangent magnitude.  The \c finalTangentMagnitude will be \c BCTangentMagnitudeRuleHalfEuclidianDistance.
-///\warning This operation requires the curve to be partially normalized, see \c BCCubicNormalize.
+/**Creates a cubic connecting a cubic to a point, with an initialTangent [finalTangent of the a] and the finalTangent provided.
+\discussion This will copy the tangent magnitudes of the initial cubic into the resulting cubic.  The magnitude of the cubic's \c finalTangent is determined by the \c r/2 rule.
+\param a Initial cubic
+\param b point to connect to
+\param finalTangentAngle angle of the final tangent
+\param initialTangentRule Rule to generate the initialTangent magnitude.  The \c finalTangentMagnitude will be \c BCTangentMagnitudeRuleHalfEuclidianDistance.
+\throws rvalue is \c BCCubicError
+ */
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:to:finalTangent:initialTangentRule:)")))
 static inline BCCubic BCCubicMakeConnectingCubicToPoint(BCCubic a, bc_float2_t b, bc_float_t finalTangentAngle, BCTangentMagnitudeRule initialTangentRule) {
@@ -371,11 +377,14 @@ static inline BCCubic BCCubicMakeConnectingCubicToPoint(BCCubic a, bc_float2_t b
         lengths.x = lengths.y;
         break;
     }
+    //since BCCubicMakeConnectingTangents also uses BCCubicError, pass it through.
     return BCCubicMakeConnectingTangents(connecting, bc_make_float2(BCCubicFinalTangentAngle(a), finalTangentAngle), lengths);
 }
 
-///Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.
-///\seealso \c BCCubicMakeConnectingTangents
+/**Creates a cubic by connecting a given line.  The points on the cubic should be the same as the points on the line.
+\seealso \c BCCubicMakeConnectingTangents
+ \throws BCCubicError if needed
+ */
 __attribute__((const))
 __attribute__((swift_name("Cubic.init(connecting:)")))
 static inline BCCubic BCCubicMakeWithLine(BCLine a) {
@@ -384,6 +393,8 @@ static inline BCCubic BCCubicMakeWithLine(BCLine a) {
     out.b = a.b;
     out.c = BCLineEvaluate(a, 0.49);
     out.d = BCLineEvaluate(a, 0.51);
+    __BC_BUGASSERT(!(out.c.x == BC_FLOAT_LARGE && out.c.y == BC_FLOAT_LARGE), BCErrorCubicMake(BCErrorLogic));
+    __BC_BUGASSERT(!(out.d.x == BC_FLOAT_LARGE && out.d.y == BC_FLOAT_LARGE), BCErrorCubicMake(BCErrorLogic));
     return out;
 }
 
