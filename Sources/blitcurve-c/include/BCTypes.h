@@ -6,12 +6,22 @@
 
 #ifndef __METAL_VERSION__
 #include <simd/simd.h>
+#include <float.h> //needed for FLT_MAX
 #else
 #include <metal_stdlib>
 #endif
 __attribute__((swift_name("BCFloat")))
 ///@typedef BlitCurve's internal float type.
 typedef float bc_float_t;
+
+
+//A large floating-point value that is is defined.
+//note: infinity is not defined for metal -ffast-math
+#define BC_FLOAT_LARGE FLT_MAX
+
+//A large floating-point negative value that is defined.
+//note: -infinity is not defined for metal -ffast-math
+#define BC_FLOAT_LARGE_NEGATIVE -BC_FLOAT_LARGE
 
 __attribute__((swift_name("BCFloat2")))
 ///@typedef BlitCurve's internal float2 type.

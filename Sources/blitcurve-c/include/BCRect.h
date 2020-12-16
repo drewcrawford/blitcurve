@@ -89,6 +89,21 @@ __attribute__((swift_name("BCRect.intersects(self:_:)")))
 bool BCRectIntersects(BCRect e, BCRect f);
 
 __attribute__((const))
-__attribute__((swift_name("BCRect.contains(self:_:)")))
-bool BCRectContainsPoint(BCRect a, bc_float2_t point);
+__attribute__((swift_private)) //use overlay instead
+/**
+ \abstract Determines whether the rect contains the point.
+ \returns \c 0 if not contained, \c 1 if contained
+ \throws Internal errors may produce an rvalue of \c -1-BCError
+ */
+char BCRectContainsPoint(BCRect a, bc_float2_t point);
+
+__attribute__((swift_name("Rect.contains(self:_:)")))
+static inline bool __BCRectContainsPointForSwift(BCRect a, bc_float2_t point) {
+    const char result = BCRectContainsPoint(a, point);
+    if (result<0) {
+        __BC_CPU_TRAP;
+    }
+    return result;
+}
+
 #endif

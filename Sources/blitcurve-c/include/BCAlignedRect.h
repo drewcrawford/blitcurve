@@ -3,6 +3,7 @@
 
 #ifndef BCAlignedBox_h
 #define BCAlignedBox_h
+#include "BCTrap.h"
 #include "BCTypes.h"
 #include "BCCubic.h"
 #include "BCStrategy.h"
@@ -26,8 +27,11 @@ typedef struct {
     
 } BCAlignedRect;
 
-///\abstract Calculates a bounding box for a cubic.
-///\param strategy The only value supported currently is \c fastest, which is O(1) and ~4 SIMD instructions
+/**
+ \abstract Calculates a bounding box for a cubic.
+\param strategy The only value supported currently is \c fastest, which is O(1) and ~4 SIMD instructions
+ \throws Checks the arguments with assert.  \c rvalue for the error case is a 0-sized rect.
+ */
 __attribute__((swift_name("AlignedRect.init(cubic:strategy:)")))
 static inline BCAlignedRect BCAlignedRectCreateFromCubic(BCCubic c, BCStrategy strategy) {
     BCAlignedRect b;
@@ -41,8 +45,11 @@ static inline BCAlignedRect BCAlignedRectCreateFromCubic(BCCubic c, BCStrategy s
             return b;
         }
             
-        default:
-        __BC_ASSERT(false);
+        default: {
+            b.min = 0;
+            b.max = 0;
+            __BC_ASSERT(false,b);
+        }
     }
 }
 

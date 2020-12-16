@@ -171,7 +171,7 @@ bool BCRectIntersects(BCRect e, BCRect f) {
     return BCRectHalfIntersects(e, f) && BCRectHalfIntersects(f, e);
 }
 
-bool BCRectContainsPoint(BCRect a, bc_float2_t point) {
+char BCRectContainsPoint(BCRect a, bc_float2_t point) {
     //similar to implementation of BCRectHalfIntersects, we assume a is located at .zero and we project point
     //into a space that agrees with this assumption
     BCLine toPoint;
@@ -179,7 +179,7 @@ bool BCRectContainsPoint(BCRect a, bc_float2_t point) {
     toPoint.b = point;
     if (a.center.x == point.x && a.center.y == point.y) { return true; } //can't calculate tangent in this situation.
     const float newAngle = BCLineTangent(toPoint) - a.angle;
-    
+    __BC_BUGASSERT_CONVERT(newAngle==BC_FLOAT_LARGE,-1-BCErrorLogic);
     const BCLine newPointLine = BCLineMakeWithPointAndAngle(bc_make_float2(0,0), newAngle, BCLineLength(toPoint));
     const bc_float2_t newPoint = newPointLine.b;
     const bc_float2_t halflengths = a.lengths / 2;

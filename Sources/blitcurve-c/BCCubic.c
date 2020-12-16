@@ -70,10 +70,9 @@ BCCubic2 BCCubicSplit(BCCubic c, bc_float_t t) {
 }
 
 bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t arclength, bc_float_t lowerBound, bc_float_t upperBound, bc_float_t threshold) {
-    __BC_ASSERT(arclength >= 0);
+    __BC_RANGEASSERT(arclength >= 0,BCErrorArg1);
     const float cubicLength = BCCubicLength(cubic);
     if (arclength >= cubicLength) {
-        __BC_ASSERT(arclength <= cubicLength * 1.01); //asked for a suspiciously out-of-range paramterization
         return upperBound;
     }
     while (true) {
@@ -94,16 +93,18 @@ bc_float_t BCCubicArclengthParameterizationWithBounds(BCCubic cubic, bc_float_t 
     }
 }
 void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
-    __BC_ASSERT(approximateDistance > 0);
+    __BC_ASSERT_CUSTOM(approximateDistance > 0, *c = BCErrorCubicMake(BCErrorArg1); return);
     const bc_float_t cDistance = bc_distance(c->c, c->a);
     if (cDistance < approximateDistance) {
         bc_float_t angle;
         if (cDistance > 0) { //if the line is technically normalized (partially for c) then we can use the tangent angle
             angle = BCCubicInitialTangentAngle(*c);
+            __BC_PRECONDITION_CUSTOM(angle!=BC_FLOAT_LARGE, *c = BCErrorCubicMake(BCErrorArg0); return);
         }
         else { //otherwise we need to use the line angle
             const BCLine asLine = BCCubicAsLine(*c);
             angle = BCLineTangent(asLine);
+            __BC_PRECONDITION_CUSTOM(angle!=BC_FLOAT_LARGE,*c = BCErrorCubicMake(BCErrorArg0); return);
         }
         const BCLine tangent = BCLineMakeWithPointAndAngle(c->a, angle, approximateDistance);
         c->c = tangent.b;
@@ -113,10 +114,13 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
         bc_float_t angle;
         if (dDistance > 0) { //if the line is technically normalized (partially for d) then we can use the tangent angle
             angle = BCCubicFinalTangentAngle(*c);
+            __BC_PRECONDITION_CUSTOM(angle!=BC_FLOAT_LARGE,*c = BCErrorCubicMake(BCErrorArg0); return);
         }
         else { //otherwise we need to use the line angle
             const BCLine asLine = BCCubicAsLine(*c);
             angle = BCLineTangent(asLine);
+            __BC_PRECONDITION_CUSTOM(angle!=BC_FLOAT_LARGE,*c = BCErrorCubicMake(BCErrorArg0); return);
+
         }
         const BCLine tangent = BCLineMakeWithPointAndAngle(c->b,angle - BC_M_PI_F, approximateDistance);
         c->d = tangent.b;
@@ -125,9 +129,9 @@ void BCCubicNormalize(BCCubic __BC_DEVICE *c, bc_float_t approximateDistance) {
 
 
 bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDistance, bc_float_t straightAngle, bc_float_t curvatureError) {
-    __BC_ASSERT(euclidianDistance>0);
-    __BC_ASSERT(straightAngle>0);
-    __BC_ASSERT(curvatureError>0);
+    __BC_RANGEASSERT(euclidianDistance>0,(-1-BCErrorArg0));
+    __BC_ASSERT(straightAngle>0,(-1-BCErrorArg1));
+    __BC_ASSERT(curvatureError>0,(-1-BCErrorArg2));
     const bc_float_t r = euclidianDistance;
     const bc_float_t k = curvatureError;
     const bc_float_t p1 = bc_sin(straightAngle);
@@ -141,9 +145,11 @@ bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDis
     return t1 + t2;
 }
 
-bool BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
+char BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
     const float distance = BCLineLength(BCCubicAsLine(cubic));
     const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(distance, straightAngle, curvatureError);
+    //BCNormalizationDistanceForCubicCurvatureError uses same rvalue scheme
+    __BC_PRECONDITION_CONVERT(expectedDistance<0, expectedDistance);
     if (bc_distance(cubic.a, cubic.c) < expectedDistance) { return false; }
     if (bc_distance(cubic.b, cubic.d) < expectedDistance) { return false; }
     return true;

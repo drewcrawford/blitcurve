@@ -26,10 +26,10 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
 
 
 bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
-    __BC_ASSERT(t >=0 && t <= 1);
-    __BC_ASSERT(bc_abs(c.b_x)>0);
-    __BC_ASSERT(bc_abs(c.c.x) > 0 || bc_abs(c.c.y) > 0);
-    __BC_ASSERT(bc_abs(c.d.x - c.b_x) > 0 || bc_abs(c.d.y) > 0);
+    __BC_RANGEASSERT(t >= 0 && t <= 1, BC_FLOAT_LARGE);
+    __BC_PRECONDITION(bc_abs(c.b_x)>0,BC_FLOAT_LARGE);
+    __BC_PRECONDITION(bc_abs(c.c.x) > 0 || bc_abs(c.c.y) > 0, BC_FLOAT_LARGE);
+    __BC_PRECONDITION(bc_abs(c.d.x - c.b_x) > 0 || bc_abs(c.d.y) > 0,BC_FLOAT_LARGE);
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
     const bc_float_t p2_t = p2 * t;
@@ -59,8 +59,11 @@ bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
     return (n2_n1.y - n2_n1.x) / d2;
 }
 
+/**
+ @throws Private function uses bug type, checks \c t for \c 0<=t<=1, and a complicated divide-by-zero expression.  rvalue is \c BC_FLOAT_LARGE
+ */
 __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t) {
-    __BC_ASSERT(t >= 0 && t <= 1);
+    __BC_BUGASSERT(t >= 0 && t <= 1,BC_FLOAT_LARGE);
     const bc_float2_t c3 = c.c * 3;
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
@@ -100,19 +103,29 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
     bc_float2_t d = bc_pow(bc_make_float2(p29,p29), bc_make_float2(5.0/2.0,3.0/2.0));
     d.x *= 2;
     const bc_float2_t n = bc_make_float2(n1_1 * n1_2,n2_1-n2_2);
+    __BC_BUGASSERT(d.x!=0&&d.y!=0,BC_FLOAT_LARGE);
     return bc_reduce_add(n/d);
 }
 
+/**
+ @throws Internal func uses \c bugassert, rvalue is \c BC_FLOAT_LARGE_NEGATIVE.  Note that \c BC_FLOAT_LARGE is a sentinel return value for \em valid input.
+    Generally, the problem here is to do with upper/lower, or in some cases a bug in another function.
+ */
 static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upper, bc_float_t accuracy) {
-    __BC_ASSERT(upper >= lower);
+    __BC_BUGASSERT(upper >= lower,BC_FLOAT_LARGE_NEGATIVE);
     while (upper - lower > accuracy) {
-        bc_float_t lowerPrime = __BCAlignedCubicKappaPrime(c, lower);
-        bc_float_t upperPrime = __BCAlignedCubicKappaPrime(c, upper);
+        const bc_float_t lowerPrime = __BCAlignedCubicKappaPrime(c, lower);
+        __BC_BUGASSERT_CONVERT(lowerPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
+        const bc_float_t upperPrime = __BCAlignedCubicKappaPrime(c, upper);
+        __BC_BUGASSERT_CONVERT(upperPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
+
         if (bc_signbit(lowerPrime) == bc_signbit(upperPrime)) {
-            return MAXFLOAT;
+            return BC_FLOAT_LARGE;
         }
         const bc_float_t midpoint = (upper - lower) / 2 + lower;
         const bc_float_t midPrime = __BCAlignedCubicKappaPrime(c, midpoint);
+        __BC_BUGASSERT_CONVERT(midPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
+        
         if (bc_signbit(midPrime) == bc_signbit(upperPrime)) {
             upper = midpoint;
         }
@@ -125,27 +138,35 @@ static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upp
 
 bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy) {
     float maxKappa = 0;
-    float param = MAXFLOAT;
+    float param = BC_FLOAT_LARGE;
     for(unsigned char i_t = 0; i_t < 5; i_t++) {
         bc_float_t l = i_t * 0.2;
         bc_float_t r = (i_t + 1) * 0.2;
         const bc_float_t itry = KappaSearch(c, l, r, accuracy);
-        if (itry != MAXFLOAT) {
-            const bc_float_t proposedKappa = bc_abs(BCAlignedCubicKappa(c, itry));
+        __BC_BUGASSERT_CONVERT(itry==BC_FLOAT_LARGE_NEGATIVE, (-1-BCErrorLogic));
+        
+        if (itry != BC_FLOAT_LARGE) {
+            const bc_float_t proposedKappaPreabs = BCAlignedCubicKappa(c, itry);
+            __BC_PRECONDITION_CONVERT(proposedKappaPreabs==BC_FLOAT_LARGE, (-1-BCErrorUnknown));
+            
+            const bc_float_t proposedKappa = bc_abs(proposedKappaPreabs);
             if (proposedKappa > maxKappa) {
                 maxKappa = proposedKappa;
                 param = itry;
             }
         }
     }
-    if (param == MAXFLOAT) {
+    if (param == BC_FLOAT_LARGE) {
         return 0;
     }
     return param;
 }
 
-bool BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
+char BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
     const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(bc_abs(cubic.b_x), straightAngle, curvatureError);
+    //somewhat conveniently, expectedDistance uses the same rvalue scheme as we do
+    __BC_PRECONDITION_CONVERT(expectedDistance < 0, expectedDistance);
+    
     if (bc_length(cubic.c) < expectedDistance) { return false; }
     bc_float2_t d = cubic.d;
     d.x -= cubic.b_x;
