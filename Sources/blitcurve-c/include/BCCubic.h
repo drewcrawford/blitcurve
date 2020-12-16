@@ -189,7 +189,7 @@ __attribute__((swift_name("Cubic.tangentAt(self:t:)")))
 \throws Asserts the cubic is normalized.  rvalue is \c BC_FLOAT_LARGE.
  */
 static inline bc_float_t BCCubicTangent(BCCubic c, bc_float_t t) {
-    __BC_ASSERT(BCCubicIsTechnicallyNormalized(c), BC_FLOAT_LARGE);
+    __BC_PRECONDITION(BCCubicIsTechnicallyNormalized(c), BC_FLOAT_LARGE);
     bc_float2_t prime = BCCubicEvaluatePrime(c, t);
     return bc_atan2(prime.y, prime.x);
 }
@@ -225,7 +225,7 @@ __attribute__((swift_name("Cubic.init(connecting:tangents:distances:)")))
  */
 static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float2_t tangents, bc_float2_t distances) {
     const BCCubic errorCubic = {BC_FLOAT_LARGE,BC_FLOAT_LARGE,BC_FLOAT_LARGE,BCErrorArg0};
-    __BC_ASSERT(BCLineLength(connecting) > 0, BCErrorCubicMake(BCErrorArg0));
+    __BC_PRECONDITION(BCLineLength(connecting) > 0, BCErrorCubicMake(BCErrorArg0));
     BCCubic c;
     c.a = connecting.a;
     c.b = connecting.b;

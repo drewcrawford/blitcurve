@@ -18,6 +18,13 @@
  * The platform might trap, if supported / convenient.  On Metal we have tried a variety of trap systems, not all of which work well.  At the time of this writing, we trap on CPU platforms, but this may change.
  * If not trapping, the rvalue may be returned.
  * We may in the future allow a mode for UB for errors, to allow faster performance.  Unclear to me if this will be in the form of calling special UB functions, or through a preprocessor define.
+ 
+ Assertion types.  These generally draw a distinction between "variant" and "constant" values.  Constant values are parameters that the developer probably used a compile-time constant for (e.g. a strategy, max size, accuracy, etc.)  Variant values are those that really reflect the runtime situation (geometry, etc.)  In this way we can check assertions for the former case during development and then disable them, knowing that the same constants are in use in production and they were fine.
+ 
+ 0.  BUGASSERT.  Checking blitcurve behavior itself.
+ 1.  ASSERT.  Common errors developers make when calling blitcurve functions, such as unsupported strategies.  Generally this ought to be used for cases that are invariant (e.g., developer is probably passing a constant argument).
+ 2.  RANGEASSERT.  Errors when variant data are outside a (probably) constant range.  e.g., bezier parameters outside of range 0<=t<=1, or a paramater out of range of another parameter which is likely known at compile time.
+ 2.  PRECONDITION.  Less common errors.  Most often, involving the relationship between two non-constant variables
  */
 
 #ifndef BCTrap_h
@@ -34,6 +41,7 @@
 #define __BC_CPU_TRAP {printf("BC_CPU_TRAP %s:%d\n",__FILE__,__LINE__); exit(137);}
 #endif
 
+//ASSERT priority
 
 //Like __BC_ASSERT, but allows custom code to run after the trap rather than using an rvalue.
 #define __BC_ASSERT_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
@@ -44,14 +52,22 @@
  */
 #define __BC_ASSERT(CONDITION,RVALUE) __BC_ASSERT_CUSTOM(CONDITION,return RVALUE)
 
-//The BUGIF priority deals with conditions that we think are blitcurve bugs if they occur
-#define __BC_BUGASSERT_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
-#define __BC_BUGASSERT(CONDITION,RVALUE) __BC_BUGASSERT_CUSTOM(CONDITION,return RVALUE)
-
 /*
  Converts some rvalue to another rvalue, for assertion-type.
  */
 #define __BC_ASSERT_CONVERT(LHS,RVALUE,NEWRVALUE) if (__builtin_expect(LHS==RVALUE,0)) { __BC_CPU_TRAP return NEWRVALUE; }
+
+//The BUG priority deals with conditions that we think are blitcurve bugs if they occur
+#define __BC_BUGASSERT_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
+#define __BC_BUGASSERT(CONDITION,RVALUE) __BC_BUGASSERT_CUSTOM(CONDITION,return RVALUE)
+
+//The RANGEASSSERT priority deals with values outside a constant range
+#define __BC_RANGEASSERT_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
+#define __BC_RANGEASSERT(CONDITION,RVALUE) __BC_RANGEASSERT_CUSTOM(CONDITION,return RVALUE)
+
+//The PRECONDITION priority deals with variant errors
+#define __BC_PRECONDITION_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
+#define __BC_PRECONDITION(CONDITION,RVALUE) __BC_PRECONDITION_CUSTOM(CONDITION,return RVALUE)
 
 /**
  This defines various error situations that might occur.  Note that in practice, functions often transform these errors in some way to fit them into values outside the function domain.
