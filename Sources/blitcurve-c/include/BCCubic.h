@@ -175,7 +175,7 @@ inline BCLine BCCubicAsLine(BCCubic c) {
 __attribute__((const))
 __attribute__((swift_name("Cubic.isNearlyLinear(self:accuracy:)")))
 static inline char BCCubicIsNearlyLinear(BCCubic self, bc_float_t accuracy) {
-    __BC_ASSERT2(accuracy > 0,(-1-BCErrorArg1));
+    __BC_ASSERT(accuracy > 0,(-1-BCErrorArg1));
     
     const bc_float_t lineTangent = BCLineTangent(BCCubicAsLine(self));
     __BC_ASSERT_CONVERT(lineTangent,BC_FLOAT_LARGE,(-1-BCErrorArg0));
@@ -189,7 +189,7 @@ __attribute__((swift_name("Cubic.tangentAt(self:t:)")))
 \throws Asserts the cubic is normalized.  rvalue is \c BC_FLOAT_LARGE.
  */
 static inline bc_float_t BCCubicTangent(BCCubic c, bc_float_t t) {
-    __BC_ASSERT2(BCCubicIsTechnicallyNormalized(c), BC_FLOAT_LARGE);
+    __BC_ASSERT(BCCubicIsTechnicallyNormalized(c), BC_FLOAT_LARGE);
     bc_float2_t prime = BCCubicEvaluatePrime(c, t);
     return bc_atan2(prime.y, prime.x);
 }
@@ -225,7 +225,7 @@ __attribute__((swift_name("Cubic.init(connecting:tangents:distances:)")))
  */
 static inline BCCubic BCCubicMakeConnectingTangents(BCLine connecting, bc_float2_t tangents, bc_float2_t distances) {
     const BCCubic errorCubic = {BC_FLOAT_LARGE,BC_FLOAT_LARGE,BC_FLOAT_LARGE,BCErrorArg0};
-    __BC_ASSERT2(BCLineLength(connecting) > 0, BCErrorCubicMake(BCErrorArg0));
+    __BC_ASSERT(BCLineLength(connecting) > 0, BCErrorCubicMake(BCErrorArg0));
     BCCubic c;
     c.a = connecting.a;
     c.b = connecting.b;

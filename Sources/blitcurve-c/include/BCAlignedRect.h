@@ -48,7 +48,7 @@ static inline BCAlignedRect BCAlignedRectCreateFromCubic(BCCubic c, BCStrategy s
         default: {
             b.min = 0;
             b.max = 0;
-            __BC_ASSERT2(false,b);
+            __BC_ASSERT(false,b);
         }
     }
 }

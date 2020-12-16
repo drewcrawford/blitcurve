@@ -47,7 +47,7 @@ __attribute__((swift_name("getter:Line.slope(self:)")))
  */
 inline bc_float_t BCLineSlope(BCLine l) {
     bc_float2_t diff = l.a - l.b;
-    __BC_ASSERT2(bc_abs(diff.x) > 0, BC_FLOAT_LARGE);
+    __BC_ASSERT(bc_abs(diff.x) > 0, BC_FLOAT_LARGE);
     return diff.y / diff.x;
 }
 
@@ -57,7 +57,7 @@ inline bc_float_t BCLineSlope(BCLine l) {
 __attribute__((const))
 __attribute__((swift_name("getter:Line.yIntercept(self:)")))
 inline bc_float_t BCLineYIntercept(BCLine l) {
-    __BC_ASSERT2(bc_abs(l.a.x-l.b.x) > 0, BC_FLOAT_LARGE);
+    __BC_ASSERT(bc_abs(l.a.x-l.b.x) > 0, BC_FLOAT_LARGE);
     return l.a.y - BCLineSlope(l) * l.a.x;
 }
 
@@ -85,7 +85,7 @@ inline BCLine BCLineReversed(BCLine l) {
 __attribute__((const))
 __attribute__((swift_name("getter:Line.tangent(self:)")))
 static inline bc_float_t BCLineTangent(BCLine l) {
-    __BC_ASSERT2(BCLineLength(l) > 0,BC_FLOAT_LARGE);
+    __BC_ASSERT(BCLineLength(l) > 0,BC_FLOAT_LARGE);
     const bc_float2_t diff = l.b - l.a;
     return bc_atan2(diff.y, diff.x);
 }
@@ -99,7 +99,7 @@ static inline bc_float_t BCLineTangent(BCLine l) {
 __attribute__((const))
 __attribute__((swift_name("Line.evaluate(self:t:)")))
 static inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
-    __BC_ASSERT2(t >= 0.0 && t <= 1.0, bc_make_float2(BC_FLOAT_LARGE,BC_FLOAT_LARGE));
+    __BC_ASSERT(t >= 0.0 && t <= 1.0, bc_make_float2(BC_FLOAT_LARGE,BC_FLOAT_LARGE));
     return bc_mix(l.a,l.b,bc_make_float2(t,t));
 }
 
@@ -111,10 +111,10 @@ static inline bc_float2_t BCLineEvaluate(BCLine l,bc_float_t t) {
 __attribute__((const))
 __attribute__((swift_name("Line.parameterization(self:arclength:)")))
 static inline bc_float_t BCLineArclengthParameterization(BCLine c, bc_float_t distance) {
-    __BC_ASSERT2(distance >= 0, (1-BCErrorArg1));
+    __BC_ASSERT(distance >= 0, (1-BCErrorArg1));
     const float lineLength = BCLineLength(c);
-    __BC_ASSERT2(lineLength > 0,(1-BCErrorSizeIsZero));
-    __BC_ASSERT2(lineLength >= distance,(1-BCErrorArgRelationship))
+    __BC_ASSERT(lineLength > 0,(1-BCErrorSizeIsZero));
+    __BC_ASSERT(lineLength >= distance,(1-BCErrorArgRelationship))
     return distance / lineLength;
 }
 

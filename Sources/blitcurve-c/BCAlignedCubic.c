@@ -26,10 +26,10 @@ BCAlignedCubic BCAlignedCubicMake(BCCubic c) {
 
 
 bc_float_t BCAlignedCubicKappa(BCAlignedCubic c, bc_float_t t) {
-    __BC_ASSERT2(t >= 0 && t <= 1, BC_FLOAT_LARGE);
-    __BC_ASSERT2(bc_abs(c.b_x)>0,BC_FLOAT_LARGE);
-    __BC_ASSERT2(bc_abs(c.c.x) > 0 || bc_abs(c.c.y) > 0, BC_FLOAT_LARGE);
-    __BC_ASSERT2(bc_abs(c.d.x - c.b_x) > 0 || bc_abs(c.d.y) > 0,BC_FLOAT_LARGE);
+    __BC_ASSERT(t >= 0 && t <= 1, BC_FLOAT_LARGE);
+    __BC_ASSERT(bc_abs(c.b_x)>0,BC_FLOAT_LARGE);
+    __BC_ASSERT(bc_abs(c.c.x) > 0 || bc_abs(c.c.y) > 0, BC_FLOAT_LARGE);
+    __BC_ASSERT(bc_abs(c.d.x - c.b_x) > 0 || bc_abs(c.d.y) > 0,BC_FLOAT_LARGE);
     const bc_float_t p1 = -t;
     const bc_float_t p2 = 1 + p1;
     const bc_float_t p2_t = p2 * t;
@@ -105,7 +105,7 @@ __BC_MAYBESTATIC bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_floa
 }
 
 static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upper, bc_float_t accuracy) {
-    __BC_ASSERT2(upper >= lower,BC_FLOAT_LARGE_NEGATIVE);
+    __BC_ASSERT(upper >= lower,BC_FLOAT_LARGE_NEGATIVE);
     while (upper - lower > accuracy) {
         bc_float_t lowerPrime = __BCAlignedCubicKappaPrime(c, lower);
         bc_float_t upperPrime = __BCAlignedCubicKappaPrime(c, upper);

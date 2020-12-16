@@ -35,14 +35,14 @@
 #endif
 
 
-//Like __BC_ASSERT2, but allows custom code to run after the trap rather than using an rvalue.
-#define __BC_ASSERT2_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
+//Like __BC_ASSERT, but allows custom code to run after the trap rather than using an rvalue.
+#define __BC_ASSERT_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
 
-/*__BC_ASSERT2 traps incorrect application usage of blitcurve.  This is typically cases like invalid arguments and similar obvious misuse.
+/*__BC_ASSERT traps incorrect application usage of blitcurve.  This is typically cases like invalid arguments and similar obvious misuse.
  This does not include "subtle" bugs that might only turn up in production.  For example, issues that occur only on large problem sizes.
 
  */
-#define __BC_ASSERT2(CONDITION,RVALUE) __BC_ASSERT2_CUSTOM(CONDITION,return RVALUE)
+#define __BC_ASSERT(CONDITION,RVALUE) __BC_ASSERT_CUSTOM(CONDITION,return RVALUE)
 
 //The BUGIF priority deals with conditions that we think are blitcurve bugs if they occur
 #define __BC_BUGASSERT_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}

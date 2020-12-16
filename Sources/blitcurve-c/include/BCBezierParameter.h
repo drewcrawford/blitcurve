@@ -20,8 +20,8 @@ inline bc_float_t BCVertexToBezierParameter(uint16_t vertexID, unsigned char ver
 __attribute__((diagnose_if(!(vertexID < vertexesPerInstance), "vertexID out of range","error")))
 __attribute__((diagnose_if(!(vertexesPerInstance > 1), "vertexesPerInstance out of range","error")))
 {
-    __BC_ASSERT2(vertexID < vertexesPerInstance, (-1-BCErrorArgRelationship));
-    __BC_ASSERT2(vertexesPerInstance > 1,(-1-BCErrorArg1));
+    __BC_ASSERT(vertexID < vertexesPerInstance, (-1-BCErrorArgRelationship));
+    __BC_ASSERT(vertexesPerInstance > 1,(-1-BCErrorArg1));
     return ((float)vertexID) / (vertexesPerInstance - 1);
 }
 
@@ -42,9 +42,9 @@ inline bc_float_t BCVertexToBezierParameter(uint16_t vertexID, unsigned char ver
 __attribute__((diagnose_if(!(vertexID < vertexesPerInstance), "vertexID out of range","error")))
 __attribute__((diagnose_if(!(vertexesPerInstance > 1), "vertexesPerInstance out of range","error")))
 {
-    __BC_ASSERT2(vertexID < vertexesPerInstance,(1-BCErrorArgRelationship));
-    __BC_ASSERT2(lowerT < upperT,(1-BCErrorRangeIsZero));
-    __BC_ASSERT2(vertexesPerInstance > 1,(1-BCErrorArg1));
+    __BC_ASSERT(vertexID < vertexesPerInstance,(1-BCErrorArgRelationship));
+    __BC_ASSERT(lowerT < upperT,(1-BCErrorRangeIsZero));
+    __BC_ASSERT(vertexesPerInstance > 1,(1-BCErrorArg1));
     float range = upperT - lowerT;
     return ((float)vertexID) / (vertexesPerInstance - 1) * range + lowerT;
 }

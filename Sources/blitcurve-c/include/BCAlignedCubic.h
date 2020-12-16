@@ -88,7 +88,7 @@ __attribute__((swift_name("AlignedCubic.curveRadius(self:t:)")))
 inline bc_float_t BCAlignedCubicCurveRadius(BCAlignedCubic c, bc_float_t t)
 __attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error")))
 {
-    __BC_ASSERT2(t>=0 && t <=1,BC_FLOAT_LARGE);
+    __BC_ASSERT(t>=0 && t <=1,BC_FLOAT_LARGE);
     const float kappa = BCAlignedCubicKappa(c, t);
     __BC_BUGASSERT(kappa!=0, BC_FLOAT_LARGE);
     return 1.0 / kappa;
