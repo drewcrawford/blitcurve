@@ -451,14 +451,20 @@ static inline bc_float_t BCCubicArclengthParameterization(BCCubic cubic, bc_floa
  @param cubic a cubic to check
  @param straightAngle Positive angle that is "nearly straight", used to detect the undesired curvature.  Plausible values for this parameter include \c 2*PI/360f
  @param curvatureError  maximum error (difference in unsigned curvature for a "nearly straight" cubic) we want.  I think this function is not well-behaved if you pass a value below \c 1*10^-14 or so, so if you intended to do that, just use \c BCLineLength(BCCubicAsLine(cubic))/2 rather than calling this function.
- 
+ @throws uses \c (-1-BCError) for rvalue
  @returns whether the cubic is normalized in a way appropriate for curvature calculations.
  */
 __attribute__((const))
+__attribute__((swift_private))
+char BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError);
+
 __attribute__((swift_name("Cubic.isNormalizedForCurvature(self:straightAngle:curvatureError:)")))
-bool BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError)
-__attribute__((diagnose_if(!(straightAngle>0), "Invalid straightAngle","error")))
-__attribute__((diagnose_if(!(curvatureError>0), "Invalid curvatureError","error")));
+static inline bool BCCubicIsNormalizedForCurvatureForSwift(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
+    const char result = BCCubicIsNormalizedForCurvature(cubic,straightAngle,curvatureError);
+    if (result < 0) { __BC_CPU_TRAP; }
+    return (result>0);
+}
+
 
 
 #endif

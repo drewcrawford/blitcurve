@@ -91,6 +91,8 @@ typedef enum {
     BCErrorSizeIsZero,
     ///Logic error, usually inside blitcurve itself.  Please file a bug.
     BCErrorLogic,
+    ///An unknown error.  This can be any error, but usually indicates we can't determine the cause at the place the error was thrown (information not propoagated, etc.)  See sourcecode for details.
+    BCErrorUnknown,
 } BCError;
 
 #endif

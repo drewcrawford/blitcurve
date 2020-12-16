@@ -143,9 +143,11 @@ bc_float_t BCNormalizationDistanceForCubicCurvatureError(bc_float_t euclidianDis
     return t1 + t2;
 }
 
-bool BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
+char BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
     const float distance = BCLineLength(BCCubicAsLine(cubic));
     const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(distance, straightAngle, curvatureError);
+    //BCNormalizationDistanceForCubicCurvatureError uses same rvalue scheme
+    __BC_PRECONDITION_CONVERT(expectedDistance<0, expectedDistance);
     if (bc_distance(cubic.a, cubic.c) < expectedDistance) { return false; }
     if (bc_distance(cubic.b, cubic.d) < expectedDistance) { return false; }
     return true;

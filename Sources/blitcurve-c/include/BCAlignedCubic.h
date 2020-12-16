@@ -61,7 +61,7 @@ __attribute__((const))
 __attribute__((swift_name("AlignedCubic.__kappaPrime(self:t:)")))
 /**
  Private function.
- @discussion uses \c BUGIF to check arguments, rvalue is \c BC_FLOAT_LARGE.
+ @discussion uses \c BUGASSERT to check arguments, rvalue is \c BC_FLOAT_LARGE.
  */
 bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
 #endif
@@ -71,6 +71,7 @@ bc_float_t __BCAlignedCubicKappaPrime(BCAlignedCubic c, bc_float_t t);
  @param accuracy The maximum error allowed on \c t
  @performance This implements a binary search.
  @warning This function is UB if the curve has 0-length or the cubic not technically normalized (see \c BCCubicIsTechnicallyNormalized)`  In addition, "good behavior" requires a higher-than-normal normalization distance, see \c BCAlignedCubicIsNormalizedForCurvature for details.
+ @throws rvalue is \c (-1-BCError)
  */
 __attribute__((const))
 __attribute__((swift_name("AlignedCubic.maxKappaParameter(self:accuracy:)")))
@@ -90,6 +91,7 @@ __attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error
 {
     __BC_RANGEASSERT(t>=0 && t <=1,BC_FLOAT_LARGE);
     const float kappa = BCAlignedCubicKappa(c, t);
+    __BC_PRECONDITION_CONVERT(kappa==BC_FLOAT_LARGE, BC_FLOAT_LARGE);
     __BC_BUGASSERT(kappa!=0, BC_FLOAT_LARGE);
     return 1.0 / kappa;
 }
@@ -101,13 +103,18 @@ __attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error
  @param straightAngle Positive angle that is "nearly straight", used to detect the undesired curvature.  Plausible values for this parameter include \c 2*PI/360f
  @param curvatureError  maximum error (difference in unsigned curvature for a "nearly straight" cubic) we want.  I think this function is not well-behaved if you pass a value below \c 1*10^-14 or so, so if you intended to do that, just use \c BCLineLength(BCCubicAsLine(cubic))/2 rather than calling this function.
  @returns whether the cubic is normalized in a way appropriate for curvature calculations.
+ @throws rvalue is \c (-1-BCError)
  */
 __attribute__((const))
+__attribute__((swift_private))
+char BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError);
+
 __attribute__((swift_name("AlignedCubic.isNormalizedForCurvature(self:straightAngle:curvatureError:)")))
-bool BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError)
-__attribute__((diagnose_if(!(cubic.b_x>0), "Invalid distance","error")))
-__attribute__((diagnose_if(!(straightAngle>0), "Invalid straightAngle","error")))
-__attribute__((diagnose_if(!(curvatureError>0), "Invalid curvatureError","error")));
+static inline bool BCAlignedCubicIsNormalizedForCurvatureForSwift(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
+    const char result = BCAlignedCubicIsNormalizedForCurvature(cubic,straightAngle,curvatureError);
+    if (result<0) { __BC_CPU_TRAP};
+    return result >0;
+}
 
 
 #endif
