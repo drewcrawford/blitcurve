@@ -92,7 +92,9 @@ __attribute__((diagnose_if(!(t>=0&&t<=1), "bezier parameter out of range","error
     __BC_RANGEASSERT(t>=0 && t <=1,BC_FLOAT_LARGE);
     const float kappa = BCAlignedCubicKappa(c, t);
     __BC_PRECONDITION_CONVERT(kappa==BC_FLOAT_LARGE, BC_FLOAT_LARGE);
-    __BC_BUGASSERT(kappa!=0, BC_FLOAT_LARGE);
+    if (kappa==0) {
+        return BC_FLOAT_LARGE;
+    }
     return 1.0 / kappa;
 }
 
