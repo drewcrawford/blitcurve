@@ -25,6 +25,15 @@ static inline bc_float4_t BCVertex4ErrorMake(BCError e) {
     return b;
 }
 
+__attribute__((overloadable))
+static inline bool BCVertexIsError(bc_float4_t vtx) {
+    return vtx.x == BC_FLOAT_LARGE && vtx.y == BC_FLOAT_LARGE;
+}
+__attribute__((overloadable))
+static inline bool BCVertexIsError(bc_float3_t vtx) {
+    return vtx.x == BC_FLOAT_LARGE && vtx.y == BC_FLOAT_LARGE;
+}
+
 
 /**
 \abstract Creates a 3D vertex suitable for drawing a portion of a cubic.
