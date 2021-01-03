@@ -115,16 +115,16 @@ static bc_float_t KappaSearch(BCAlignedCubic c, bc_float_t lower, bc_float_t upp
     __BC_BUGASSERT(upper >= lower,BC_FLOAT_LARGE_NEGATIVE);
     while (upper - lower > accuracy) {
         const bc_float_t lowerPrime = __BCAlignedCubicKappaPrime(c, lower);
-        __BC_BUGASSERT_CONVERT(lowerPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
+        __BC_TRY_IF(lowerPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
         const bc_float_t upperPrime = __BCAlignedCubicKappaPrime(c, upper);
-        __BC_BUGASSERT_CONVERT(upperPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
+        __BC_TRY_IF(upperPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
 
         if (bc_signbit(lowerPrime) == bc_signbit(upperPrime)) {
             return BC_FLOAT_LARGE;
         }
         const bc_float_t midpoint = (upper - lower) / 2 + lower;
         const bc_float_t midPrime = __BCAlignedCubicKappaPrime(c, midpoint);
-        __BC_BUGASSERT_CONVERT(midPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
+        __BC_TRY_IF(midPrime==BC_FLOAT_LARGE, BC_FLOAT_LARGE_NEGATIVE);
         
         if (bc_signbit(midPrime) == bc_signbit(upperPrime)) {
             upper = midpoint;
@@ -143,11 +143,11 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy)
         bc_float_t l = i_t * 0.2;
         bc_float_t r = (i_t + 1) * 0.2;
         const bc_float_t itry = KappaSearch(c, l, r, accuracy);
-        __BC_BUGASSERT_CONVERT(itry==BC_FLOAT_LARGE_NEGATIVE, (-1-BCErrorLogic));
+        __BC_TRY_IF(itry==BC_FLOAT_LARGE_NEGATIVE, (-1-BCErrorLogic));
         
         if (itry != BC_FLOAT_LARGE) {
             const bc_float_t proposedKappaPreabs = BCAlignedCubicKappa(c, itry);
-            __BC_PRECONDITION_CONVERT(proposedKappaPreabs==BC_FLOAT_LARGE, (-1-BCErrorUnknown));
+            __BC_TRY_IF(proposedKappaPreabs==BC_FLOAT_LARGE, (-1-BCErrorUnknown));
             
             const bc_float_t proposedKappa = bc_abs(proposedKappaPreabs);
             if (proposedKappa > maxKappa) {
@@ -165,7 +165,7 @@ bc_float_t BCAlignedCubicMaxKappaParameter(BCAlignedCubic c,bc_float_t accuracy)
 char BCAlignedCubicIsNormalizedForCurvature(BCAlignedCubic cubic, bc_float_t straightAngle, bc_float_t curvatureError) {
     const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(bc_abs(cubic.b_x), straightAngle, curvatureError);
     //somewhat conveniently, expectedDistance uses the same rvalue scheme as we do
-    __BC_PRECONDITION_CONVERT(expectedDistance < 0, expectedDistance);
+    __BC_PRECONDITION(expectedDistance > 0, expectedDistance);
     
     if (bc_length(cubic.c) < expectedDistance) { return false; }
     bc_float2_t d = cubic.d;

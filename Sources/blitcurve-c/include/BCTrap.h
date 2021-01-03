@@ -1,5 +1,5 @@
 //BCTrap.h: Trap system
-// ©2020 DrewCrawfordApps LLC
+// ©2020-2021 DrewCrawfordApps LLC
 
 /*
  Support for error handling on platforms vary widely.  On CPU platforms, we generally like trap behavior if input is very invalid, ideally with robust debugging information.  However even bare aborts are not supported in Metal, and in some of our attempts to create it we discover compiler bugs.
@@ -61,7 +61,6 @@
 //The BUG priority deals with conditions that we think are blitcurve bugs if they occur
 #define __BC_BUGASSERT_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
 #define __BC_BUGASSERT(CONDITION,RVALUE) __BC_BUGASSERT_CUSTOM(CONDITION,return RVALUE)
-#define __BC_BUGASSERT_CONVERT(CONDITION,NEWEXPR) if (__builtin_expect(CONDITION,0)) { __BC_CPU_TRAP return NEWEXPR; }
 
 //The RANGEASSSERT priority deals with values outside a constant range
 #define __BC_RANGEASSERT_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
@@ -71,8 +70,8 @@
 #define __BC_PRECONDITION_CUSTOM(CONDITION,CUSTOM) if (!__builtin_expect(CONDITION,1)) {__BC_CPU_TRAP CUSTOM;}
 #define __BC_PRECONDITION(CONDITION,RVALUE) __BC_PRECONDITION_CUSTOM(CONDITION,return RVALUE)
 
-#define __BC_PRECONDITION_CONVERT(CONDITION,NEWREXPR) if (__builtin_expect(CONDITION,0)) { __BC_CPU_TRAP return NEWREXPR; }
 
+#define __BC_TRY_IF(CONDITION,RVALUE) if (__builtin_expect(CONDITION,0)) { __BC_CPU_TRAP return RVALUE; }
 /**
  This defines various error situations that might occur.  Note that in practice, functions often transform these errors in some way to fit them into values outside the function domain.
  For example, they  might be cast to floats or negated.

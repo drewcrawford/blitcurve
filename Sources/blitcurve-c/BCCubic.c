@@ -149,7 +149,7 @@ char BCCubicIsNormalizedForCurvature(BCCubic cubic, bc_float_t straightAngle, bc
     const float distance = BCLineLength(BCCubicAsLine(cubic));
     const float expectedDistance = BCNormalizationDistanceForCubicCurvatureError(distance, straightAngle, curvatureError);
     //BCNormalizationDistanceForCubicCurvatureError uses same rvalue scheme
-    __BC_PRECONDITION_CONVERT(expectedDistance<0, expectedDistance);
+    __BC_ASSERT(expectedDistance>0, expectedDistance);
     if (bc_distance(cubic.a, cubic.c) < expectedDistance) { return false; }
     if (bc_distance(cubic.b, cubic.d) < expectedDistance) { return false; }
     return true;

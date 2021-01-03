@@ -59,7 +59,7 @@ __attribute__((swift_name("getter:Line.yIntercept(self:)")))
 inline bc_float_t BCLineYIntercept(BCLine l) {
     __BC_PRECONDITION(bc_abs(l.a.x-l.b.x) > 0, BC_FLOAT_LARGE);
     const float slope = BCLineSlope(l);
-    __BC_PRECONDITION_CONVERT(slope == BC_FLOAT_LARGE,BC_FLOAT_LARGE);
+    __BC_TRY_IF(slope == BC_FLOAT_LARGE,BC_FLOAT_LARGE);
     return l.a.y - slope * l.a.x;
 }
 
